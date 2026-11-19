@@ -1,0 +1,434 @@
+/* ==========================================================================
+   HEADER STYLES
+   Colors/fonts approximated from the supplied screenshot.
+   Adjust the CSS variables below if your exact hex codes / font names differ.
+   ========================================================================== */
+
+:root {
+  --header-green: #0b3d2e;        /* dark forest green - top bar & logo */
+  --header-green-dark: #082e23;   /* slightly darker, for hover states */
+  --header-coral: #e8776a;        /* Book Now button */
+  --header-coral-dark: #d9634f;   /* Book Now hover */
+  --header-navy: #1c3a5e;         /* main nav dropdown text */
+  --header-navy-dark: #0f2540;    /* nav hover */
+  --header-white: #ffffff;
+  --header-font-heading: 'Poppins', 'Montserrat', sans-serif;
+  --header-font-body: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+}
+
+/* ---------- Reset / base ---------- */
+.header * {
+  box-sizing: border-box;
+}
+
+.header {
+  width: 100%;
+  z-index: 9999;
+  font-family: var(--header-font-body);
+}
+
+/* ---------- Top info bar ---------- */
+.header-info {
+  background-color: var(--header-green);
+  color: var(--header-white);
+  font-size: 14px;
+  padding: 10px 0;
+}
+
+.header-info .container-fluid {
+  gap: 16px;
+}
+
+.header-info__phone-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.header-info .webCellPhone {
+  color: var(--header-white);
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.2s ease;
+}
+
+.header-info .webCellPhone:hover {
+  opacity: 0.85;
+}
+
+.header-info .webCellPhone i {
+  margin-right: 4px;
+}
+
+.header-info__divider {
+  opacity: 0.5;
+}
+
+.header-info__cta-text {
+  font-weight: 400;
+  opacity: 0.95;
+  white-space: nowrap;
+}
+
+
+.open-newsletter {
+  background-color: var(--header-coral);
+  color: var(--header-white);
+  border: none;
+  padding: 8px 22px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.open-newsletter:hover {
+  background-color: var(--header-coral-dark);
+  transform: translateY(-1px);
+}
+
+/* ---------- Main nav row ---------- */
+.main-nav-row {
+  padding: 14px 0;
+}
+
+.header .logo img {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.header .logo {
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+/* Mobile-only phone link next to logo */
+.m-phone-link {
+  display: none;
+  color: var(--header-green);
+  font-size: 20px;
+  text-decoration: none;
+}
+
+/* ---------- Main nav menu / dropdowns ---------- */
+.navmenu {
+  display: flex;
+  align-items: center;
+}
+
+.navmenu .nav-mega-new {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navmenu .dropdown {
+  position: relative;
+}
+
+.navmenu .dropdown-toggle {
+      background: none;
+    border: none;
+    color: var(--header-navy);
+    font-family: var(--header-font-heading);
+    font-size: 15px;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.2s ease;
+    text-transform: uppercase !important;
+}
+
+.navmenu .dropdown-toggle .caret {
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 6px solid var(--header-navy);
+  transition: transform 0.2s ease, border-top-color 0.2s ease;
+}
+
+.navmenu .dropdown:hover .dropdown-toggle,
+.navmenu .dropdown-toggle:hover,
+.navmenu .dropdown-toggle:focus {
+  color: var(--header-coral);
+}
+
+.navmenu .dropdown:hover .dropdown-toggle .caret {
+  border-top-color: var(--header-coral);
+}
+
+/* Dropdown panel */
+.navmenu .dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  min-width: 220px;
+  background: var(--header-white);
+  border-radius: 8px;
+  box-shadow: 0 12px 30px rgba(11, 61, 46, 0.15);
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  z-index: 1000;
+}
+
+.navmenu .dropdown:hover .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.navmenu .dropdown-menu li a {
+  display: block;
+  padding: 8px 20px;
+  color: var(--header-navy);
+  text-decoration: none;
+  font-size: 14px;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.navmenu .dropdown-menu li a:hover {
+  background-color: rgba(11, 61, 46, 0.06);
+  color: var(--header-coral);
+}
+
+.navmenu .dropdown-menu .dropdown-heading a {
+  font-weight: 700;
+  color: var(--header-green);
+  border-bottom: 1px solid rgba(11, 61, 46, 0.1);
+  margin-bottom: 4px;
+  padding-bottom: 10px;
+}
+
+.navmenu a.active {
+  color: var(--header-coral);
+}
+
+/* Mobile hamburger icon
+   NOTE: this must be a sibling of #navmenu in the markup (not nested inside it).
+   #navmenu becomes an off-canvas panel on mobile (position:fixed; right:-100%),
+   so any element nested inside it gets carried off-screen too. */
+.mobile-nav-toggle {
+  display: none;
+  font-size: 28px;
+  line-height: 1;
+  color: var(--header-green);
+  cursor: pointer;
+  position: relative;
+  z-index: 10000;
+  margin-left: auto;
+  padding: 4px;
+}
+
+/* ==========================================================================
+   RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* ---- Large tablets / small desktops ---- */
+@media (max-width: 1199.98px) {
+  .navmenu .dropdown-toggle {
+    padding: 10px 8px;
+    font-size: 14px;
+  }
+}
+
+/* Below this, main nav collapses into an off-canvas style menu */
+@media (max-width: 1199.98px) {
+   .mobile-nav-active .mobile-nav-toggle{
+      z-index: 9999999;
+   }
+  .mobile-nav-toggle {
+    display: block;
+  }
+
+  .navmenu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100vh;
+    background: var(--header-white);
+    box-shadow: -8px 0 30px rgba(0, 0, 0, 0.15);
+    transition: right 0.3s ease;
+    z-index: 9999;
+    padding: 70px 0 20px;
+    overflow-y: auto;
+  }
+
+  .navmenu.navmenu-active {
+    right: 0;
+  }
+
+  .navmenu .nav-mega-new {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0;
+  }
+
+  .navmenu .dropdown-toggle {
+    width: 100%;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(11, 61, 46, 0.08);
+    font-size: 16px;
+  }
+
+  .navmenu .dropdown-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    display: none;
+    background-color: rgba(11, 61, 46, 0.03);
+    border-radius: 0;
+    padding-left: 10px;
+  }
+
+  .navmenu .dropdown.dropdown-open .dropdown-menu {
+    display: block;
+  }
+
+  .navmenu .dropdown.dropdown-open .dropdown-toggle .caret {
+    transform: rotate(180deg);
+  }
+
+  body.nav-open {
+    overflow: hidden;
+  }
+
+  body.nav-open::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 9998;
+  }
+}
+
+/* ---- Tablets ---- */
+@media (max-width: 991.98px) {
+  .header-info__cta-text {
+    display: none;
+  }
+
+  .header-info__divider {
+    display: none;
+  }
+
+  .header .logo img {
+    height: 42px;
+  }
+}
+
+/* ---- Small tablets / large phones ---- */
+@media (max-width: 767.98px) {
+       .mobile-nav-active .navmenu {
+         background: rgb(33 37 41 / 95%) !important;
+       }
+   .navmenu ul{
+      inset: 86px 20px 20px 20px !important;
+   }
+  .header-info {
+    padding: 8px 0;
+  }
+
+  .header-info .container-fluid {
+    justify-content: space-between;
+  }
+
+  .header-info__phone-wrap .webCellPhone span:not(.bi) {
+    display: none;
+  }
+
+  .open-newsletter {
+    padding: 7px 16px;
+    font-size: 13px;
+  }
+
+  .main-nav-row {
+    padding: 10px 10px;
+  }
+
+  .main-nav-row {
+    justify-content: flex-start;
+  }
+
+  .m-phone-link {
+    display: inline-flex;
+    align-items: center;
+    margin-left: auto;
+    margin-right: 16px;
+  }
+
+  .mobile-nav-toggle {
+    margin-left: 0;
+  }
+}
+
+/* ---- Phones ---- */
+@media (max-width: 575.98px) {
+  .header-info__phone-wrap .webCellPhone {
+    font-size: 13px;
+  }
+
+  .header-info__cta-text,
+  .header-info__divider {
+    display: none;
+  }
+
+  .header .logo img {
+    height: 36px;
+  }
+
+  .open-newsletter {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+/* ---- Very small phones ---- */
+@media (max-width: 380px) {
+  .header-info .container-fluid {
+    gap: 8px;
+  }
+
+  .header-info__phone-wrap .webCellPhone {
+    font-size: 12px;
+  }
+}
+
+
+.top-navmenu ul li{
+    display: inline-block;
+}
+.top-navmenu ul li a {
+    padding: 0 12px;
+}
+.top-navmenu ul li a:hover {
+   color: #e04a43;
+}
+.top-navmenu .nav-mega{
+   width: 100% !important;
+   margin-bottom: 0 !important;
+}
+
+.nav-mega-new .dropdown{
+   position: relative !important;
+}

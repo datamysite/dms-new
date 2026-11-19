@@ -1,0 +1,485 @@
+@extends('web.includes.master')
+@section('metaAddition')
+    
+@endsection
+@section('addStyle')
+    <link href="{{URL::to('/public')}}/assets/css/service.css" rel="stylesheet">
+@endsection
+@section('content')
+
+    <main class="main">
+
+        <!-- Page Title -->
+          <div class="page-title dark-background" data-aos="fade" style="background-image: url('{{URL::to('public/assets/img/service-new/'.$service->slug.'.jpg')}}');">
+            <div class="container head-container-service">
+                <div class="row">
+                    <div class="col-lg-8 head-para-service">
+                        <h1>&#10687; PR & Media Coverage in Dubai</h1>
+                        <h2>The Impact of <br>Public Relations</h2>
+                        <br>
+                        <p>At DataMySite, we secure editorial placements, media features, and press coverage across 30+ of the UAE's and the world's most respected publications. From Gulf News and Khaleej Times to Forbes Middle East and Business Insider — we get your story in front of the audiences that matter most.</p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="aside-form">
+                            
+                            <form action="{{route('enquiry.submit')}}" id="enquiry-form">
+                                @csrf
+                                <input type="hidden" name="service" value="{{$service->name}}" required>
+                                <div class="form1-wrapper">
+                                    <div class="form1-bg">
+                                      <h2 class="form1-headline">Ready to Get <span>Results?</span></h2>
+                                      <p class="form1-sub">Drop us your details — our experts respond within 60 minutes.</p>
+
+                                      <div class="form1-field">
+                                        <input type="text" placeholder="Your Full Name" name="name" required>
+                                      </div>
+
+                                      <div class="form1-field">
+                                          <input type="tel" class="form-control" name="mainphone" id="phone-field2" required="">
+                                          <input type="hidden" name="phone" id="fullphone-field2" required="">
+                                      </div>
+
+                                      <div class="form1-field">
+                                        <input type="email" placeholder="Your Email Address" class="aside-email" name="email" required>
+                                      </div>
+
+                                      <div class="form1-field">
+                                        <textarea class="form1-textarea" name="description" placeholder="Tell us what you need — the more detail, the better we can help." required></textarea>
+                                      </div>
+
+                                      <button class="form1-btn" type="submit">
+                                        Get Free Consultation
+                                        <span class="form1-btn-arrow">→</span>
+                                      </button>
+
+                                      <div class="form1-trust">
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                                          No spam, ever
+                                        </div>
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                          Reply in 60 min
+                                        </div>
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                          100% Private
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="loading"><img src="{{URL::to('/public/loader-gif.gif')}}" width="80px" class="newsletter-loader"></div>
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+          </div><!-- End Page Title -->
+        
+        
+        <div class="container">
+            <section class="hub-guides"><h2>PR guides</h2><ul>
+            <li><a href="/luxury-pr-agency-dubai-tailored-pr-for-premium-brands">Luxury PR for premium brands in Dubai</a></li>
+            <li><a href="/comparing-the-best-pr-companies-in-dubai-today">Comparing Dubai PR companies</a></li>
+            </ul></section>
+        </div>
+        
+        
+        <section id="service-cards" class="blog-section section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
+                    <h4>Public Relations (PR) Coverage</h4>
+                    <p>In today's digital world, securing Public Relations (PR Coverage) is crucial for businesses aiming to build credibility and authority. Your brand benefits from increased visibility, which solves customer trust issues and enables you to take leadership in your industry. At datamysite, we specialise in securing high-impact <strong>30+ Media houses</strong>, PR coverage UAE that ensures your brand reaches the right audience through powerful storytelling and strategic media placements.</p>
+                </div>
+                <div class="col-lg-6">
+                    <iframe class="service-iframe" src="https://www.youtube.com/embed/WR2HoD0FpyM?si=Ba7ZxHCiRwpc1Hyg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="col-lg-6">
+                    <div class="faq " id="accordion">
+                        @foreach($subservices as $key => $val)
+                            @php $s = $key; @endphp
+                            <div class="card">
+                                <div class="card-header" id="faqHeading-{{$s}}">
+                                    <div class="mb-0">
+                                        <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-{{$s}}" data-aria-expanded="true" data-aria-controls="faqCollapse-{{$s}}">
+                                            <i class="{{$val->icon}}"></i> &nbsp; {{$val->name}}
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div id="faqCollapse-{{$s}}" class="collapse {{$s == 0 ? 'show' : ''}}" aria-labelledby="faqHeading-{{$s}}" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p>{{$val->description}}</p>
+                                        <a href="{{URL::to('/'.$service->slug.'/'.$val->slug)}}" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>  
+            </div>
+
+          </div>
+
+        </section>
+
+
+        
+        <section class="pr-pubs section">
+            <div class="container">
+              <div class="in">
+                <div class="top">
+                  <div class="tag" style="justify-content:center">Our Media Partners</div>
+                  <h2>Get Featured in <em>UAE's Most Trusted</em> Publications</h2>
+                  <p class="sub">Editorial placements that build credibility money simply can't buy through paid ads.</p>
+                </div>
+                <div class="pub-grid">
+                  <div class="pub-feat-card">
+                    <div class="pf-icon">📰</div>
+                    <div class="pf-name">Gulf News</div>
+                    <div class="pf-type">English Daily · UAE</div>
+                    <div class="pf-reach">2M+ monthly readers</div>
+                    <div class="pf-cred">DA 82 · High Trust</div>
+                  </div>
+                  <div class="pub-feat-card">
+                    <div class="pf-icon">💼</div>
+                    <div class="pf-name">Forbes ME</div>
+                    <div class="pf-type">Business Magazine · Global</div>
+                    <div class="pf-reach">Exec & HNW audience</div>
+                    <div class="pf-cred">DA 94 · Global Authority</div>
+                  </div>
+                  <div class="pub-feat-card">
+                    <div class="pf-icon">🗞️</div>
+                    <div class="pf-name">Khaleej Times</div>
+                    <div class="pf-type">English Daily · 1976</div>
+                    <div class="pf-reach">1.8M+ monthly readers</div>
+                    <div class="pf-cred">DA 78 · Legacy Brand</div>
+                  </div>
+                  <div class="pub-feat-card">
+                    <div class="pf-icon">🌍</div>
+                    <div class="pf-name">Arabian News</div>
+                    <div class="pf-type">Digital Media · GCC</div>
+                    <div class="pf-reach">GCC business audience</div>
+                    <div class="pf-cred">Regional Influence</div>
+                  </div>
+                </div>
+                <div class="pub-cta">
+                  <div>
+                    <h3>Not sure which publication fits your brand?</h3>
+                    <p>Our PR team recommends the right editorial placement for your industry and goals — free.</p>
+                  </div>
+                  <div style="display:flex;gap:12px;flex-wrap:wrap;flex-shrink:0">
+                    <a href="https://datamysite.com/contact-us" class="btn btn-w">Get a Free PR Plan <span class="arr">→</span></a>
+                    <a href="https://api.whatsapp.com/send/?phone=971525287259" class="btn btn-ow">💬 WhatsApp Us</a>
+                  </div>
+                </div>
+              </div>
+          </div>
+        </section>
+
+
+        <section id="testimonials" class="testimonials section">
+            <!-- Section Title -->
+          <div class="container section-title" style="padding-bottom: 15px;">
+            <h2 class="text-theme">Available Publications</h2>
+          </div><!-- End Section Title -->
+          <div class="container">
+            <div class="row publications-logos">
+                @foreach($publications as $val)
+                    <div class="col-lg-2 col-sm-4 col-xs-6">
+                        <div class="pub-item">
+                            <a href="{{$val->link}}" target="_blank" rel="nofollow">
+                                <div class="pub-item-img">
+                                    <img src="{{URL::to('/public/publications/'.$val->image)}}" alt="{{$val->name}} Logo">
+                                </div>
+                            </a>
+                            <a href="{{$val->link}}" target="_blank" rel="nofollow">
+                                <h5>{{$val->name}}</h5>
+                            </a>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            <div class="pub-see-more">
+                <button>See More</button>
+            </div>
+          </div>
+
+        </section>
+
+
+
+        <section id="testimonials" class="testimonials striped-section section">
+            @include('web.includes.elements.clients')
+        </section>
+
+
+
+        <section id="testimonials" class="testimonials case-studies-section section">
+           @include('web.includes.elements.case-studies')
+        </section>
+
+        <section id="service-cards" class="blog-section section striped-section pr-icon-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
+                    <h4>Our Public Relations (PR Coverage) Services</h4>
+                    <p>Here's what we offer:</p>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{URL::to('/public/assets/img/pr-icon1.png')}}" alt="Pr Icon">
+                    <h5>Media Relations</h5>
+                    <p>
+                        Our team maintains powerful connections with prominent journalists as well as editors and influential media establishments that operate across the UAE. We aid in establishing brand placements in distinguished newspapers, prominent magazines, and digital outlets to expand your brand exposure considerably. Our expertise extends to Gulf News advertising Dubai and Khaleej Times PR coverage UAE, helping businesses gain premium visibility.
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{URL::to('/public/assets/img/pr-icon2.png')}}" alt="Pr Icon">
+                    <h5>Press Release Writing & Distribution</h5>
+                    <p>
+                        We craft compelling press releases designed to capture media attention and generate extensive Public Relations (PR Coverage). Organisations receive enhanced brand awareness while boosting engagement when we transmit their press releases to specialised media institutions.
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{URL::to('/public/assets/img/pr-icon3.png')}}" alt="Pr Icon">
+                    <h5>Crisis Communication</h5>
+                    <p>
+                        Reputation management is key. We provide crisis management expertise to control public perception and decrease negative exposure when unforeseen situations occur. The team accepts responsibility for safeguarding both your brand's integrity and its credibility.
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{URL::to('/public/assets/img/pr-icon4.png')}}" alt="Pr Icon">
+                    <h5>Leadership & Executive Positioning</h5>
+                    <p>
+                        A quality PR initiative serves more than brand advertisement functions since it establishes executive leaders as industry influencers. Through interviews, opinion pieces, and guest articles in leading publications like Forbes PR campaigns GCC, we help establish authority in your industry.
+                    </p>
+                </div>  
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section id="service-cards" class="blog-section section pr-impact-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-5">
+                    <img src="{{URL::to('/public/pr-coverage.png')}}" width="100%" alt="Impact of PR Coverage">
+                </div>
+                <div class="col-lg-7">
+                    <h4>The Impact of Public Relations (PR Coverage)</h4>
+                    <p>
+                        Public Relations (PR Coverage) is the tangible outcome of a well-executed PR strategy. It includes:
+                    </p>
+                    <ul>
+                        <li>News articles and blog mentions</li>
+                        <li>Social media discussions and influencer endorsements</li>
+                        <li>TV, radio, and podcast appearances</li>
+                        <li>Featured interviews in top publications</li>
+                    </ul>
+
+                    <p>
+                        Effective Public Relations (PR Coverage) can be measured through media reach, audience sentiment, and overall brand recognition. Businesses that develop appropriate strategies obtain enhanced credibility alongside market leadership capacity.
+                    </p>
+                </div> 
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section id="service-cards" class="blog-section striped-section section why-us-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-9">
+                    <h4>Why Choose Datamysite for Public Relations (PR Coverage)?</h4>
+                    <p>
+                        Below are a few reasons that make us stand out:
+                        <br>
+                        Expertise in the Dubai Market: We have in-depth knowledge of the region's media landscape as a leading PR agency in Dubai. By having solid media house relationships, our branding receives maximum visibility in the market.
+                    </p>
+                    <ul>
+                        <li><strong>Tailored Strategies</strong>: Our firm adjusts its PR strategies to meet the distinctive characteristics of each business. That's why we customise PR campaigns to align with your business objectives, whether you're looking for high-impact PR coverage UAE or niche audience targeting.</li>
+                        <li><strong>Proven Track Record</strong>: Since 2021, datamysite has functioned continually as a leader in digital marketing and PR across the market. We've helped businesses across industries secure Public Relations (PR Coverage) in top-tier publications, enhancing their brand visibility and reputation.</li>
+                        <li><strong>Data-Driven Approach</strong>: Data analytics powers our PR tracking system, which generates measurable performance results. The team watches media coverage alongside measuring audience relationships and branding feedback to optimise outcome-based strategies.</li>
+                    </ul>
+
+                    <p>
+                        Datamysite combines regional insights and worldwide PR techniques to deliver strong outcomes for brands. Let's connect and discuss how we can drive Public Relations (PR Coverage) success for your business. Contact us today at (+971) 42 957 001.
+                    </p>
+                </div>
+                <div class="col-lg-3 mob-not-visible">
+                    <img src="{{URL::to('/public/assets/img/why-us.png')}}" width="100%" alt="Why choose us">
+                </div> 
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+
+        <section id="service-cards" class="blog-section section pr-blogs-section">
+
+          <div class="container section-title">
+            <h2 class="text-theme">Blogs</h2>
+            <p class="pr-blog-sub">What’s Going On in the Industry?</p>
+            <div class="row gy-4 blog-portrait-card first-row">
+                @foreach($blogs as $val)
+                    <div class="col-lg-4">
+                        <a href="{{route('blogs.detail', [$val->slug])}}">
+                          <div class="popular-card blog-card-2 flex-grow-1" bis_skin_checked="1">
+                            <div class="card-image" bis_skin_checked="1">
+                              <img src="{{URL::to('public/storage/blogs/'.$val->banner)}}" alt="{{$val->banner_alt}}">
+                            </div>
+                            <div class="popular-text" bis_skin_checked="1">
+                              <h6 class="mt-2" title="{{$val->heading}}">{{$val->heading}}</h6>
+                              <p class="line-break-3">{{$val->short_description}}</p>
+                              <small>by <font class="text-theme2">{{$val->author->name}}</font> - <font class="text-bold">{{date('F d, Y', strtotime($val->created_at))}}</font></small>
+                            </div>
+                          </div>
+                        </a>
+                    </div>
+                @endforeach
+                <div class="col-lg-12">
+                    <a href="{{URL::to('/blogs/pr-and-media-relations')}}" class="see-all-btn" target="_blank">See All Blogs</a>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section id="service-cards" class="blog-section section faq-new-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-4">
+                    <img src="{{URL::to('/public/assets/img/faq-new.png')}}" width="100%" alt="FAQs">
+                </div> 
+                <div class="col-lg-1"></div>
+                <div class="col-lg-7">
+                    <h4>FAQs</h4>
+                    <div class="faq " id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-1">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-1" data-aria-expanded="true" data-aria-controls="faqCollapse-1">
+                                        <span class="badge">&nbsp;</span>What does a PR agency in Dubai cost per month?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-1" class="collapse show" aria-labelledby="faqHeading-1" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Monthly PR retainers in Dubai run from AED 5,000 to AED 50,000 depending on how many outlets, releases and spokesperson hours are included. Coverage-only packages, where you pay per placement, start lower. Full breakdown in our PR cost guide.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-2">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-2" data-aria-expanded="false" data-aria-controls="faqCollapse-2">
+                                        <span class="badge">&nbsp;</span>What is the difference between PR coverage and media relations?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-2" class="collapse" aria-labelledby="faqHeading-2" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Coverage is the article or feature that appears. Media relations is the ongoing relationship with editors and journalists that makes coverage repeatable. We sell both: guaranteed placements for launches, and retainers that build the relationship over months.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-3">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-3" data-aria-expanded="false" data-aria-controls="faqCollapse-3">
+                                        <span class="badge">&nbsp;</span>Do you handle corporate communications?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-3" class="collapse" aria-labelledby="faqHeading-3" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Yes. Internal announcements, leadership messaging, spokesperson training and crisis statements sit with the same team that pitches your stories, so the message stays consistent inside and outside the company.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-4">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-4" data-aria-expanded="false" data-aria-controls="faqCollapse-4">
+                                        <span class="badge">&nbsp;</span>How do you track the success of a PR campaign?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-4" class="collapse" aria-labelledby="faqHeading-4" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Success measurement of PR campaigns relies on counting media appearances, tracking audience response and publication circulation, and examining positive or negative feedback. Our data-driven method guarantees powerful news coverage for your brand.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+    </main>
+
+@endsection
+
+@section('addScript')
+@include('web.includes.elements.local-schema')
+<script type="application/ld+json">
+{
+ "@context": "https://schema.org",
+ "@type": "FAQPage",
+ "mainEntity": [
+  {
+   "@type": "Question",
+   "name": "What does a PR agency in Dubai cost per month?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Monthly PR retainers in Dubai run from AED 5,000 to AED 50,000 depending on how many outlets, releases and spokesperson hours are included. Coverage-only packages, where you pay per placement, start lower. Full breakdown in our PR cost guide."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "What is the difference between PR coverage and media relations?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Coverage is the article or feature that appears. Media relations is the ongoing relationship with editors and journalists that makes coverage repeatable. We sell both: guaranteed placements for launches, and retainers that build the relationship over months."
+   }
+  },
+  {
+   "@type": "Question",
+   "name": "Do you handle corporate communications?",
+   "acceptedAnswer": {
+    "@type": "Answer",
+    "text": "Yes. Internal announcements, leadership messaging, spokesperson training and crisis statements sit with the same team that pitches your stories, so the message stays consistent inside and outside the company."
+   }
+  }
+ ]
+}
+    </script>
+@endsection

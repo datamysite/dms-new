@@ -1,0 +1,430 @@
+@extends('web.includes.master')
+@section('metaAddition')
+    
+@endsection
+@section('addStyle')
+    <link href="{{URL::to('/public')}}/assets/css/service.css" rel="stylesheet">
+@endsection
+@section('content')
+
+    <main class="main">
+
+        <!-- Page Title -->
+          <div class="page-title dark-background" data-aos="fade" style="background-image: url('{{URL::to('public/assets/img/service-new/'.$subservice->slug.'.jpg')}}');">
+            <div class="container head-container-service">
+                <div class="row">
+                    <div class="col-lg-8 head-para-service">
+                        <h1>&#10687; {{$subservice->name}}</h1>
+                        <h2>About Cost-Per-Lead (CPL)</h2>
+                        <br>
+                        <p>
+                            Cost per lead in Dubai runs from about AED 30 for home services to AED 400 for B2B and SaaS, based on DMS campaigns in 2026. The number only means something next to the sale value behind it, so this page gives the benchmarks by industry and the three levers that move them. Use it to set a target before you buy leads or brief a campaign.
+                        </p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="aside-form">
+                            
+                            <form action="{{route('enquiry.submit')}}" id="enquiry-form">
+                                @csrf
+                                <input type="hidden" name="service" value="{{$subservice->name}}" required>
+                                <div class="form1-wrapper">
+                                    <div class="form1-bg">
+                                      <h2 class="form1-headline">Ready to Get <span>Results?</span></h2>
+                                      <p class="form1-sub">Drop us your details — our experts respond within 60 minutes.</p>
+
+                                      <div class="form1-field">
+                                        <input type="text" placeholder="Your Full Name" name="name" required>
+                                      </div>
+
+                                      <div class="form1-field">
+                                          <input type="tel" class="form-control" name="mainphone" id="phone-field2" required="">
+                                          <input type="hidden" name="phone" id="fullphone-field2" required="">
+                                      </div>
+
+                                      <div class="form1-field">
+                                        <input type="email" placeholder="Your Email Address" class="aside-email" name="email" required>
+                                      </div>
+
+                                      <div class="form1-field">
+                                        <textarea class="form1-textarea" name="description" placeholder="Tell us what you need — the more detail, the better we can help." required></textarea>
+                                      </div>
+
+                                      <button class="form1-btn" type="submit">
+                                        Get Free Consultation
+                                        <span class="form1-btn-arrow">→</span>
+                                      </button>
+
+                                      <div class="form1-trust">
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                                          No spam, ever
+                                        </div>
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                          Reply in 60 min
+                                        </div>
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                          100% Private
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="loading"><img src="{{URL::to('/public/loader-gif.gif')}}" width="80px" class="newsletter-loader"></div>
+                            
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+          </div><!-- End Page Title -->
+
+        
+        <div class="container">
+            <section class="hub-guides"><h2>Cost per lead benchmarks</h2><ul>
+            <li><a href="/lead-generation">Lead generation services in Dubai</a></li></ul></section>
+        </div>
+
+        <section id="service-cards" class="blog-section section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+                <div class="col-lg-12">
+                    <h4>Impact of Cost-Per-Lead Services</h4>
+                    <p>
+                        At Datamysite, we customise our CPL solutions to provide optimal marketing return on investment to clients. We offer high quality performance-driven lead generation solutions that help businesses achieve their growth objectives.
+                    </p>
+                </div>
+                <div class="col-lg-8" data-aos="fade-up" data-aos-delay="100">
+                   <div class="faq " id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-210">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-210" data-aria-expanded="true" data-aria-controls="faqCollapse-210">
+                                        <span class="badge">&nbsp;</span>Benefits of Cost-Per-Lead Services Dubai
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-210" class="collapse show" aria-labelledby="faqHeading-210" data-parent="#accordion">
+                                <div class="card-body">
+                                    <ul>
+                                        <li><strong>Budget Efficiency</strong>: You only pay for actual leads, optimising your marketing spend.</li>
+                                        <li><strong>Scalability</strong>: CPL campaigns can be scaled to match business growth objectives.</li>
+                                        <li><strong>Measurable Performance</strong>: Transparent analytics provide clear insights into campaign success.</li>
+                                        <li><strong>Customised Targeting</strong>: We create tailored campaigns for specific audience segments.</li>
+                                        <li><strong>Reduced Financial Risk</strong>: You invest in actual results rather than uncertain impressions.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-211">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-211" data-aria-expanded="false" data-aria-controls="faqCollapse-211">
+                                        <span class="badge">&nbsp;</span>Effective CPL campaigns UAE with Datamysite
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-211" class="collapse" aria-labelledby="faqHeading-211" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Datamysite is a trusted partner in delivering successful CPL campaigns UAE tailored to business needs. We provide:</p>
+                                    <ul>
+                                        <li><strong>Data-Driven Strategies</strong>: The use of analytics in CPL campaigns results in optimised performance through data-driven strategies.</li>
+                                        <li><strong>Customised Solutions</strong>: We provide businesses with lead-generation approaches that fulfil their strategic goals.</li>
+                                        <li><strong>Multi-Channel Approach</strong>: Paid ads, SEO, and content marketing.</li>
+                                       <li> <strong>Continuous Optimisation</strong>: The continuous monitoring of real-time data helps organisations build higher-quality leads at reduced prices.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <iframe class="service-iframe cpl-iframe" src="https://www.youtube.com/embed/zrKP3REbO7Y?si=qafY5PwxtYi86Z6q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div> 
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <section id="testimonials" class="testimonials striped-section section">
+          @include('web.includes.elements.clients')
+        </section>
+
+
+
+        <section id="testimonials" class="testimonials case-studies-section section">
+           @include('web.includes.elements.case-studies')
+        </section>
+
+
+        
+        <section id="service-cards" class="blog-section section striped-section pr-icon-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-8">
+                    <h4>Key Factors Affecting Cost-per-lead services Dubai</h4>
+                    <p>Let’s take a look at the major factors that influence Cost-per-lead services Dubai. </p>
+                    <ul>
+                        <li>
+                            <strong>Industry</strong>: CPL financial investment adjusts depending on the particular business field. Real estate and finance sectors tend to face increased lead generation expenses because of market competition and the valuable nature of their customers.
+                        </li>
+                        <li>
+                            <strong>Marketing Channel</strong>: Cost depends on the selection of marketing channels, which leads carry to the company for future opportunities. Common methods include:
+                            <ol>
+                                <li>Advertising campaigns that pay for service include Google Ads and social media advertising with display advertising options.</li>
+                                <li>The content strategy uses blogs together with whitepapers and ebooks as lead generation tools.</li>
+                                <li>The process of optimising organic search functionality allows businesses to attract leads without paying for advertisement.</li>
+                                <li>Media outreach combined with branding programs known as PR campaigns represents the approach to generating leads.</li>
+
+                            </ol>
+                        </li>
+                        <li><strong>Lead Quality</strong>: A business must recognise that all sales leads carry different values. These leads generate higher conversion rates but command higher expenses. Establishing an optimised CPL strategy will generate high-quality leads instead of general volume increases.</li>
+                        <li><strong>Competition</strong>: Competitive market environments drive up CPL expenses because quality lead generation becomes more challenging in such areas of high demand. A powerful marketing plan allows businesses to distinguish themselves from competitors and decrease marketing expenses.</li>
+
+                    </ul>
+                </div>
+                <div class="col-lg-4 vertical-center">
+                    <img src="{{URL::to('/public/section-images/image35.png')}}" class="side-image" width="100%" alt="Impact of PR Coverage">
+                </div>
+                <div class="col-lg-12">
+                    <h5>How to Calculate Cost-per-lead services Dubai</h5>
+                    <p>
+                        To determine your CPL, use this simple formula:<br>
+                        <strong>Total Campaign Cost</strong> / <strong>Number of Leads Generated</strong> = <strong>Cost-per-lead</strong>.<br>
+                        Businesses use this metric to evaluate marketing performance, thus enhancing their strategies for future success.
+                    </p>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <section id="service-cards" class="blog-section section why-us-section why-out-us-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-9">
+
+                    <h4>Why Choose Datamysite for Cost-per-lead services Dubai?</h4>
+                    <p>Founded in 2021, Datamysite specialises in digital and out-of-home (OOH) media strategies. The company employs data-driven techniques to maximise leads and advertisement placement effectiveness for both digital and outdoor media channels.<br>
+                    The company develops strong alliances with leading PR media houses that help broaden brand exposure through meaningful media coverage, which produces premium quality leads. The capabilities of our Dubai-based team bridge local understanding of markets with worldwide business best practices to produce CPL campaigns which produce trackable outcomes.<br>
+                    Get Started with Datamysite Today! Ready to elevate your lead generation with Cost-per-lead services Dubai? Contact us and let us work together on developing CPL campaigns that give your business growth while achieving maximum returns on investment.</p>
+                    
+
+                    <h5>Effective CPL campaigns UAE with Datamysite</h5>
+                    <p>Datamysite is a trusted partner in delivering successful CPL campaigns UAE tailored to business needs. We provide:</p>
+                    <ul>
+                        <li><strong>Data-Driven Strategies</strong>: The use of analytics in CPL campaigns results in optimised performance through data-driven strategies.</li>
+                        <li><strong>Customised Solutions</strong>: We provide businesses with lead-generation approaches that fulfil their strategic goals.</li>
+                        <li><strong>Multi-Channel Approach</strong>: Paid ads, SEO, and content marketing.</li>
+                        <li><strong>Continuous Optimisation</strong>: The continuous monitoring of real-time data helps organisations build higher-quality leads at reduced prices.</li>
+                    </ul>
+                </div>
+                <div class="col-lg-1"></div>
+                <div class="col-lg-2 mob-not-visible">
+                    <img src="{{URL::to('/public/assets/img/why-us.png')}}" width="100%" alt="Why choose us">
+                </div> 
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+
+        <section id="service-cards" class="blog-section section striped-section pr-blogs-section">
+
+          <div class="container section-title">
+            <h2 class="text-theme">Blogs</h2>
+            <p class="pr-blog-sub">What’s Going On in the Industry?</p>
+            <div class="row gy-4 blog-portrait-card first-row">
+                @foreach($blogs as $val)
+                    <div class="col-lg-4">
+                        <a href="{{route('blogs.detail', [$val->slug])}}">
+                          <div class="popular-card blog-card-2 flex-grow-1" bis_skin_checked="1">
+                            <div class="card-image" bis_skin_checked="1">
+                              <img src="{{URL::to('public/storage/blogs/'.$val->banner)}}" alt="{{$val->banner_alt}}">
+                            </div>
+                            <div class="popular-text" bis_skin_checked="1">
+                              <h6 class="mt-2" title="{{$val->heading}}">{{$val->heading}}</h6>
+                              <p class="line-break-3">{{$val->short_description}}</p>
+                              <small>by <font class="text-theme2">{{$val->author->name}}</font> - <font class="text-bold">{{date('F d, Y', strtotime($val->created_at))}}</font></small>
+                            </div>
+                          </div>
+                        </a>
+                    </div>
+                @endforeach
+                <div class="col-lg-12">
+                    <a href="{{URL::to('/blogs/pr-and-media-relations')}}" class="see-all-btn" target="_blank">See All Blogs</a>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section id="service-cards" class="blog-section section faq-new-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-4">
+                    <img src="{{URL::to('/public/assets/img/faq-new.png')}}" width="100%" alt="FAQs">
+                </div> 
+                <div class="col-lg-1"></div>
+                <div class="col-lg-7 vertical-center">
+                    <h4>FAQs</h4>
+                    <div class="faq " id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-1">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-1" data-aria-expanded="true" data-aria-controls="faqCollapse-1">
+                                        <span class="badge">&nbsp;</span>How much does a lead cost in Dubai?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-1" class="collapse show" aria-labelledby="faqHeading-1" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>In 2026 a qualified lead costs from about AED 30 for home services to AED 400 for B2B and software, with real estate at AED 80 to 250. The price depends on how tightly the lead is qualified, how competitive the category is and whether the lead is exclusive to you.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-2">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-2" data-aria-expanded="false" data-aria-controls="faqCollapse-2">
+                                        <span class="badge">&nbsp;</span>What counts as a qualified lead?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-2" class="collapse" aria-labelledby="faqHeading-2" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>A named person with a working UAE phone number or WhatsApp, a stated need that matches the service, a location you serve and consent to be contacted. Duplicates, wrong numbers and out-of-area enquiries are not billed and are replaced under the agreed definition.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-3">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-3" data-aria-expanded="false" data-aria-controls="faqCollapse-3">
+                                        <span class="badge">&nbsp;</span>Which channels do you use to generate leads?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-3" class="collapse" aria-labelledby="faqHeading-3" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Search, social and professional networks, plus landing pages and WhatsApp flows built for each campaign. The channel mix is chosen per industry from the cost-per-lead benchmarks, and every lead is verified and scored before it reaches you.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-4">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-4" data-aria-expanded="false" data-aria-controls="faqCollapse-4">
+                                        <span class="badge">&nbsp;</span>Do I pay for leads that do not convert?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-4" class="collapse" aria-labelledby="faqHeading-4" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>You pay per qualified lead delivered, not per sale. If you would rather pay only for closed business, that is a cost-per-acquisition model with a higher price per result; our CPL vs CPA guide explains when each model suits a UAE campaign.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-5">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-5" data-aria-expanded="false" data-aria-controls="faqCollapse-5">
+                                        <span class="badge">&nbsp;</span>How fast will leads start arriving?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-5" class="collapse" aria-labelledby="faqHeading-5" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Campaigns usually deliver their first qualified leads within days of launch, and each lead is passed to your CRM, WhatsApp or email in real time so your team can respond within minutes, which is when conversion rates are highest.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+    </main>
+
+@endsection
+
+@section('addScript')
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How much does a lead cost in Dubai?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "In 2026 a qualified lead costs from about AED 30 for home services to AED 400 for B2B and software, with real estate at AED 80 to 250. The price depends on how tightly the lead is qualified, how competitive the category is and whether the lead is exclusive to you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What counts as a qualified lead?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A named person with a working UAE phone number or WhatsApp, a stated need that matches the service, a location you serve and consent to be contacted. Duplicates, wrong numbers and out-of-area enquiries are not billed and are replaced under the agreed definition."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which channels do you use to generate leads?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Search, social and professional networks, plus landing pages and WhatsApp flows built for each campaign. The channel mix is chosen per industry from the cost-per-lead benchmarks, and every lead is verified and scored before it reaches you."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I pay for leads that do not convert?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You pay per qualified lead delivered, not per sale. If you would rather pay only for closed business, that is a cost-per-acquisition model with a higher price per result; our CPL vs CPA guide explains when each model suits a UAE campaign."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How fast will leads start arriving?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Campaigns usually deliver their first qualified leads within days of launch, and each lead is passed to your CRM, WhatsApp or email in real time so your team can respond within minutes, which is when conversion rates are highest."
+      }
+    }
+  ]
+}
+</script>
+
+@endsection

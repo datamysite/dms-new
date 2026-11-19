@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c2464"/>
+      <stop offset="1" stop-color="#16357f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="800" fill="url(#g)"/>
+  <rect x="40" y="40" width="1120" height="720" fill="none" stroke="#ffffff" stroke-opacity="0.14" stroke-width="2"/>
+  <circle cx="1050" cy="130" r="220" fill="#41b121" fill-opacity="0.10"/>
+  <text x="600" y="378" text-anchor="middle" font-family="Arial, sans-serif" font-size="52" font-weight="700" letter-spacing="10" fill="#ffffff" fill-opacity="0.92">dgnova</text>
+  <text x="600" y="432" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" letter-spacing="6" fill="#ffffff" fill-opacity="0.55">IMAGE</text>
+</svg>

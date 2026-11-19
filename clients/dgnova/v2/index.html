@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>dgnova | Real Estate, Car Rental, Import/Export, Tourism &amp; Trading in the UAE</title>
+<meta name="description" content="Five ways to get things done in the UAE, one team behind all of them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* dgnova central stylesheet — shared by every page */
+:root{--primary:#0c2464;--secondary:#41b121;--dark:#081a48;--text:#172033;--muted:#6b7280;--light:#f6f8fb;--white:#fff;--border:#e7ebf0;--tint:#eaf7e5;--r:4px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font:400 16px/1.65 'Plus Jakarta Sans',system-ui,sans-serif;color:var(--text);background:#fff;overflow-x:hidden}
+img{max-width:100%}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4{margin:0 0 .5em;color:var(--primary);line-height:1.15;font-weight:800}
+h1{font-size:clamp(2.2rem,5vw,3.8rem)}h2{font-size:clamp(1.8rem,3.4vw,2.7rem)}h3{font-size:1.15rem}
+p{margin:0 0 1em}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+.muted{color:var(--muted)}.soft{color:#c3cde6}.g{color:var(--secondary)}
+:focus-visible{outline:3px solid var(--secondary);outline-offset:2px}
+
+/* Buttons */
+.btn{display:inline-block;padding:12px 24px;font:700 .9rem/1.2 inherit;border:2px solid var(--secondary);border-radius:var(--r);background:var(--secondary);color:#fff;cursor:pointer;transition:.2s}
+.btn:hover{background:#369a1b;border-color:#369a1b}
+.btn-outline{background:#fff;color:var(--primary);border-color:var(--primary)}
+.btn-outline:hover{background:var(--primary);border-color:var(--primary);color:#fff}
+.btn-outline-light{background:transparent;color:#fff;border-color:#fff}
+.btn-outline-light:hover{background:#fff;border-color:#fff;color:var(--primary)}
+.btns{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+
+/* Eyebrow */
+.eyebrow{display:inline-block;margin-bottom:12px;font-weight:700;font-size:.85rem;letter-spacing:.06em;color:var(--secondary);text-transform:uppercase}
+
+/* Header */
+.topbar{background:var(--dark);color:#c3cde6;font-size:.8rem}
+.topbar .wrap{display:flex;justify-content:space-between;gap:16px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
+.topbar nav a{margin-left:18px}.topbar a:hover{color:var(--secondary)}
+.header{position:sticky;top:0;z-index:50;background:#fff;box-shadow:0 2px 12px rgba(12,36,100,.08)}
+.bar{display:flex;align-items:center;justify-content:space-between;min-height:72px}
+.logo{font-weight:800;font-size:1.4rem;letter-spacing:.08em;color:var(--primary);display:flex;flex-direction:column;line-height:1}
+.logo small{font-size:.55rem;letter-spacing:.2em;font-weight:600;color:var(--secondary);margin-top:4px}
+.logo.light{color:#fff}
+.mainnav{display:flex;align-items:center;gap:28px;font-weight:600;font-size:.92rem}
+.mainnav a:hover{color:var(--secondary)}
+.burger{display:none;background:none;border:0;font-size:1.8rem;color:var(--primary);cursor:pointer;min-width:44px;min-height:44px}
+
+/* Hero */
+.hero{background:var(--primary);color:#fff;position:relative;overflow:hidden;padding:80px 0}
+.hero::after{content:"";position:absolute;right:-8%;top:0;width:34%;height:100%;background:var(--secondary);opacity:.9;transform:skewX(-14deg);z-index:0}
+.hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;position:relative;z-index:1}
+.hero h1{color:#fff}.lead{color:#c3cde6;max-width:520px}
+.trust{list-style:none;display:flex;gap:18px;flex-wrap:wrap;padding:0;margin:28px 0 0;font-size:.85rem;color:#c3cde6}
+.trust li::before{content:"";display:inline-block;width:8px;height:8px;background:var(--secondary);margin-right:8px}
+.collage{position:relative;height:460px}
+.ph,.img,.round,.slant{background-size:cover;background-position:center;background-color:#1d3a85}
+.ph{position:absolute;border:6px solid #fff;border-radius:var(--r);box-shadow:0 18px 40px rgba(0,0,0,.3)}
+.p1{width:62%;height:70%;top:0;right:0}.p2{width:50%;height:42%;bottom:0;left:0}.p3{width:44%;height:36%;bottom:6%;right:4%}
+.badge-exp{position:absolute;top:10%;left:2%;background:var(--secondary);padding:14px 18px;font-size:.8rem;line-height:1.3;border-radius:var(--r)}
+.badge-exp strong{display:block;font-size:2rem}
+
+/* Sections */
+.sec{padding:96px 0}.alt{background:var(--light)}
+.dark{background:var(--primary);color:#fff}.dark h2,.dark h3{color:#fff}
+.head{max-width:680px;margin-bottom:48px}.head.center{margin-left:auto;margin-right:auto;text-align:center}
+.row{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.head.row{max-width:none}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
+.split.rev>:first-child{order:0}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:24px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+
+/* Cards */
+.card{background:#fff;border:1px solid var(--border);border-radius:var(--r);overflow:hidden;color:var(--text);box-shadow:0 4px 14px rgba(12,36,100,.05);transition:.25s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(12,36,100,.14)}
+.card .img{height:230px;position:relative;transition:transform .4s}
+.card:hover .img{transform:scale(1.03)}
+.card{overflow:hidden}
+.card .body{padding:22px;position:relative;background:#fff;flex:1;display:flex;flex-direction:column}
+.card h3{margin-bottom:6px}
+.badge{position:absolute;top:14px;left:14px;background:var(--secondary);color:#fff;font-size:.72rem;font-weight:700;padding:4px 10px;border-radius:var(--r)}
+.tag{font-size:.75rem;font-weight:700;color:var(--secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.meta{list-style:none;display:flex;gap:16px;padding:12px 0;margin:8px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);font-size:.85rem;color:var(--muted)}
+.price{color:var(--primary);margin:8px 0}
+.actions{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:12px;font-weight:700;font-size:.9rem}
+.actions a{color:var(--primary);border-bottom:2px solid var(--secondary)}
+
+/* Business areas tabs */
+.areas{display:grid;grid-template-columns:240px 1fr;gap:32px}
+.tabs{display:flex;flex-direction:column;gap:10px}
+.tabs button{text-align:left;padding:14px 18px;font:700 .95rem inherit;border:1px solid var(--border);background:#fff;color:var(--primary);border-radius:var(--r);cursor:pointer;transition:.2s}
+.tabs button[aria-selected=true]{background:var(--secondary);border-color:var(--secondary);color:#fff}
+.panel{flex-direction:row;min-height:340px}
+.panel[hidden]{display:none}
+.panel .img{flex:1.1;height:auto;min-height:300px}.panel .body{flex:1;justify-content:center}
+.panel .btn{align-self:flex-start;margin-top:12px}
+
+/* Split visuals */
+.round{height:440px;border-radius:50% 50% 50% 8%;border:8px solid var(--tint);box-shadow:20px 20px 0 var(--secondary)}
+.slant{height:440px;clip-path:polygon(12% 0,100% 0,100% 100%,0 100%)}
+.check{list-style:none;padding:0;margin:20px 0}
+.check li{padding:6px 0 6px 30px;position:relative;font-weight:600}
+.check li::before{content:"";position:absolute;left:0;top:12px;width:16px;height:16px;background:var(--secondary);clip-path:polygon(14% 50%,0 64%,40% 100%,100% 24%,86% 10%,40% 70%)}
+
+/* Values & steps */
+.value{background:#fff;border:1px solid var(--border);padding:28px;border-radius:var(--r);transition:.25s}
+.value:hover{border-color:var(--secondary);box-shadow:0 10px 24px rgba(12,36,100,.08)}
+.ico{display:grid;place-items:center;width:48px;height:48px;background:var(--primary);color:#fff;margin-bottom:16px;transition:.25s}
+.value:hover .ico{background:var(--secondary)}
+.steps{list-style:none;padding:0;margin:0}
+.steps li{border-top:4px solid var(--secondary);padding-top:14px}
+.steps b{display:block;font-size:3.4rem;line-height:1;color:var(--primary);opacity:.15}
+
+/* Testimonials */
+.quote{margin:0;background:rgba(255,255,255,.07);border:1px dashed rgba(255,255,255,.35);padding:26px;border-radius:var(--r)}
+.quote p{color:#e1e8f7}.quote footer{font-size:.85rem;color:#9fb0d8}
+
+/* FAQ */
+.acc{border:1px solid var(--border);margin-bottom:12px;border-radius:var(--r)}
+.acc h3{margin:0}
+.acc button{width:100%;text-align:left;background:#fff;border:0;padding:18px 54px 18px 20px;font:700 1rem inherit;color:var(--primary);cursor:pointer;position:relative}
+.acc button::after{content:"+";position:absolute;right:20px;font-size:1.4rem;line-height:1}
+.acc button[aria-expanded=true]{background:var(--secondary);color:#fff}
+.acc button[aria-expanded=true]::after{content:"–"}
+.ans{padding:16px 20px;color:var(--muted)}.ans[hidden]{display:none}
+
+/* CTA */
+.cta{background:var(--dark);color:#fff;padding:72px 0;position:relative;overflow:hidden}
+.cta::before{content:"";position:absolute;left:-4%;top:0;width:16%;height:100%;background:repeating-linear-gradient(115deg,var(--secondary) 0 10px,transparent 10px 26px);opacity:.5}
+.cta .wrap{position:relative}.cta h2{color:#fff;margin-bottom:8px}.cta .btns{margin:0}
+
+/* Footer */
+.footer{background:var(--dark);color:#9fb0d8;padding-top:64px;font-size:.92rem}
+.fgrid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:40px;padding-bottom:40px}
+.footer h4{color:#fff;font-size:1rem}.footer a{display:block;padding:4px 0}.footer a:hover{color:var(--secondary)}
+.copy{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;border-top:1px solid rgba(255,255,255,.12);padding:20px;font-size:.82rem}
+.copy a{display:inline}
+
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(8,26,72,.75);display:grid;place-items:center;z-index:100;padding:16px}
+.modal[hidden]{display:none}
+.mbox{background:#fff;max-width:480px;width:100%;padding:32px;border-radius:var(--r);position:relative;max-height:92vh;overflow:auto;border-top:6px solid var(--secondary)}
+.mclose{position:absolute;right:12px;top:8px;border:0;background:none;font-size:2rem;cursor:pointer;color:var(--primary);min-width:44px;min-height:44px}
+form label{display:block;font-weight:600;font-size:.85rem;margin-bottom:14px;color:var(--primary)}
+form input,form textarea{display:block;width:100%;margin-top:4px;padding:12px;border:1px solid var(--border);border-radius:var(--r);font:inherit}
+.srcline{background:var(--tint);padding:8px 12px;font-size:.85rem;border-radius:var(--r)}
+.ok{color:var(--secondary);font-weight:700;margin-top:12px}
+
+/* Responsive */
+@media (max-width:991px){
+  .hero-grid,.split,.areas,.panel{grid-template-columns:1fr;flex-direction:column}
+  .split{gap:40px}.grid3{grid-template-columns:1fr 1fr}.grid4{grid-template-columns:1fr 1fr}.fgrid{grid-template-columns:1fr 1fr}
+  .tabs{flex-direction:row;flex-wrap:wrap}.panel .img{min-height:240px;flex:none}
+  .hero::after{width:40%}
+  .burger{display:block}
+  .mainnav{display:none;position:absolute;top:100%;left:0;right:0;background:#fff;flex-direction:column;align-items:stretch;padding:16px 20px 24px;gap:0;box-shadow:0 12px 20px rgba(12,36,100,.12)}
+  .mainnav.open{display:flex}.mainnav a{padding:14px 0;border-bottom:1px solid var(--border)}.mainnav .btn{margin-top:16px}
+}
+@media (max-width:640px){
+  .sec{padding:64px 0}.grid3,.grid4,.grid2,.fgrid{grid-template-columns:1fr}
+  .collage{height:340px}.topbar .wrap>span{display:none}.round,.slant{height:300px}
+  .btns .btn{flex:1;text-align:center}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<!-- =========================
+     Top Utility Bar Start
+========================= -->
+<div class="topbar"><div class="wrap">
+  <span>UAE based · +971 00 000 0000 · info@dgnova.com</span>
+  <nav aria-label="Top"><a href="index.html">Home</a><a href="about.html">About</a><a href="faq.html">FAQs</a><a href="contact.html">Contact</a></nav>
+</div></div>
+<!-- Top Utility Bar End -->
+
+<!-- =========================
+     Header Start
+========================= -->
+<header class="header"><div class="wrap bar">
+  <a class="logo" href="index.html" aria-label="dgnova home">
+        <img src="../images/logo.svg" width="170px"></a>
+  <button class="burger" aria-label="Open menu" aria-expanded="false" aria-controls="nav">&#9776;</button>
+  <nav id="nav" class="mainnav" aria-label="Main">
+    <a href="real-estate.html">Realestate</a><a href="car-rental.html">Car Rental</a><a href="car-import-export.html">Car Impt/Expt</a><a href="tourism.html">Tourism</a><a href="general-trading.html">General Trading</a>
+    <button class="btn btn-green" data-enquiry="General">Send Enquiry</button>
+  </nav>
+</div></header>
+<!-- Header End -->
+
+<main>
+<!-- =========================
+     Hero Section Start
+========================= -->
+<section class="hero"><div class="wrap hero-grid">
+  <div>
+    <p class="eyebrow">One team. Five services.</p>
+    <h1>Five ways to get things done in the UAE — one team behind all of them.</h1>
+    <p class="lead">Find property, rent or export vehicles, plan travel and source goods with clear paperwork and a single point of contact.</p>
+    <div class="btns"><a class="btn btn-green" href="#areas">Explore Services</a><button class="btn btn-outline-light" data-enquiry="General">Send Enquiry</button></div>
+    <ul class="trust"><li>Real estate</li><li>Car rental</li><li>Import/export</li><li>Tourism</li><li>Trading</li></ul>
+  </div>
+  <div class="collage" aria-hidden="true">
+    <div class="ph p1" style="background-image:url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1400&auto=format&fit=crop)"></div>
+    <div class="ph p2" style="background-image:url(https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop)"></div>
+    <div class="ph p3" style="background-image:url(https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=1400&auto=format&fit=crop)"></div>
+    <div class="badge-exp"><strong>5</strong> divisions<br>one contact</div>
+  </div>
+</div></section>
+<!-- Hero Section End -->
+
+<!-- =========================
+     Business Areas Start
+========================= -->
+<section class="sec" id="areas"><div class="wrap">
+  <div class="head"><p class="eyebrow">What we do</p><h2>One company, five doors in.</h2><p class="muted">Start with the division you need today. Behind each one is the same team and the same way of working.</p></div>
+  <div class="areas">
+    <div class="tabs" role="tablist" aria-label="Business areas">
+      <button role="tab" aria-selected="true" data-tab="0">Real Estate</button>
+      <button role="tab" aria-selected="false" data-tab="1">Car Rental</button>
+      <button role="tab" aria-selected="false" data-tab="2">Car Import &amp; Export</button>
+      <button role="tab" aria-selected="false" data-tab="3">Travel &amp; Tourism</button>
+      <button role="tab" aria-selected="false" data-tab="4">General Trading</button>
+    </div>
+    <div class="panels">
+      <article class="card panel" data-panel="0"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=1400&auto=format&fit=crop)"></div><div class="body"><span class="tag">Buy · Rent</span><h3>Real Estate</h3><p>Apartments, villas and commercial space across Dubai and the wider UAE.</p><a class="btn btn-green" href="real-estate.html">Explore Properties</a></div></article>
+      <article class="card panel" data-panel="1" hidden><div class="img" style="background-image:url(https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop)"></div><div class="body"><span class="tag">Daily · Weekly · Monthly</span><h3>Car Rental</h3><p>Professionally maintained luxury, SUV and sedan options with transparent rates.</p><a class="btn btn-green" href="car-rental.html">Find a Rental Car</a></div></article>
+      <article class="card panel" data-panel="2" hidden><div class="img" style="background-image:url(https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1400&auto=format&fit=crop)"></div><div class="body"><span class="tag">Gulf · Africa</span><h3>Car Import &amp; Export</h3><p>Sourcing, documentation and shipping handled from Dubai to destination.</p><a class="btn btn-green" href="car-import-export.html">Discuss Your Requirement</a></div></article>
+      <article class="card panel" data-panel="3" hidden><div class="img" style="background-image:url(https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?q=80&w=1400&auto=format&fit=crop)"></div><div class="body"><span class="tag">Price on Request</span><h3>Travel &amp; Tourism</h3><p>International packages from the UAE, adjusted to your dates and budget.</p><a class="btn btn-green" href="tourism.html">Browse Packages</a></div></article>
+      <article class="card panel" data-panel="4" hidden><div class="img" style="background-image:url(https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?q=80&w=1400&auto=format&fit=crop)"></div><div class="body"><span class="tag">Request Quote</span><h3>General Trading</h3><p>Industrial and commercial supplies sourced across industries.</p><a class="btn btn-green" href="general-trading.html">Request a Quote</a></div></article>
+    </div>
+  </div>
+</div></section>
+<!-- Business Areas End -->
+
+<!-- =========================
+     Real Estate Start
+========================= -->
+<section class="sec alt"><div class="wrap">
+  <div class="head row"><div><p class="eyebrow">Real estate</p><h2>Featured properties on the market now</h2></div><a class="btn btn-outline" href="real-estate.html">View All Properties</a></div>
+  <div class="grid3">
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1512453979798-5ea266f8880c?q=80&w=1400&auto=format&fit=crop)"><span class="badge">For Rent</span></div><div class="body"><span class="tag">Apartment</span><h3>Marina Horizon 2-Bedroom Apartment</h3><p class="muted">Dubai Marina, Dubai</p><ul class="meta"><li>2 Beds</li><li>2 Baths</li><li>1,420 sq ft</li></ul><div class="actions"><button class="btn btn-green" data-enquiry="Real Estate: Marina Horizon 2-Bedroom Apartment">Enquire</button><a href="property-details.html">View Details</a></div></div></article>
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1518684079-3c830dcef090?q=80&w=1400&auto=format&fit=crop)"><span class="badge">For Sale</span></div><div class="body"><span class="tag">Villa</span><h3>Palm Signature Garden Villa</h3><p class="muted">Palm Jumeirah, Dubai</p><ul class="meta"><li>5 Beds</li><li>6 Baths</li><li>7,200 sq ft</li></ul><div class="actions"><button class="btn btn-green" data-enquiry="Real Estate: Palm Signature Garden Villa">Enquire</button><a href="property-details.html">View Details</a></div></div></article>
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=1400&auto=format&fit=crop)"><span class="badge">For Rent</span></div><div class="body"><span class="tag">Office</span><h3>Business Bay Canal-View Office Suite</h3><p class="muted">Business Bay, Dubai</p><ul class="meta"><li>Office</li><li>2 Baths</li><li>1,980 sq ft</li></ul><div class="actions"><button class="btn btn-green" data-enquiry="Real Estate: Business Bay Office Suite">Enquire</button><a href="property-details.html">View Details</a></div></div></article>
+  </div>
+</div></section>
+<!-- Real Estate End -->
+
+<!-- =========================
+     Car Rental Start
+========================= -->
+<section class="sec dark"><div class="wrap">
+  <div class="head row"><div><p class="eyebrow">Car rental</p><h2>On the road <span class="g">the same day</span></h2><p class="soft">Choose from a maintained fleet with daily, weekly and monthly rates. Documents kept simple, handover kept fast.</p></div><button class="btn btn-green" data-enquiry="Car Rental">Find a Rental Car</button></div>
+  <div class="grid3">
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1400&auto=format&fit=crop)"><span class="badge">Available</span></div><div class="body"><span class="tag">SUV</span><h3>Toyota Land Cruiser GXR</h3><ul class="meta"><li>Daily</li><li>Weekly</li><li>Monthly</li></ul><div class="actions"><button class="btn btn-green" data-enquiry="Car Rental: Toyota Land Cruiser GXR">Enquire</button><a href="car-details.html">View Details</a></div></div></article>
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1400&auto=format&fit=crop)"><span class="badge">Available</span></div><div class="body"><span class="tag">Luxury sedan</span><h3>Mercedes-Benz E 300</h3><ul class="meta"><li>Daily</li><li>Weekly</li><li>Monthly</li></ul><div class="actions"><button class="btn btn-green" data-enquiry="Car Rental: Mercedes-Benz E 300">Enquire</button><a href="car-details.html">View Details</a></div></div></article>
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?q=80&w=1400&auto=format&fit=crop)"><span class="badge">Available</span></div><div class="body"><span class="tag">Sports</span><h3>Porsche 911 Carrera</h3><ul class="meta"><li>Daily</li><li>Weekly</li><li>Monthly</li></ul><div class="actions"><button class="btn btn-green" data-enquiry="Car Rental: Porsche 911 Carrera">Enquire</button><a href="car-details.html">View Details</a></div></div></article>
+  </div>
+</div></section>
+<!-- Car Rental End -->
+
+<!-- =========================
+     Car Import & Export Start
+========================= -->
+<section class="sec"><div class="wrap split">
+  <div class="round" style="background-image:url(https://images.unsplash.com/photo-1578575437130-527eed3abbec?q=80&w=1400&auto=format&fit=crop)" role="img" aria-label="Container port"></div>
+  <div>
+    <p class="eyebrow">Car import &amp; export</p>
+    <h2>Vehicles moved from Dubai to the Gulf and Africa — handled end to end.</h2>
+    <p class="muted">We coordinate sourcing, documentation, shipping preparation and destination handover for vehicles exported out of Dubai.</p>
+    <ul class="check"><li>Vehicle sourcing</li><li>Export documentation</li><li>Shipping coordination</li><li>Gulf &amp; Africa routes</li><li>Enquiry support</li></ul>
+    <div class="btns"><button class="btn btn-green" data-enquiry="Car Import &amp; Export">Import / Export Enquiry</button><a class="btn btn-outline" href="car-import-export.html">Learn More</a></div>
+  </div>
+</div></section>
+<!-- Car Import & Export End -->
+
+<!-- =========================
+     Travel & Tourism Start
+========================= -->
+<section class="sec alt"><div class="wrap">
+  <div class="head row"><div><p class="eyebrow">Travel &amp; tourism</p><h2>Trips planned from the UAE, priced around you</h2></div><a class="btn btn-outline" href="tourism.html">View All Trips</a></div>
+  <div class="grid3">
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1514282401047-d79a71a590e8?q=80&w=1400&auto=format&fit=crop)"><span class="badge">Beach</span></div><div class="body"><h3>Maldives Overwater Escape</h3><p class="muted">Island resort stay with transfers, tailored to your dates.</p><strong class="price">Price on Request</strong><div class="actions"><button class="btn btn-green" data-enquiry="Tourism: Maldives Overwater Escape">Enquire</button><a href="tourism-details.html">View Package</a></div></div></article>
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?q=80&w=1400&auto=format&fit=crop)"><span class="badge">City</span></div><div class="body"><h3>Istanbul &amp; Cappadocia Discovery</h3><p class="muted">Historic city days paired with Cappadocia highlights.</p><strong class="price">Price on Request</strong><div class="actions"><button class="btn btn-green" data-enquiry="Tourism: Istanbul &amp; Cappadocia">Enquire</button><a href="tourism-details.html">View Package</a></div></div></article>
+    <article class="card"><div class="img" style="background-image:url(https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=1400&auto=format&fit=crop)"><span class="badge">Mountains</span></div><div class="body"><h3>Swiss Alps &amp; Lakes Journey</h3><p class="muted">Scenic rail, lakes and mountain stays across Switzerland.</p><strong class="price">Price on Request</strong><div class="actions"><button class="btn btn-green" data-enquiry="Tourism: Swiss Alps &amp; Lakes">Enquire</button><a href="tourism-details.html">View Package</a></div></div></article>
+  </div>
+</div></section>
+<!-- Travel & Tourism End -->
+
+<!-- =========================
+     General Trading Start
+========================= -->
+<section class="sec"><div class="wrap split rev">
+  <div>
+    <p class="eyebrow">General trading</p>
+    <h2>Sourcing across industries, quoted per requirement</h2>
+    <p class="muted">From industrial equipment to commercial supplies, tell us the specification and quantity and we will come back with a clear quote and delivery timeline.</p>
+    <ul class="check"><li>UAE &amp; international sourcing</li><li>Industrial products</li><li>Commercial supplies</li><li>Custom quotations</li><li>B2B support</li></ul>
+    <div class="btns"><button class="btn btn-green" data-enquiry="General Trading">Request a Quote</button><a class="btn btn-outline" href="general-trading.html">Browse Categories</a></div>
+  </div>
+  <div class="slant" style="background-image:url(https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1400&auto=format&fit=crop)" role="img" aria-label="Solar modules and industrial supply"></div>
+</div></section>
+<!-- General Trading End -->
+
+<!-- =========================
+     Why dgnova Start
+========================= -->
+<section class="sec alt"><div class="wrap">
+  <div class="head center"><p class="eyebrow">Why dgnova</p><h2>New name, experienced hands</h2><p class="muted">We won't show you invented numbers or borrowed praise. What we can promise is how we work.</p></div>
+  <div class="grid4">
+    <div class="value"><span class="ico">◆</span><h3>Reliable UAE-based support</h3><p>Local knowledge, realistic timelines and clear answers.</p></div>
+    <div class="value"><span class="ico">◆</span><h3>Multi-service capability</h3><p>Combine property, travel, vehicles and sourcing in one conversation.</p></div>
+    <div class="value"><span class="ico">◆</span><h3>B2B &amp; B2C experience</h3><p>Individuals and companies get the same careful handling.</p></div>
+    <div class="value"><span class="ico">◆</span><h3>Single point of contact</h3><p>One team coordinates your request from first message to handover.</p></div>
+  </div>
+</div></section>
+<!-- Why dgnova End -->
+
+<!-- =========================
+     Process Start
+========================= -->
+<section class="sec"><div class="wrap">
+  <div class="head"><p class="eyebrow">How it works</p><h2>From enquiry to handover in four steps</h2></div>
+  <ol class="grid4 steps">
+    <li><b>01</b><h3>Tell us what you need</h3><p>Send an enquiry through any page or the form.</p></li>
+    <li><b>02</b><h3>We confirm the details</h3><p>We check options, requirements and budget.</p></li>
+    <li><b>03</b><h3>You approve the solution</h3><p>Review a clear proposal and choose what suits you.</p></li>
+    <li><b>04</b><h3>We coordinate handover</h3><p>dgnova manages delivery until it is complete.</p></li>
+  </ol>
+</div></section>
+<!-- Process End -->
+
+<!-- =========================
+     Testimonials Start
+========================= -->
+<section class="sec dark"><div class="wrap split">
+  <div><p class="eyebrow">Client feedback</p><h2>What our customers say</h2><p class="soft">Real customer reviews will appear here once collected.</p></div>
+  <div class="grid2">
+    <blockquote class="quote"><p>[Placeholder — replace with a real customer testimonial.]</p><footer>Customer name · Customer type</footer></blockquote>
+    <blockquote class="quote"><p>[Placeholder — replace with a real customer testimonial.]</p><footer>Customer name · Customer type</footer></blockquote>
+  </div>
+</div></section>
+<!-- Testimonials End -->
+
+<!-- =========================
+     FAQ Start
+========================= -->
+<section class="sec"><div class="wrap split">
+  <div><p class="eyebrow">Questions</p><h2>Before you enquire</h2><p class="muted">The answers to what we're asked most often. Need more? Visit the full FAQ page.</p><a class="btn btn-green" href="faq.html">All FAQs</a></div>
+  <div class="faq">
+    <div class="acc"><h3><button aria-expanded="true" aria-controls="f1">Do you serve both businesses and individuals?</button></h3><div id="f1" class="ans"><p>Yes. We handle personal and company requests across all five divisions.</p></div></div>
+    <div class="acc"><h3><button aria-expanded="false" aria-controls="f2">Can I request multiple services together?</button></h3><div id="f2" class="ans" hidden><p>Yes. One enquiry reaches every division, so combined requests are coordinated by one team.</p></div></div>
+    <div class="acc"><h3><button aria-expanded="false" aria-controls="f3">How does your enquiry process work?</button></h3><div id="f3" class="ans" hidden><p>Send your details; we confirm requirements, share options and coordinate next steps.</p></div></div>
+    <div class="acc"><h3><button aria-expanded="false" aria-controls="f4">Can you assist with international vehicle exports?</button></h3><div id="f4" class="ans" hidden><p>Yes. We export vehicles from Dubai, primarily to Gulf countries and African markets.</p></div></div>
+  </div>
+</div></section>
+<!-- FAQ End -->
+
+<!-- =========================
+     Final CTA Start
+========================= -->
+<section class="cta"><div class="wrap row">
+  <div><h2>Tell us what you're looking for.</h2><p class="soft">One message reaches all five divisions. We'll route it to the right team and come back with clear next steps.</p></div>
+  <div class="btns"><button class="btn btn-green" data-enquiry="General">Send Enquiry</button><a class="btn btn-outline-light" href="contact.html">Contact Us</a></div>
+</div></section>
+<!-- Final CTA End -->
+</main>
+
+<!-- =========================
+     Footer Start
+========================= -->
+<footer class="footer"><div class="wrap fgrid">
+  <div><a class="logo light" href="index.html">
+        <img src="../images/logo.svg" width="170px"></a><p>A UAE-based company serving individuals and businesses across property, mobility, travel and trade.</p></div>
+  <div><h4>Quick Links</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="faq.html">FAQs</a><a href="contact.html">Contact</a></div>
+  <div><h4>Services</h4><a href="real-estate.html">Real Estate</a><a href="car-rental.html">Car Rental</a><a href="car-import-export.html">Car Import &amp; Export</a><a href="tourism.html">Tourism</a><a href="general-trading.html">General Trading</a></div>
+  <div><h4>Contact</h4><p>Dubai, United Arab Emirates</p><p>+971 00 000 0000</p><p>info@dgnova.com</p></div>
+</div>
+<div class="wrap copy"><span>© 2026 dgnova. All rights reserved.</span><span><a href="#">Privacy Policy</a> · <a href="#">Terms</a></span></div></footer>
+<!-- Footer End -->
+
+<!-- =========================
+     Enquiry Modal Start
+========================= -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mt" hidden>
+  <div class="mbox">
+    <button class="mclose" aria-label="Close">&times;</button>
+    <h2 id="mt">Send an enquiry</h2>
+    <form id="enqForm">
+      <input type="hidden" name="source" id="source">
+      <p class="srcline">Source: <strong id="srcTxt"></strong></p>
+      <label>Name<input name="name" required autocomplete="name"></label>
+      <label>Email<input type="email" name="email" required autocomplete="email"></label>
+      <label>Phone<input type="tel" name="phone" autocomplete="tel"></label>
+      <label>Message<textarea name="message" rows="3"></textarea></label>
+      <button class="btn btn-green" type="submit">Send Enquiry</button>
+      <p class="ok" id="ok" hidden>Thank you. Your enquiry has been recorded.</p>
+    </form>
+  </div>
+</div>
+<!-- Enquiry Modal End -->
+
+<script>
+/* dgnova shared scripts */
+(function () {
+  'use strict';
+  var $ = function (s, c) { return (c || document).querySelector(s); };
+  var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
+
+  // Mobile menu
+  var burger = $('.burger'), nav = $('#nav');
+  if (burger && nav) {
+    burger.addEventListener('click', function () {
+      var open = nav.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open);
+    });
+  }
+
+  // Business area tabs
+  var tabs = $$('.tabs [role=tab]'), panels = $$('.panel');
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      tabs.forEach(function (b) { b.setAttribute('aria-selected', b === t); });
+      panels.forEach(function (p) { p.hidden = p.getAttribute('data-panel') !== t.getAttribute('data-tab'); });
+    });
+  });
+
+  // FAQ accordion
+  $$('.acc button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var open = b.getAttribute('aria-expanded') === 'true';
+      b.setAttribute('aria-expanded', !open);
+      document.getElementById(b.getAttribute('aria-controls')).hidden = open;
+    });
+  });
+
+  // Enquiry modal: keeps source reference automatically
+  var modal = $('#modal'), last;
+  function openModal(src, trigger) {
+    last = trigger;
+    $('#source').value = src;
+    $('#srcTxt').textContent = src;
+    $('#ok').hidden = true;
+    modal.hidden = false;
+    $('input[name=name]', modal).focus();
+  }
+  function closeModal() { modal.hidden = true; if (last) last.focus(); }
+  $$('[data-enquiry]').forEach(function (b) {
+    b.addEventListener('click', function () { openModal(b.getAttribute('data-enquiry'), b); });
+  });
+  $('.mclose').addEventListener('click', closeModal);
+  modal.addEventListener('click', function (e) { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
+  $('#enqForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    // TODO: connect to the existing enquiry endpoint, sending the "source" field with the form data.
+    $('#ok').hidden = false;
+    e.target.reset();
+    $('#source').value = $('#srcTxt').textContent;
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+/* ============================================================
+   dgnova — responsive.css
+   Breakpoint behaviour layered over style.css
+   ============================================================ */
+
+/* ---------- Large desktop refinements ---------- */
+@media (min-width: 1400px) {
+  .hero-home { min-height: 82vh; }
+}
+
+/* ---------- Below 1200px ---------- */
+@media (max-width: 1199.98px) {
+  .nav-primary { gap: 1.15rem; }
+  .nav-primary .nav-link { font-size: 0.9rem; }
+  .division-grid { gap: 1rem; }
+  .hero-visual { transform: scale(.94); transform-origin: right center; }
+}
+
+/* ---------- Below 992px : tablet / nav collapse ---------- */
+@media (max-width: 991.98px) {
+  :root { --header-h: 68px; --header-h-compact: 60px; --section-spacing: clamp(4rem, 8vw, 5.5rem); --section-spacing-sm: clamp(3rem, 6vw, 4rem); }
+  .container-xl { padding-inline: 1.75rem; }
+  .hero-home { min-height: 0; }
+
+  .nav-primary, .main-nav .btn-conversion.d-desktop-cta { display: none !important; }
+  .nav-toggle { display: inline-flex; }
+
+  .utility-bar .utility-nav { display: none; }
+
+  /* Hero */
+  .hero-home { min-height: 0; padding: 3.25rem 0 3rem; }
+  .hero-home .row { row-gap: 2.5rem; }
+  .hero-visual { transform: none; margin-top: .5rem; }
+
+  /* Division editorial grid stacks to 2-col rhythm */
+  .division-grid { grid-template-columns: repeat(2, 1fr); }
+  .division-card--tall { grid-column: span 1; grid-row: span 1; min-height: 300px; }
+  .division-card--wide { grid-column: span 2; min-height: 260px; }
+  .division-card--third { grid-column: span 1; min-height: 260px; }
+
+  /* Split media */
+  .split-media { gap: 2.25rem; }
+  .split-media--offset .sm-frame { display: none; }
+
+  /* Process */
+  .process-row, .process-row--5, .process-row--6 { grid-template-columns: repeat(2, 1fr); row-gap: 2rem; }
+  .process-step::after { display: none; }
+
+  /* Detail layout: sidebar drops inline */
+  .detail-layout { grid-template-columns: 1fr; }
+  .sticky-side { position: static; top: auto; }
+
+  .spec-grid { grid-template-columns: repeat(2, 1fr); }
+  .amenity-list { grid-template-columns: repeat(2, 1fr); }
+  .incl-excl { grid-template-columns: 1fr; }
+  .rate-cards { grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+
+  .footer-grid { grid-template-columns: 1fr 1fr; row-gap: 2.25rem; }
+}
+
+/* ---------- Below 768px : mobile ---------- */
+@media (max-width: 767.98px) {
+  :root { --section-spacing: clamp(4rem, 12vw, 5.5rem); }
+  body { padding-bottom: 76px; } /* room for fixed mobile action bar */
+  .container-xl { padding-inline: 1.25rem; }
+  .hero-home h1 { font-size: clamp(2.25rem, 9.5vw, 2.75rem); max-width: none; }
+  .hero-home::after { display: none; }
+  .section-head h2 { letter-spacing: -0.025em; }
+  .cta-band .cb-inner { padding: 3.6rem 0; }
+
+  .utility-bar { font-size: .78rem; }
+  .utility-bar .utility-contact a span.u-hide-sm { display: none; }
+
+  /* Filters: hide desktop panel + toolbar sort, show mobile bar */
+  .filter-panel { display: none; }
+  .listing-toolbar .sort-group { display: none; }
+  .mobile-filter-bar { display: flex; }
+
+  /* Mobile conversion bar on, floating WhatsApp off */
+  .mobile-action-bar { display: flex; }
+  .float-whatsapp { display: none !important; }
+  .back-top { bottom: 92px; }
+
+  /* Galleries: mosaic → swipe strip */
+  .gallery-mosaic { display: none; }
+  .gallery-strip { display: flex; }
+
+  /* Section heads */
+  .section-head-row { flex-direction: column; align-items: flex-start; gap: .9rem; }
+
+  /* Division grid single column */
+  .division-grid { grid-template-columns: 1fr; }
+  .division-card--wide, .division-card--third { grid-column: span 1; }
+  .division-card, .division-card--tall { min-height: 250px; }
+
+  /* Process vertical */
+  .process-row, .process-row--5, .process-row--6 { grid-template-columns: 1fr; }
+  .process-step { display: grid; grid-template-columns: auto 1fr; column-gap: 1.1rem; }
+  .process-step .ps-num { margin-bottom: 0; }
+  .process-step h3, .process-step p { grid-column: 2; }
+
+  /* Cards + toolbars */
+  .listing-toolbar { flex-direction: column; align-items: flex-start; gap: .75rem; }
+
+  .rate-cards { grid-template-columns: 1fr; }
+  .spec-grid { grid-template-columns: 1fr 1fr; }
+  .amenity-list { grid-template-columns: 1fr; }
+
+  .detail-topbar { flex-direction: column; align-items: flex-start; gap: .8rem; }
+  .detail-head { flex-direction: column; align-items: flex-start; gap: .75rem; }
+
+  .cta-band { text-align: left; }
+  .cta-band .cta-actions { justify-content: flex-start; }
+
+  .footer-grid { grid-template-columns: 1fr; }
+  .footer-bottom { flex-direction: column; gap: .6rem; align-items: flex-start; }
+
+  .hero-eyebrow { font-size: .78rem; }
+
+  .purpose-toggle { width: 100%; }
+  .purpose-toggle button { flex: 1; }
+
+  .lightbox .lb-prev { left: .6rem; }
+  .lightbox .lb-next { right: .6rem; }
+}
+
+/* ---------- Small phones ---------- */
+@media (max-width: 479.98px) {
+  .brand-wordmark .brand-name { font-size: 1.2rem; letter-spacing: .13em; }
+  .hero-home h1 { font-size: clamp(2.1rem, 10vw, 2.4rem); }
+  .btn { padding-inline: 1.1rem; }
+  .hero-actions { flex-direction: column; align-items: stretch; }
+  .hero-actions .btn { width: 100%; }
+  .spec-grid { grid-template-columns: 1fr; }
+  .chip-row { overflow-x: auto; flex-wrap: nowrap; padding-bottom: .35rem; -webkit-overflow-scrolling: touch; }
+  .chip-row::-webkit-scrollbar { display: none; }
+}
+
+/* ---------- Desktop-only helpers ---------- */
+@media (min-width: 768px) {
+  .mobile-filter-bar, .mobile-action-bar { display: none !important; }
+  .gallery-strip { display: none; }
+}
+@media (min-width: 992px) {
+  .offcanvas-nav { display: none; }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  .utility-bar, .site-header, .mobile-action-bar, .float-whatsapp, .back-top,
+  .cta-band, .site-footer, .filter-panel, .mobile-filter-bar { display: none !important; }
+  body { padding-bottom: 0; }
+}
+
+
+/* Filter panel overlap guard on tablets */
+@media (max-width: 991.98px) {
+  .filter-panel { margin-top: -2.4rem; }
+}
+
+/* ============================================================
+   Organic redesign — responsive guards
+   ============================================================ */
+@media (max-width: 991.98px) {
+    .deco-rings-br::after { width: 160px; height: 160px; right: -50px; bottom: -50px; }
+    .deco-blob-r::after { width: 260px; height: 260px; }
+    .split-wrap::after { width: 96px; height: 96px; }
+}
+
+@media (max-width: 767.98px) {
+    /* Decorations off — clean mobile canvas, no overflow */
+    .deco-curve-left::before,
+    .deco-rings-br::after,
+    .deco-dots-tr::before,
+    .deco-blob-r::after,
+    .hero-visual::before,
+    .hero-visual::after,
+    .hero-visual .hv-frame,
+    .split-wrap::before,
+    .split-wrap::after,
+    .cta-band .cb-inner::before,
+    .cta-band .cb-inner::after,
+    .section-navy::after,
+    .site-footer::before,
+    .row > div:first-child > .info-card::after,
+    .info-card--accent::after {
+        display: none;
+    }
+
+    /* Simplified organic masks on small screens */
+    .hero-visual .hv-main {
+        width: 100%;
+        aspect-ratio: 16 / 11;
+        border-radius: 22px 22px 22px 60px;
+    }
+    .split-media { border-radius: 20px 20px 20px 56px; }
+    .split-media img { aspect-ratio: 16 / 10 !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .d-card, .d-card img, .btn, .division-card img { transition: none !important; }
+}

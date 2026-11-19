@@ -1,0 +1,302 @@
+@extends('web.includes.master')
+
+@section('addStyle')
+    <link href="{{URL::to('/public')}}/assets/css/service.css" rel="stylesheet">
+@endsection
+@section('content')
+
+    <main class="main">
+
+        
+        
+        <!-- Page Title -->
+          <div class="page-title dark-background" data-aos="fade" style="background-image: url('{{URL::to('public/assets/img/service-new/'.$subservice->slug.'.jpg')}}');">
+            <div class="container head-container-service">
+                <div class="row">
+                    <div class="col-lg-8 head-para-service">
+                        <h1>&#10687; {{$subservice->name}}</h1>
+                        <h2>Proven SEO Results</h2>
+                        <h4>That Drive Real Business Growth</h4>
+                        <br>
+                        <p>
+                            At DataMySite, we believe results speak louder than words. From global e-commerce brands to local legal service providers, we’ve helped businesses across multiple industries improve their online visibility, generate high-converting traffic, and dominate the search results.
+                            <br>
+                            Explore a selection of our SEO success stories below — each tailored with strategy, precision, and a results-first mindset.
+                        </p>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="aside-form">
+                            
+                            <form action="{{route('enquiry.submit')}}" id="enquiry-form">
+                                @csrf
+                                <input type="hidden" name="service" value="{{$subservice->name}}" required>
+                                <div class="form1-wrapper">
+                                    <div class="form1-bg">
+                                      <h2 class="form1-headline">Ready to Get <span>Results?</span></h2>
+                                      <p class="form1-sub">Drop us your details — our experts respond within 60 minutes.</p>
+
+                                      <div class="form1-field">
+                                        <input type="text" placeholder="Your Full Name" name="name" required>
+                                      </div>
+
+                                      <div class="form1-field">
+                                          <input type="tel" class="form-control" name="mainphone" id="phone-field2" required="">
+                                          <input type="hidden" name="phone" id="fullphone-field2" required="">
+                                      </div>
+
+                                      <div class="form1-field">
+                                        <input type="email" placeholder="Your Email Address" class="aside-email" name="email" required>
+                                      </div>
+
+                                      <div class="form1-field">
+                                        <textarea class="form1-textarea" name="description" placeholder="Tell us what you need — the more detail, the better we can help." required></textarea>
+                                      </div>
+
+                                      <button class="form1-btn" type="submit">
+                                        Get Free Consultation
+                                        <span class="form1-btn-arrow">→</span>
+                                      </button>
+
+                                      <div class="form1-trust">
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                                          No spam, ever
+                                        </div>
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                          Reply in 60 min
+                                        </div>
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                          100% Private
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="loading"><img src="{{URL::to('/public/loader-gif.gif')}}" width="80px" class="newsletter-loader"></div>
+                            
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+        </div><!-- End Page Title -->
+
+
+        
+
+        <div class="">
+                @include('web.includes.elements.clients')
+        </div>
+
+
+        <section id="service-cards" class="blog-section section  section-striped">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+                <div class="col-lg-6">
+                    <div class="case-studies-item">
+                        <img src="{{URL::to('/public/case1.jpg')}}" width="100%">
+                        <h3><strong>Blunt Umbrella</strong> – E-commerce  <a href="https://bluntumbrellas.com" target="_blank">Visit Site</a></h3>
+                        <h6>Engagement Duration: <strong>3 Years</strong></h6>
+                        <p>Blunt Umbrella, a premium global brand renowned for high-performance umbrellas, approached us with technical SEO issues and low organic conversions. Our work included a full technical audit, optimization of key product/category pages, and schema implementation.</p>
+                        <h5>Top Ranking Keywords:</h5>
+                        <table class="table">
+                            <tr>
+                                <td>“windproof umbrella”</td>
+                                <td class="text-right"><span>2</span></td>
+                            </tr>
+                            <tr>
+                                <td>“designer umbrella NZ”</td>
+                                <td class="text-right"><span>1</span></td>
+                            </tr>
+                            <tr>
+                                <td>“high quality umbrellas”</td>
+                                <td class="text-right"><span>3</span></td>
+                            </tr>
+                        </table>
+                        <h5>Key Results:</h5>
+                        <ul>
+                            <li><font style="color:green; font-weight: bold;">175%</font> increase in organic traffic</li>
+                            <li><font style="color:green; font-weight: bold;">3x</font> improvement in conversion rate</li>
+                            <li><font style="color:green; font-weight: bold;">40+</font> commercial-intent keywords ranking on Google’s first page</li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <img src="{{URL::to('/public/case-studies.png')}}" alt="SEO Case Studies" width="100%">
+                </div>
+                <div class="col-lg-6">
+                    <div class="case-studies-item">
+                        <img src="{{URL::to('/public/case2.jpg')}}" width="100%">
+                        <h3><strong>Injury Specialists Direct</strong> – Lead Gen.  <a href="https://injury-specialists-direct.com" target="_blank">Visit Site</a></h3>
+                        <h6>Engagement Duration: <strong>2 Years</strong></h6>
+                        <p>This UK-based legal firm partnered with us from scratch to build a fully functional, SEO-optimized website targeting high-value legal leads. Our approach included keyword mapping, content strategy, local SEO, and technical enhancements.</p>
+                        <h5>Top Ranking Keywords:</h5>
+                        <table class="table">
+                            <tr>
+                                <td>“injury claim specialists UK”</td>
+                                <td class="text-right"><span>1</span></td>
+                            </tr>
+                            <tr>
+                                <td>“no win no fee solicitors”</td>
+                                <td class="text-right"><span>5</span></td>
+                            </tr>
+                            <tr>
+                                <td>“personal injury compensation claims”</td>
+                                <td class="text-right"><span>3</span></td>
+                            </tr>
+                        </table>
+                        <h5>Key Results:</h5>
+                        <ul>
+                            <li><font style="color:green; font-weight: bold;">320%</font> growth in organic traffic</li>
+                            <li>Steady lead generation via SEO forms</li>
+                            <li>Top 5 rankings for 20+ legal terms</li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="case-studies-item">
+                        <img src="{{URL::to('/public/case3.jpg')}}" width="100%">
+                        <h3><strong>TechHive Solutions</strong> – B2B / SaaS  <a href="https://www.techhivesolutions.com" target="_blank">Visit Site</a></h3>
+                        <h6>Engagement Duration: <strong>1 Year</strong></h6>
+                        <p>TechHive Solutions needed to increase qualified leads for its IT services. We focused on targeted content around managed IT and SaaS solutions, improved internal linking, and built backlinks from high-authority tech sites.</p>
+                        <h5>Top Ranking Keywords:</h5>
+                        <table class="table">
+                            <tr>
+                                <td>“managed IT services USA”</td>
+                                <td class="text-right"><span>4</span></td>
+                            </tr>
+                            <tr>
+                                <td>“SaaS development company”</td>
+                                <td class="text-right"><span>6</span></td>
+                            </tr>
+                            <tr>
+                                <td>“custom CRM software provider”</td>
+                                <td class="text-right"><span>3</span></td>
+                            </tr>
+                        </table>
+                        <h5>Key Results:</h5>
+                        <ul>
+                            <li><font style="color:green; font-weight: bold;">85%</font> increase in monthly organic traffic</li>
+                            <li><font style="color:green; font-weight: bold;">50+</font> backlinks from authoritative tech domains</li>
+                            <li>Surge in demo inquiries through SEO-optimized landing pages</li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="case-studies-item">
+                        <img src="{{URL::to('/public/case4.jpg')}}" width="100%">
+                        <h3><strong>Housing Disrepair</strong> – Legal Services  <a href="https://housing-disrepair.org" target="_blank">Visit Site</a></h3>
+                        <h6>Engagement Duration: <strong>1.5 Years</strong></h6>
+                        <p>We helped this UK-based legal service provider break into a competitive, regulated space. Our SEO strategy included local landing pages, topical authority clusters, and a heavy focus on high-converting legal keywords.</p>
+                        <h5>Top Ranking Keywords:</h5>
+                        <table class="table">
+                            <tr>
+                                <td>“housing disrepair solicitors UK”</td>
+                                <td class="text-right"><span>2</span></td>
+                            </tr>
+                            <tr>
+                                <td>“claim compensation for housing disrepair”</td>
+                                <td class="text-right"><span>3</span></td>
+                            </tr>
+                            <tr>
+                                <td>“tenant rights housing UK”</td>
+                                <td class="text-right"><span>4</span></td>
+                            </tr>
+                        </table>
+                        <h5>Key Results:</h5>
+                        <ul>
+                            <li><font style="color:green; font-weight: bold;">280%</font> growth in organic leads</li>
+                            <li><font style="color:green; font-weight: bold;">30+</font> legal keywords ranking on page 1</li>
+                            <li>High-converting pages with lead form integration</li>
+                        </ul>
+
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="case-studies-item">
+                        <img src="{{URL::to('/public/case5.jpg')}}" width="100%">
+                        <h3><strong>MoneySavingExpert</strong> – Finance <a href="https://www.moneysavingexpert.com" target="_blank">Visit Site</a></h3>
+                        <h6>Engagement Duration: <strong>Ongoing (Consulting)</strong></h6>
+                        <p>As one of the UK’s largest consumer finance websites, MoneySavingExpert required expert-level SEO support to fine-tune content structure, enhance E-E-A-T, and increase visibility in featured snippets.</p>
+                        <h5>Top Ranking Keywords:</h5>
+                        <table class="table">
+                            <tr>
+                                <td>“best credit card deals UK”</td>
+                                <td class="text-right"><span>1</span></td>
+                            </tr>
+                            <tr>
+                                <td>“how to save money on bills”</td>
+                                <td class="text-right"><span>2</span></td>
+                            </tr>
+                            <tr>
+                                <td>“PPI claims UK”</td>
+                                <td class="text-right"><span>1</span></td>
+                            </tr>
+                        </table>
+                        <h5>Key Results:</h5>
+                        <ul>
+                            <li>Improved SERP performance via schema and FAQ markup</li>
+                            <li>Enhanced on-page SEO and content authority</li>
+                            <li>Boosted CTR across several high-volume pages</li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section id="service-cards" class="blog-section section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-12">
+                    <h3>Ready to Be Our Next Success Story?</h3>
+                    <div class="row services gy-4">
+                        <div class="col-lg-7">
+                            <p>At DataMySite, we don’t follow cookie-cutter SEO plans — we design personalized strategies that solve your business challenges and deliver measurable results. Whether you're in e-commerce, SaaS, legal, or local service-based industries, our SEO solutions are built to scale with your business.</p>
+
+                            <p><strong>Your journey starts with free consultation.</strong></p>
+
+                            @include('web.includes.elements.contact')
+                        </div>
+
+                        <div class="col-lg-5">
+
+                            <div class="web-form-div">
+                                <h4>Results You Can Expect:</h4>
+                                <ul>
+                                    <li>Faster indexing & ranking</li>
+                                    <li>Improved website loading speed</li>
+                                    <li>Better Google Core Web Vitals scores</li>
+                                    <li>Higher visibility in search results</li>
+                                    <li>Improved mobile and desktop performance</li>
+
+                                </ul>
+
+                                <h5>Want a website that actually drives business? <br><a href="javascript:void(0)" class="scroll-up">Let’s Talk</a>!</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+    </main>
+
+
+@endsection

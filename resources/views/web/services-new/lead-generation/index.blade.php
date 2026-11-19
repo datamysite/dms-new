@@ -1,0 +1,522 @@
+@extends('web.includes.master')
+@section('metaAddition')
+    
+@endsection
+@section('addStyle')
+    <link href="{{URL::to('/public')}}/assets/css/service.css" rel="stylesheet">
+    <style>
+        #serviceVideo{
+            position: absolute;
+              right: 0;
+              bottom: 0;
+              min-width: 100%; 
+              min-height: 100vh;
+              object-fit: cover;
+        }
+    </style>
+@endsection
+@section('content')
+
+    <main class="main">
+
+        <!-- Page Title -->
+          <div class="page-title dark-background" data-aos="fade" style="background-image: url('{{URL::to('public/assets/img/service-new/'.$service->slug.'.jpg')}}');">
+            <div class="container head-container-service">
+                <div class="row">
+                    <div class="col-lg-8 head-para-service">
+                        <h1>Lead Generation Services in Dubai</h1>
+                        <h2>We Specialize in</h2>
+                        <h5>lead generation services in Dubai and across the UAE</h5>
+                        <br>
+                        <p>
+                            Pay-per-lead pricing in Dubai ranges from AED 30 for home services to AED 400 for B2B and SaaS, with real estate averaging AED 80-250 per qualified lead. You pay only for delivered leads that match agreed criteria - no retainers, no wasted spend. Below: 2026 CPL benchmarks by industry and how our pay-per-lead model works.
+                        </p>
+                        <span><strong>Get Qualified Leads → · <a href="https://api.whatsapp.com/send/?phone=971525287259" target="_blank">WhatsApp: +971 52 528 7259</a></strong></span>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="aside-form">
+                            
+                            <form action="{{route('enquiry.submit')}}" id="enquiry-form">
+                                @csrf
+                                <input type="hidden" name="service" value="{{$service->name}}" required>
+                                <div class="form1-wrapper">
+                                    <div class="form1-bg">
+                                      <h2 class="form1-headline">Ready to Get <span>Results?</span></h2>
+                                      <p class="form1-sub">Drop us your details — our experts respond within 60 minutes.</p>
+
+                                      <div class="form1-field">
+                                        <input type="text" placeholder="Your Full Name" name="name" required>
+                                      </div>
+
+                                      <div class="form1-field">
+                                          <input type="tel" class="form-control" name="mainphone" id="phone-field2" required="">
+                                          <input type="hidden" name="phone" id="fullphone-field2" required="">
+                                      </div>
+
+                                      <div class="form1-field">
+                                        <input type="email" placeholder="Your Email Address" class="aside-email" name="email" required>
+                                      </div>
+
+                                      <div class="form1-field">
+                                        <textarea class="form1-textarea" name="description" placeholder="Tell us what you need — the more detail, the better we can help." required></textarea>
+                                      </div>
+
+                                      <button class="form1-btn" type="submit">
+                                        Get Free Consultation
+                                        <span class="form1-btn-arrow">→</span>
+                                      </button>
+
+                                      <div class="form1-trust">
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+                                          No spam, ever
+                                        </div>
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                          Reply in 60 min
+                                        </div>
+                                        <div class="form1-trust-item">
+                                          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                                          100% Private
+                                        </div>
+                                      </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <div class="loading"><img src="{{URL::to('/public/loader-gif.gif')}}" width="80px" class="newsletter-loader"></div>
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+          </div><!-- End Page Title -->
+
+        
+        <div class="container">
+            <section class="hub-guides">
+                <h2>Lead generation guides</h2>
+                <ul>
+                    <li><a href="/how-to-get-leads-for-real-estate-in-dubai-full-guide">How to get real estate leads in Dubai</a></li>
+                    <li><a href="/content-marketing-dubai-generate-leads">Generating leads with content marketing</a></li>
+                    <li><a href="/lead-generation/cost-per-lead">Cost per lead benchmarks for Dubai</a></li>
+                </ul>
+            </section>
+        </div>
+
+        <section id="service-cards" class="blog-section section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-12" data-aos="fade-up" data-aos-delay="100">
+                </div>
+                <div class="col-lg-7">
+                    <h4>Why Lead Generation is Critical for Businesses in Dubai</h4>
+                    <p>
+                        Dubai is a commercial hub with a diverse population, including expatriates and locals from over 200 nationalities. While this presents a massive opportunity, it also means the market is highly competitive. Many businesses rely on traditional marketing methods like billboards, print ads, and social media campaigns, but these often generate traffic without guaranteed conversions.
+                        <br>
+                        Lead generation solves this problem by:
+                    </p>
+                    <ul>
+                        <li><strong>Focusing on quality over quantity</strong>: Capture leads who are genuinely interested in your offerings.</li>
+
+
+                        <li><strong>Reducing acquisition costs</strong>: A well-optimized lead generation strategy lowers marketing spend per customer.</li>
+
+
+                        <li><strong>Increasing conversion potential</strong>: Engaged leads are more likely to become paying customers.</li>
+
+
+                        <li><strong>Building a predictable sales pipeline</strong>: Consistent lead flow allows businesses to forecast revenue accurately.</li>
+                    </ul>
+                    <div class="faq " id="accordion">
+                        @foreach($subservices as $key => $val)
+                            @php $s = $key; @endphp
+                            <div class="card">
+                                <div class="card-header" id="faqHeading-{{$s}}">
+                                    <div class="mb-0">
+                                        <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-{{$s}}" data-aria-expanded="true" data-aria-controls="faqCollapse-{{$s}}">
+                                            <i class="{{$val->icon}}"></i> &nbsp; {{$val->name}}
+                                        </h5>
+                                    </div>
+                                </div>
+                                <div id="faqCollapse-{{$s}}" class="collapse" aria-labelledby="faqHeading-{{$s}}" data-parent="#accordion">
+                                    <div class="card-body">
+                                        <p>{{$val->description}}</p>
+                                        <a href="{{URL::to('/'.$service->slug.'/'.$val->slug)}}" class="readmore stretched-link"><span>Learn More</span><i class="bi bi-arrow-right"></i></a>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                    <p>In short, Dubai businesses need more than traffic; they need qualified leads, and that’s where DataMySite excels.</p>
+                </div>  
+                <div class="col-lg-5 vertical-center">
+                    <iframe class="service-iframe transit-iframe" src="https://www.youtube.com/embed/zrKP3REbO7Y?si=qafY5PwxtYi86Z6q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <div id="testimonials" class="striped-section">
+          @include('web.includes.elements.clients')
+        </div>
+
+
+
+        <section id="testimonials" class="testimonials case-studies-section section">
+           @include('web.includes.elements.case-studies')
+        </section>
+
+
+         <section id="service-cards" class="blog-section striped-section section pr-impact-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row outdoor-service-col-section">
+
+                <div class="col-lg-12">
+                    <h4>Our Comprehensive Lead Generation Approach</h4>
+                    <p>At DataMySite, we follow a data-driven, multi-channel strategy to generate leads that convert. Here’s how we do it:</p>
+                    
+                </div> 
+                <div class="col-lg-6">
+                    <h5 class="text-theme">In-Depth Strategy & Audience Research</h5>
+                    <p>
+                        Every lead generation campaign begins with understanding your business, goals, and audience. We:
+                    </p>
+                    <ul>
+                        <li>Define ideal customer personas (demographics, interests, profession, nationality, location).</li>
+
+
+                        <li>Analyze competitor strategies in Dubai and UAE.</li>
+
+
+                        <li>Identify high-intent keywords and phrases your target audience searches for online.</li>
+
+
+                        <li>Determine the most effective channels to reach your prospects — search engines, social media, email, or offline campaigns.</li>
+                    </ul>
+                    <p>This ensures that every lead we generate is highly targeted and relevant.</p>
+                </div>
+                <div class="col-lg-6">
+                    <h5 class="text-theme">Customized Lead Capture Systems</h5>
+                    <p>
+                        We design high-converting lead capture solutions tailored for your Dubai audience:
+                    </p>
+                    <ul>
+                        <li><strong>Landing Pages</strong>: Optimized for speed, mobile-friendliness, and user experience.</li>
+
+
+                        <li><strong>Forms</strong>: Clear, simple, and persuasive forms designed to capture essential information without losing prospects.</li>
+
+
+                        <li><strong>Calls-to-Action (CTA)</strong>: Strategically placed to encourage action, such as “Get a Free Quote” or “Book a Consultation.”</li>
+                    </ul>
+                    <p>We also ensure that every lead is integrated into your CRM or marketing automation system for efficient follow-up.</p>
+                </div>
+                <div class="col-lg-6">
+                    <h5 class="text-theme">Multi-Channel Lead Generation</h5>
+                    <p>
+                        Our campaigns leverage multiple channels to maximize reach and results:
+                    </p>
+                    <ol>
+                        <li>
+                            <strong>Paid Advertising:</strong>
+                            <ul>
+                                <li>Google Ads: Target users actively searching for your products/services in Dubai.</li>
+
+
+                                <li>Meta Ads (Facebook & Instagram): Geo-targeted campaigns for UAE users.</li>
+
+
+                                <li>LinkedIn Ads: Perfect for B2B lead generation targeting decision-makers.</li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Organic Channels:</strong>
+                            <ul>
+                                <li>Local SEO: Optimizing your website for Dubai/UAE-specific searches.</li>
+
+
+                                <li>Content Marketing: Engaging blog posts, guides, and case studies designed to attract leads.</li>
+
+
+                                <li>Social Media: Organic campaigns to build trust and engagement.</li>
+
+                            </ul>
+                        </li>
+                        <li>
+                            <strong>Community & Offline Integration:</strong>
+                            <ul>
+                                <li>WhatsApp campaigns, email outreach, and directory listings in Dubai.</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p>This multi-channel approach ensures maximum visibility and lead capture across all relevant platforms.</p>
+                </div>
+                <div class="col-lg-6">
+                    <h5 class="text-theme">Lead Qualification & Nurturing</h5>
+                    <p>
+                        Not all leads are created equal. We implement a qualification system to prioritize:
+                    </p>
+                    <ul>
+                        <li><strong>High-intent leads</strong>:<br> Those who are ready to purchase.</li>
+
+
+                        <li><strong>Decision-makers</strong>:<br> The right contacts in companies or households.</li>
+
+
+                        <li><strong>Demographically relevant leads</strong>:<br> Matching your Dubai market focus.</li>
+                    </ul>
+                    <p>Once captured, leads are nurtured via email sequences, WhatsApp follow-ups, or retargeting campaigns. This keeps your brand top-of-mind and increases conversion rates.</p>
+                </div>
+                <div class="col-lg-12">
+                    <h5 class="text-theme">Continuous Optimization & Reporting</h5>
+                    <p>
+                        Dubai’s market is dynamic, so we continuously analyze and optimize campaigns:
+                    </p>
+                    <ul>
+                        <li>Track metrics like Cost Per Lead (CPL), conversion rate, and lead quality.</li>
+
+
+                        <li>A/B test landing pages, ad creatives, and CTAs to find the highest performing combinations.</li>
+
+
+                        <li>Reallocate budget to high-performing channels.</li>
+
+
+                        <li>Provide detailed analytics and reports, allowing you to see exactly how your investment is generating results.</li>
+                    </ul>
+                    <p>This approach ensures long-term campaign success and continuous improvement.</p>
+                </div>
+            </div>
+            <div class="uni-strip-see-more">
+                <button data-class="outdoor-service-col-section">See More</button>
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <section id="service-cards" class="blog-section section pr-icon-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+                <div class="col-lg-4 vertical-center">
+                    <img src="{{URL::to('/public/section-images/image34.png')}}" class="side-image" width="100%" alt="Impact of PR Coverage">
+                </div>
+
+                <div class="col-lg-8 vertical-center">
+                    <h5>Benefits of Choosing DataMySite for Lead Generation in Dubai</h5>
+                    <ul>
+                        <li><strong>Local Expertise</strong>:<br> We understand Dubai’s multicultural audience, business culture, and market regulations.<br><br></li>
+
+
+                        <li><strong>High-Quality Leads</strong>:<br> Our focus is on leads that convert, not just numbers.<br><br></li>
+
+
+                        <li><strong>End-to-End Service</strong>:<br> Strategy, setup, ad creation, landing pages, tracking, and optimization — we handle everything.<br><br></li>
+
+
+                        <li><strong>Multi-Language Support</strong>:<br> Campaigns can be run in English, Arabic, Hindi/Urdu, or other languages for Dubai’s diverse audience.<br><br></li>
+
+
+                        <li><strong>Transparent Reporting</strong>:<br> Know exactly where your leads come from and the ROI they deliver.<br><br></li>
+
+
+                        <li><strong>Scalable Solutions</strong>:<br> We can start small and scale campaigns as your business grows.<br><br></li>
+                    </ul>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        <section id="service-cards" class="blog-section section striped-section why-us-section why-out-us-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-8 vertical-center">
+                    <h4>How Our Lead Generation Works</h4>
+                    <p>
+                       We build targeted campaigns, qualify every lead, and deliver them with full tracking and reporting. The Cost-Per-Lead (CPL) model means you only pay for verified enquiries.
+                    </p>
+                    <br>
+                    <h4>Industries We Serve</h4>
+                    <p>Real estate developers, education, financial services, healthcare, and e-commerce — high-ticket sectors where qualified leads drive serious revenue.</p>
+                    <br>
+                    <h4>How Much Does Lead Generation Cost in Dubai?</h4>
+                    <p>Pricing is per qualified lead and varies by sector. </p>
+                    
+                </div>
+                <div class="col-lg-2"></div>
+                <div class="col-lg-2 mob-not-visible vertical-center">
+                    <img src="{{URL::to('/public/assets/img/why-us.png')}}" width="100%" alt="Why choose us">
+                </div> 
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+
+        <section id="service-cards" class="blog-section section pr-blogs-section">
+
+          <div class="container section-title">
+            <h2 class="text-theme">Blogs</h2>
+            <p class="pr-blog-sub">What’s Going On in the Industry?</p>
+            <div class="row gy-4 blog-portrait-card first-row">
+                @foreach($blogs as $val)
+                    <div class="col-lg-4">
+                        <a href="{{route('blogs.detail', [$val->slug])}}">
+                          <div class="popular-card blog-card-2 flex-grow-1" bis_skin_checked="1">
+                            <div class="card-image" bis_skin_checked="1">
+                              <img src="{{URL::to('public/storage/blogs/'.$val->banner)}}" alt="{{$val->banner_alt}}">
+                            </div>
+                            <div class="popular-text" bis_skin_checked="1">
+                              <h6 class="mt-2" title="{{$val->heading}}">{{$val->heading}}</h6>
+                              <p class="line-break-3">{{$val->short_description}}</p>
+                              <small>by <font class="text-theme2">{{$val->author->name}}</font> - <font class="text-bold">{{date('F d, Y', strtotime($val->created_at))}}</font></small>
+                            </div>
+                          </div>
+                        </a>
+                    </div>
+                @endforeach
+                <div class="col-lg-12">
+                    <a href="{{URL::to('/blogs/pr-and-media-relations')}}" class="see-all-btn" target="_blank">See All Blogs</a>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section id="service-cards" class="blog-section section striped-section faq-new-section">
+
+          <div class="container">
+
+            <div class="row gy-4 first-row">
+
+                <div class="col-lg-4">
+                    <img src="{{URL::to('/public/assets/img/faq-new.png')}}" width="100%" alt="FAQs">
+                </div> 
+                <div class="col-lg-1"></div>
+                <div class="col-lg-7">
+                    <h4>FAQs</h4>
+                    <div class="faq " id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-10">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-10" data-aria-expanded="true" data-aria-controls="faqCollapse-10">
+                                        <span class="badge">&nbsp;</span>What is cost-per-lead advertising?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-10" class="collapse show" aria-labelledby="faqHeading-10" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>A model where you pay only for verified, qualified leads — not impressions or clicks.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-11">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-11" data-aria-expanded="false" data-aria-controls="faqCollapse-11">
+                                        <span class="badge">&nbsp;</span>Which industries is it best for?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-11" class="collapse" aria-labelledby="faqHeading-11" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>High-ticket sectors like real estate, education, finance, and healthcare.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-12">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-12" data-aria-expanded="false" data-aria-controls="faqCollapse-12">
+                                        <span class="badge">&nbsp;</span>What is a high-quality lead?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-12" class="collapse" aria-labelledby="faqHeading-12" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>A lead is high-quality if it matches your ideal customer profile, has purchase intent, and can be contacted directly. We filter and score leads to ensure you receive the best prospects.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-13">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-13" data-aria-expanded="false" data-aria-controls="faqCollapse-13">
+                                        <span class="badge">&nbsp;</span>Can you target specific languages or nationalities?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-13" class="collapse" aria-labelledby="faqHeading-13" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Yes. Dubai’s diverse market allows us to target by language, nationality, and location, including English, Arabic, Hindi/Urdu, and more.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-14">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-14" data-aria-expanded="false" data-aria-controls="faqCollapse-14">
+                                        <span class="badge">&nbsp;</span>Do you provide reporting and analytics?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-14" class="collapse" aria-labelledby="faqHeading-14" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>Absolutely. We provide detailed dashboards and reports showing lead source, conversion rates, CPL, and other performance metrics.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="faqHeading-15">
+                                <div class="mb-0">
+                                    <h5 class="faq-title" data-toggle="collapse" data-target="#faqCollapse-15" data-aria-expanded="false" data-aria-controls="faqCollapse-15">
+                                        <span class="badge">&nbsp;</span>How do you nurture leads after capture?
+                                    </h5>
+                                </div>
+                            </div>
+                            <div id="faqCollapse-15" class="collapse" aria-labelledby="faqHeading-15" data-parent="#accordion">
+                                <div class="card-body">
+                                    <p>We set up automated email campaigns, WhatsApp follow-ups, and retargeting strategies to increase conversion rates and engagement.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+    </main>
+
+@endsection
+
+@section('addScript')
+@include('web.includes.elements.local-schema')
+@endsection

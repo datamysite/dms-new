@@ -1,0 +1,1 @@
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Service","name":"{{$service->name}}","provider":{"@type":"LocalBusiness","name":"DataMySite","areaServed":"AE","address":{"@type":"PostalAddress","addressCountry":"AE","addressLocality":"Dubai"}},"areaServed":"AE","description":"{{@$metaTags->description}}"}</script>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Wholefoods × DataMySite — Homepage Design Directions</title>
+<meta name="robots" content="noindex,nofollow" />
+<meta name="description" content="Three homepage design directions for wholefoods.co.in, prepared by DataMySite." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#101014;--panel:#17171D;--panel-2:#1D1D25;--ink:#F5F1E8;--mut:#9B958A;
+    --gold:#C8A24C;--line:rgba(245,241,232,.1);
+    --sh:0 20px 50px rgba(0,0,0,.45);--pop:cubic-bezier(.34,1.45,.64,1);--ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:"Inter",system-ui,sans-serif;font-size:15.5px;
+    line-height:1.65;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  a{color:inherit;text-decoration:none}
+  .disp{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.02em;line-height:1.04}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 clamp(20px,4.5vw,44px)}
+  ::selection{background:var(--gold);color:#101014}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:3px;border-radius:8px}
+
+  header{padding:clamp(48px,7vw,88px) 0 clamp(30px,4vw,48px);text-align:center}
+  .kicker{font-family:"Bricolage Grotesque";font-weight:700;font-size:11.5px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--gold)}
+  h1{font-size:clamp(34px,5.6vw,64px);margin-top:16px}
+  h1 .g{color:var(--gold)}
+  .sub{margin:16px auto 0;max-width:60ch;color:var(--mut);font-size:clamp(14.5px,1.3vw,16.5px)}
+  .meta{margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+  .meta span{font-family:"Bricolage Grotesque";font-weight:700;font-size:11.5px;letter-spacing:.06em;
+    text-transform:uppercase;border:1px solid var(--line);border-radius:100px;padding:8px 16px;color:var(--mut)}
+
+  .grid{display:grid;gap:20px;padding:clamp(10px,2vw,20px) 0 clamp(40px,6vw,64px)}
+  .opt{background:var(--panel);border:1px solid var(--line);border-radius:24px;overflow:hidden;
+    display:grid;grid-template-columns:200px 1fr auto;align-items:stretch;
+    transition:transform .35s var(--pop),border-color .35s,box-shadow .35s}
+  .opt:hover{transform:translateY(-4px);border-color:rgba(200,162,76,.5);box-shadow:var(--sh)}
+  .swatch{display:flex;flex-direction:column}
+  .swatch i{flex:1}
+  .opt .bd{padding:26px 28px;display:flex;flex-direction:column;gap:8px;justify-content:center}
+  .opt .num{font-family:"Bricolage Grotesque";font-weight:700;font-size:11px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--gold)}
+  .opt h2{font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(21px,2.6vw,28px)}
+  .opt p{color:var(--mut);font-size:13.5px;max-width:58ch}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .tags span{font-family:"Bricolage Grotesque";font-weight:700;font-size:10.5px;letter-spacing:.05em;
+    text-transform:uppercase;background:var(--panel-2);border-radius:100px;padding:6px 12px;color:var(--mut)}
+  .opt .go{display:flex;align-items:center;padding:0 28px}
+  .opt .btn{font-family:"Bricolage Grotesque";font-weight:700;font-size:13.5px;background:var(--gold);color:#101014;
+    border-radius:100px;padding:14px 26px;white-space:nowrap;display:inline-flex;gap:9px;align-items:center;
+    transition:transform .3s var(--pop)}
+  .opt:hover .btn{transform:scale(1.05)}
+  .btn .ar{transition:transform .3s var(--pop)}
+  .opt:hover .ar{transform:translateX(3px)}
+
+  .note{border:1px dashed rgba(200,162,76,.4);border-radius:18px;padding:20px 24px;color:var(--mut);
+    font-size:13px;max-width:760px;margin:0 auto clamp(44px,6vw,64px);text-align:center}
+  .note b{color:var(--ink)}
+
+  footer{border-top:1px solid var(--line);padding:26px 0 34px;text-align:center;color:var(--mut);font-size:12.5px}
+  footer .dm{font-family:"Bricolage Grotesque";font-weight:800;color:var(--ink)}
+  footer .dm em{font-style:normal;color:var(--gold)}
+
+  @media(max-width:760px){.opt{grid-template-columns:1fr}
+    .swatch{flex-direction:row;height:14px}
+    .opt .go{padding:0 28px 26px}}
+</style>
+</head>
+<body>
+
+<header class="wrap">
+  <span class="kicker">DataMySite · Design Presentation</span>
+  <h1 class="disp">Wholefoods homepage —<br>three <span class="g">directions.</span></h1>
+  <p class="sub">Three fully working homepage concepts for wholefoods.co.in — each a different template,
+    each built on the real range, real prices and the four real claims: no maida, no preservatives,
+    no artificial colours, no trans fat. Open each on desktop and mobile; everything is clickable.</p>
+  <div class="meta">
+    <span>Client: Wholefoods (Haldiram&rsquo;s)</span>
+    <span>3 live prototypes</span>
+    <span>Desktop + mobile</span>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="grid">
+
+    <a class="opt" href="option-1-saaf.html">
+      <span class="swatch" aria-hidden="true">
+        <i style="background:#FFF6E9"></i><i style="background:#FFB800"></i>
+        <i style="background:#2E7D32"></i><i style="background:#221507"></i>
+      </span>
+      <span class="bd">
+        <span class="num">Option 01 — Template: Sticker Sheet</span>
+        <h2>SAAF</h2>
+        <p>Brutalist bazaar energy — paper texture, chunky borders, sticker badges and a printed-receipt
+          section. Loud, youthful, unmistakably desi.</p>
+        <span class="tags"><span>Neo-brutalist</span><span>Sticker badges</span><span>Receipt section</span></span>
+      </span>
+      <span class="go"><span class="btn">View design <span class="ar">→</span></span></span>
+    </a>
+
+    <a class="opt" href="option-2-citrus-slam.html">
+      <span class="swatch" aria-hidden="true">
+        <i style="background:#FF7A1A"></i><i style="background:#FFE14D"></i>
+        <i style="background:#FFF8EC"></i><i style="background:#211508"></i>
+      </span>
+      <span class="bd">
+        <span class="num">Option 02 — Template: Split Screen</span>
+        <h2>Citrus Slam</h2>
+        <p>Tangerine split-screen hero with a shuffleable product deck, a draggable conveyor-belt
+          product line, 3D flip cards for the four NOs and a floating dock nav.</p>
+        <span class="tags"><span>Split hero</span><span>Card deck</span><span>Conveyor belt</span><span>Flip cards</span></span>
+      </span>
+      <span class="go"><span class="btn">View design <span class="ar">→</span></span></span>
+    </a>
+
+    <a class="opt" href="option-3-snack-oclock.html">
+      <span class="swatch" aria-hidden="true">
+        <i style="background:#FFD9A0"></i><i style="background:#FFC53D"></i>
+        <i style="background:#FF6F91"></i><i style="background:#151B3D"></i>
+      </span>
+      <span class="bd">
+        <span class="num">Option 03 — Template: Day Timeline</span>
+        <h2>Snack O&rsquo;Clock</h2>
+        <p>The homepage as one Indian day — five time-stops from 7:30 AM chai to 11 PM cookies,
+          a live time HUD that follows your scroll, and colour that shifts from dawn to midnight.</p>
+        <span class="tags"><span>Scrollytelling</span><span>Live time HUD</span><span>Dot-rail nav</span><span>Combo add</span></span>
+      </span>
+      <span class="go"><span class="btn">View design <span class="ar">→</span></span></span>
+    </a>
+
+  </div>
+
+  <p class="note"><b>How to review:</b> each prototype is fully interactive — add to cart, flip, shuffle and
+    scroll on both desktop and phone. Product names and prices are from the live Wholefoods range;
+    reviews are representative and sync from the store at launch. URLs and site structure stay untouched for SEO.</p>
+</main>
+
+<footer>
+  <span class="dm">Data<em>My</em>Site</span> · Full-service marketing &amp; advertising, Dubai —
+  prepared for Wholefoods · wholefoods.co.in
+</footer>
+
+</body>
+</html>

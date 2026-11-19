@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Whole Foods — Citrus Slam | Snack loud, label clean</title>
+<meta name="description" content="Whole Foods clean-label snacks — no maida, no preservatives, no artificial colours, no trans fat. Cookies, makhana, crackers and flours from the house of Haldiram's, delivered pan-India." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://wholefoods.co.in">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Kalam:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#FFF8EC;--ink:#211508;--mut:#7A6A55;
+    --tang:#FF7A1A;--tang-d:#E86504;--lemon:#FFE14D;--green:#2E7D32;--green-d:#1E5B24;
+    --mint:#CDEFC4;--rose:#FFC9D9;--card:#FFFFFF;
+    --sh:0 12px 32px rgba(33,21,8,.12);--sh-lg:0 20px 48px rgba(33,21,8,.18);
+    --pop:cubic-bezier(.34,1.5,.64,1);--ease:cubic-bezier(.22,.61,.36,1);--maxw:1240px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
+  body{background:var(--cream);color:var(--ink);font-family:"Inter",system-ui,sans-serif;font-size:15.5px;
+    line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%;padding-bottom:96px}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;background:none;border:none;color:inherit}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--lemon);color:var(--ink)}
+  :focus-visible{outline:3px solid var(--tang);outline-offset:3px;border-radius:8px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,4.5vw,48px)}
+  .disp{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;letter-spacing:-.02em;line-height:.95}
+  .hand{font-family:"Kalam",cursive;font-weight:700}
+  .veg{width:14px;height:14px;border:1.8px solid var(--green);border-radius:3px;display:inline-flex;
+    align-items:center;justify-content:center;flex:0 0 14px;background:#fff}
+  .veg i{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-family:"Bricolage Grotesque";
+    font-weight:700;font-size:14.5px;padding:15px 28px;border-radius:100px;transition:transform .3s var(--pop),background .3s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn:active{transform:scale(.96)}
+  .btn.lemon{background:var(--lemon);color:var(--ink);box-shadow:var(--sh)}
+  .btn.ink{background:var(--ink);color:var(--cream)}
+  .btn.white{background:#fff;color:var(--tang-d);box-shadow:var(--sh)}
+
+  /* diagonal ticker */
+  .diag{overflow:hidden;position:relative;height:52px}
+  .diag .strip{position:absolute;left:-3%;right:-3%;top:50%;transform:translateY(-50%) rotate(-1.6deg);
+    background:var(--s,var(--tang));color:var(--c,#fff);overflow:hidden;padding:9px 0}
+  .diag .mq{display:flex;width:max-content;animation:mq 26s linear infinite}
+  .diag span{font-family:"Bricolage Grotesque";font-weight:700;font-size:12.5px;letter-spacing:.08em;
+    text-transform:uppercase;display:inline-flex;align-items:center}
+  .diag span::after{content:"✦";margin:0 20px;color:var(--st,var(--lemon))}
+  @keyframes mq{to{transform:translateX(-50%)}}
+  .diag.rev .mq{animation-direction:reverse}
+
+  /* nav */
+  header.nav{position:sticky;top:0;z-index:70;background:rgba(255,248,236,.92);backdrop-filter:blur(12px)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:68px;gap:16px}
+  .brand{display:flex;align-items:center;gap:9px}
+  .brand img{height:40px;width:auto}
+  .brand .wm{font-family:"Bricolage Grotesque";font-weight:800;font-size:22px;display:none}
+  .brand .wm em{font-style:normal;color:var(--tang)}
+  .brand.noimg img{display:none}
+  .brand.noimg .wm{display:block}
+  .nav-tag{font-family:"Kalam";font-weight:700;font-size:14.5px;color:var(--tang-d)}
+  @media(max-width:640px){.nav-tag{display:none}}
+
+  /* SPLIT HERO */
+  .split{display:grid;grid-template-columns:1.02fr .98fr;min-height:min(78vh,760px)}
+  .split .left{background:var(--tang);color:#fff;padding:clamp(36px,5vw,72px) clamp(24px,4.5vw,64px);
+    display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden}
+  .split .left::before{content:"";position:absolute;width:420px;height:420px;border-radius:50%;
+    background:rgba(255,225,77,.3);top:-190px;right:-140px}
+  .split .left::after{content:"";position:absolute;width:300px;height:300px;border-radius:50%;
+    background:rgba(255,255,255,.12);bottom:-140px;left:-90px}
+  .split h1{font-size:clamp(52px,7.4vw,110px);text-transform:uppercase;position:relative;z-index:2}
+  .split h1 .row{display:block}
+  .split h1 .out{color:transparent;-webkit-text-stroke:2.5px #fff}
+  .split h1 .lm{color:var(--lemon)}
+  .split .sub{position:relative;z-index:2;margin-top:18px;max-width:42ch;color:rgba(255,255,255,.92);font-weight:500}
+  .split .sub b{color:var(--lemon)}
+  .split .cta{position:relative;z-index:2;display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+  .split .scrib{position:relative;z-index:2;margin-top:24px}
+  .split .scrib .hand{color:var(--lemon);font-size:16.5px}
+  /* deck side */
+  .split .right{background:var(--cream);display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:clamp(36px,5vw,64px) clamp(20px,4vw,48px);position:relative}
+  .deck-zone{position:relative;width:min(330px,78vw);height:400px}
+  .dcard{position:absolute;inset:0;border-radius:26px;background:var(--c,#fff);box-shadow:var(--sh-lg);
+    padding:26px;display:flex;flex-direction:column;transition:transform .5s var(--pop),opacity .4s;
+    will-change:transform}
+  .dcard .top{display:flex;justify-content:space-between;align-items:flex-start}
+  .dcard .cat{font-family:"Bricolage Grotesque";font-weight:700;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;background:#fff;border-radius:100px;padding:6px 12px;box-shadow:var(--sh)}
+  .dcard .pr{font-family:"Bricolage Grotesque";font-weight:800;font-size:20px;background:var(--ink);color:var(--lemon);
+    border-radius:100px;padding:8px 16px}
+  .dcard .mk{font-family:"Bricolage Grotesque";font-weight:800;font-size:110px;color:rgba(33,21,8,.25);
+    align-self:center;margin:auto 0}
+  .dcard .nm{font-family:"Bricolage Grotesque";font-weight:800;font-size:22px;line-height:1.1;display:flex;gap:9px;align-items:center}
+  .dcard .add{margin-top:14px;background:var(--green);color:#fff;font-family:"Bricolage Grotesque";font-weight:700;
+    font-size:13.5px;border-radius:100px;padding:13px 0;transition:transform .3s var(--pop),background .3s}
+  .dcard .add:hover{background:var(--green-d);transform:scale(1.03)}
+  /* stack positions */
+  .dcard[data-pos="0"]{transform:rotate(0) translateY(0);z-index:5}
+  .dcard[data-pos="1"]{transform:rotate(4deg) translate(14px,10px) scale(.97);z-index:4}
+  .dcard[data-pos="2"]{transform:rotate(-4deg) translate(-14px,18px) scale(.94);z-index:3}
+  .dcard[data-pos="3"]{transform:rotate(7deg) translate(24px,26px) scale(.91);z-index:2;opacity:.9}
+  .dcard[data-pos="4"]{transform:rotate(-7deg) translate(-24px,32px) scale(.88);z-index:1;opacity:.8}
+  .dcard.fly{transform:translateY(-120%) rotate(-10deg)!important;opacity:0}
+  .deck-btns{display:flex;gap:12px;margin-top:26px;align-items:center}
+  .shuffle{background:var(--ink);color:var(--cream);border-radius:100px;padding:13px 24px;
+    font-family:"Bricolage Grotesque";font-weight:700;font-size:13.5px;display:inline-flex;gap:9px;align-items:center;
+    transition:transform .3s var(--pop)}
+  .shuffle:hover{transform:translateY(-2px)}
+  .shuffle svg{width:16px;height:16px}
+  .deck-note{font-size:12px;color:var(--mut);font-weight:600}
+
+  /* stats slab */
+  .stats{background:var(--ink);color:var(--cream);padding:clamp(36px,5vw,60px) 0}
+  .stats-g{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;text-align:center}
+  .st .n{font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(34px,4.6vw,58px);color:var(--lemon)}
+  .st .l{font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,248,236,.65);margin-top:4px}
+
+  /* conveyor */
+  .convey{background:var(--lemon);padding:clamp(44px,6vw,72px) 0;overflow:hidden}
+  .convey .head{display:flex;justify-content:space-between;align-items:end;gap:14px;flex-wrap:wrap}
+  .convey h2{font-size:clamp(30px,4.6vw,54px);text-transform:uppercase}
+  .convey h2 .o{color:var(--tang-d)}
+  .convey .hint{font-family:"Kalam";font-weight:700;font-size:15.5px;color:var(--tang-d)}
+  .belt{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px 4px 12px;
+    scrollbar-width:none;cursor:grab}
+  .belt::-webkit-scrollbar{display:none}
+  .belt.dragging{cursor:grabbing;scroll-snap-type:none}
+  .bc{scroll-snap-align:start;flex:0 0 210px;background:#fff;border-radius:22px;box-shadow:var(--sh);
+    padding:18px;display:flex;flex-direction:column;gap:10px;position:relative;
+    transition:transform .35s var(--pop);user-select:none}
+  .bc:hover{transform:translateY(-6px) rotate(-.6deg)}
+  .bc .bub{position:absolute;top:-13px;right:-8px;background:var(--tang);color:#fff;font-family:"Bricolage Grotesque";
+    font-weight:800;font-size:13.5px;border-radius:100px;padding:7px 14px;box-shadow:var(--sh);transform:rotate(5deg)}
+  .bc .sw{height:84px;border-radius:14px;background:var(--c,#FFEFD2);display:flex;align-items:center;justify-content:center;
+    font-family:"Bricolage Grotesque";font-weight:800;font-size:32px;color:rgba(33,21,8,.55)}
+  .bc .nm{font-family:"Bricolage Grotesque";font-weight:700;font-size:14.5px;line-height:1.2;display:flex;gap:8px;align-items:flex-start;min-height:38px}
+  .bc .add{margin-top:auto;background:var(--ink);color:var(--lemon);font-family:"Bricolage Grotesque";font-weight:700;
+    font-size:12px;border-radius:100px;padding:10px 0;transition:transform .3s var(--pop)}
+  .bc .add:hover{transform:scale(1.04)}
+
+  /* claim flip board */
+  .claims{padding:clamp(56px,8vw,96px) 0}
+  .claims .head{text-align:center;max-width:640px;margin:0 auto clamp(26px,4vw,44px)}
+  .claims h2{font-size:clamp(32px,4.8vw,58px);text-transform:uppercase}
+  .claims h2 .o{color:var(--tang)}
+  .claims .head .hand{color:var(--green-d);font-size:16px}
+  .flip-g{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:900px;margin:0 auto}
+  .flip{perspective:1100px;height:190px}
+  .flip .inner{position:relative;width:100%;height:100%;transition:transform .7s var(--pop);transform-style:preserve-3d}
+  .flip:hover .inner,.flip.go .inner{transform:rotateY(180deg)}
+  .face{position:absolute;inset:0;border-radius:24px;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:22px;text-align:center;
+    box-shadow:var(--sh)}
+  .face.front{background:var(--f,#fff)}
+  .face.front .x{font-family:"Bricolage Grotesque";font-weight:800;font-size:15px;color:#D6452F;
+    letter-spacing:.14em;text-transform:uppercase}
+  .face.front .t{font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(24px,3vw,34px);text-transform:uppercase}
+  .face.front .tap{font-size:11px;font-weight:600;color:var(--mut)}
+  .face.back{background:var(--ink);color:var(--cream);transform:rotateY(180deg)}
+  .face.back .t{font-family:"Bricolage Grotesque";font-weight:700;font-size:16px;color:var(--lemon)}
+  .face.back p{font-size:13px;color:rgba(255,248,236,.85)}
+
+  /* south slab */
+  .south{background:var(--tang);color:#fff;padding:clamp(50px,7vw,88px) 0;position:relative;overflow:hidden}
+  .south::before{content:"";position:absolute;width:460px;height:460px;border-radius:50%;
+    background:rgba(255,225,77,.25);bottom:-220px;right:-140px}
+  .south-g{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(28px,5vw,70px);align-items:center;position:relative;z-index:2}
+  .south h2{font-size:clamp(32px,4.8vw,58px);text-transform:uppercase;color:#fff}
+  .south h2 .lm{color:var(--lemon)}
+  .south p{margin-top:14px;color:rgba(255,255,255,.92);max-width:46ch}
+  .chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:22px}
+  .chips span{font-family:"Bricolage Grotesque";font-weight:700;font-size:12.5px;background:rgba(255,255,255,.16);
+    border-radius:100px;padding:8px 15px}
+  .south-card{background:#fff;color:var(--ink);border-radius:26px;box-shadow:0 24px 56px rgba(0,0,0,.28);
+    padding:26px;justify-self:center;width:100%;max-width:380px;transform:rotate(-1.5deg)}
+  .south-card .cat{font-family:"Bricolage Grotesque";font-weight:700;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--tang-d)}
+  .south-card h3{font-family:"Bricolage Grotesque";font-weight:800;font-size:24px;margin-top:8px}
+  .south-card p{color:var(--mut);font-size:13.5px;margin-top:8px}
+  .south-card .row{display:flex;justify-content:space-between;align-items:center;margin-top:16px}
+  .south-card .pr{font-family:"Bricolage Grotesque";font-weight:800;font-size:19px}
+  .south-card .add{background:var(--green);color:#fff;font-family:"Bricolage Grotesque";font-weight:700;
+    font-size:13px;border-radius:100px;padding:12px 22px;transition:transform .3s var(--pop)}
+  .south-card .add:hover{transform:scale(1.05)}
+
+  /* voices */
+  .voices{padding:clamp(56px,8vw,96px) 0}
+  .voices h2{font-size:clamp(30px,4.4vw,52px);text-transform:uppercase;text-align:center}
+  .voices h2 .o{color:var(--tang)}
+  .v-g{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:clamp(26px,4vw,40px)}
+  .v{background:#fff;border-radius:22px;box-shadow:var(--sh);padding:24px;position:relative;
+    transition:transform .35s var(--pop)}
+  .v::after{content:"";position:absolute;bottom:-12px;left:34px;border:12px solid transparent;border-top-color:#fff;
+    border-bottom:0}
+  .v:hover{transform:translateY(-4px) rotate(-.5deg)}
+  .v .st{color:var(--tang);letter-spacing:2px;font-size:14px}
+  .v q{display:block;font-weight:500;font-size:14.5px;margin-top:10px;quotes:"“" "”"}
+  .v .who{margin-top:14px;font-weight:700;font-size:13px}
+  .v .lo{font-size:11.5px;color:var(--mut);font-weight:600}
+  .v-note{text-align:center;font-size:12px;color:var(--mut);font-weight:600;margin-top:18px}
+
+  /* CTA slab */
+  .cta{padding:0 0 clamp(30px,4vw,50px)}
+  .cta-in{background:var(--ink);color:var(--cream);border-radius:30px;padding:clamp(40px,6vw,76px) clamp(24px,5vw,60px);
+    text-align:center;position:relative;overflow:hidden}
+  .cta-in::before{content:"";position:absolute;width:380px;height:380px;border-radius:50%;
+    background:rgba(255,122,26,.3);top:-170px;left:-110px}
+  .cta h2{font-size:clamp(32px,5.2vw,64px);text-transform:uppercase;color:var(--cream);position:relative}
+  .cta h2 .lm{color:var(--lemon)}
+  .cta p{position:relative;margin:14px auto 0;max-width:44ch;color:rgba(255,248,236,.8)}
+  .cta form{position:relative;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:26px}
+  .cta input{min-width:min(320px,76vw);border:none;border-radius:100px;padding:15px 24px;font:inherit;font-weight:600}
+
+  footer{background:var(--ink);color:var(--cream);padding:30px 0 24px}
+  .ft{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center;font-size:13.5px}
+  .ft .lg{font-family:"Bricolage Grotesque";font-weight:800;font-size:20px}
+  .ft .lg em{font-style:normal;color:var(--tang)}
+  .ft .links{display:flex;gap:18px;flex-wrap:wrap}
+  .ft .links a:hover{color:var(--lemon)}
+  .ft-note{margin-top:14px;font-size:11.5px;opacity:.6;text-align:center;width:100%}
+
+  /* bottom dock */
+  .dock{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:80;background:#fff;
+    border-radius:100px;box-shadow:0 18px 46px rgba(33,21,8,.28);display:flex;gap:4px;padding:7px}
+  .dock a,.dock button{font-family:"Bricolage Grotesque";font-weight:700;font-size:13px;border-radius:100px;
+    padding:12px 20px;display:inline-flex;gap:8px;align-items:center;transition:background .25s}
+  .dock a:hover{background:var(--lemon)}
+  .dock .cart{background:var(--tang);color:#fff}
+  .dock .cart b{color:var(--lemon)}
+
+  .toast{position:fixed;bottom:86px;left:50%;transform:translateX(-50%) translateY(14px);background:var(--ink);color:var(--cream);
+    padding:12px 22px;border-radius:100px;font-weight:700;font-size:13px;opacity:0;pointer-events:none;
+    transition:.4s var(--pop);z-index:99;max-width:88vw;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:900px){.split{grid-template-columns:1fr}.split .right{padding-top:56px}
+    .stats-g{grid-template-columns:1fr 1fr}.flip-g{grid-template-columns:1fr}
+    .south-g{grid-template-columns:1fr}.v-g{grid-template-columns:1fr}}
+  @media(max-width:560px){.deck-zone{height:360px}.btn{white-space:normal}
+    .dock a:not(.cart){padding:12px 14px}}
+  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}.flip .inner{transition:none}}
+</style>
+</head>
+<body>
+
+<div class="diag" aria-hidden="true"><div class="strip"><div class="mq" id="mq1"></div></div></div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" id="brand" href="#top" aria-label="Whole Foods home">
+      <img src="https://wholefoods.co.in/cdn/shop/files/wholefood_logo-Photoroom_1.png" alt="Whole Foods India"
+        onerror="document.getElementById('brand').classList.add('noimg')">
+      <span class="wm">Whole<em>Foods</em></span>
+    </a>
+    <span class="nav-tag">snack loud, label clean</span>
+  </div>
+</header>
+
+<!-- SPLIT HERO -->
+<section class="split" id="top">
+  <div class="left">
+    <h1 class="disp">
+      <span class="row">Snack</span>
+      <span class="row out">loud.</span>
+      <span class="row">Label</span>
+      <span class="row lm">clean.</span>
+    </h1>
+    <p class="sub">Cookies, makhana, crackers and flours with <b>0% maida, no preservatives, no fake colours,
+      no trans fat</b> — from the house of Haldiram&rsquo;s, delivered pan-India.</p>
+    <div class="cta">
+      <a class="btn lemon" href="#belt">Shop the line</a>
+      <a class="btn white" href="#claims">See the four NOs</a>
+    </div>
+    <div class="scrib"><span class="hand">shuffle the deck, pick your crunch →</span></div>
+  </div>
+  <div class="right">
+    <div class="deck-zone" id="deck" aria-label="Product deck"></div>
+    <div class="deck-btns">
+      <button class="shuffle" id="shuffleBtn">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h4l3 5 3 5h6M20 17l-2.5-2.5M20 17l-2.5 2.5M4 17h4l1.4-2.3M14 7h6M20 7l-2.5-2.5M20 7l-2.5 2.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Shuffle
+      </button>
+      <span class="deck-note" id="deckNote">Card 1 of 5</span>
+    </div>
+  </div>
+</section>
+
+<!-- stats slab -->
+<section class="stats">
+  <div class="wrap stats-g">
+    <div class="st reveal"><div class="n" data-count="62" data-suffix="">0</div><div class="l">Clean products</div></div>
+    <div class="st reveal"><div class="n" data-count="7">0</div><div class="l">Categories</div></div>
+    <div class="st reveal"><div class="n" data-count="0" data-suffix="%">0%</div><div class="l">Maida, anywhere</div></div>
+    <div class="st reveal"><div class="n" data-count="100" data-suffix="%">0</div><div class="l">Vegetarian</div></div>
+  </div>
+</section>
+
+<div class="diag rev" aria-hidden="true"><div class="strip" style="--s:var(--green);--st:var(--lemon)"><div class="mq" id="mq2"></div></div></div>
+
+<!-- conveyor -->
+<section class="convey" id="belt">
+  <div class="wrap">
+    <div class="head reveal">
+      <h2 class="disp">The snack <span class="o">line.</span></h2>
+      <span class="hint">drag it like a conveyor belt</span>
+    </div>
+  </div>
+  <div class="wrap"><div class="belt" id="beltRow" tabindex="0" aria-label="Product line, scroll horizontally"></div></div>
+</section>
+
+<!-- claims flip board -->
+<section class="claims" id="claims">
+  <div class="wrap">
+    <div class="head reveal">
+      <h2 class="disp">The four <span class="o">NOs.</span></h2>
+      <span class="hand">flip each card — the why is on the back</span>
+    </div>
+    <div class="flip-g">
+      <button class="flip reveal" style="--f:var(--rose)" aria-label="No maida — flip for details"><span class="inner">
+        <span class="face front"><span class="x">✗ never</span><span class="t">Maida</span><span class="tap">tap / hover to flip</span></span>
+        <span class="face back"><span class="t">Why no maida?</span><p>Refined flour spikes and crashes. Whole grains and millets do the job properly — across all 62 products, cookies included.</p></span>
+      </span></button>
+      <button class="flip reveal" style="--f:var(--mint)" aria-label="No preservatives — flip for details"><span class="inner">
+        <span class="face front"><span class="x">✗ never</span><span class="t">Preservatives</span><span class="tap">tap / hover to flip</span></span>
+        <span class="face back"><span class="t">Why none?</span><p>We bake in small batches and keep the shelf life honest. Nothing added to pretend otherwise.</p></span>
+      </span></button>
+      <button class="flip reveal" style="--f:#FFE9C9" aria-label="No artificial colours — flip for details"><span class="inner">
+        <span class="face front"><span class="x">✗ never</span><span class="t">Fake colours</span><span class="tap">tap / hover to flip</span></span>
+        <span class="face back"><span class="t">Why natural only?</span><p>Beetroot makes pink. Spinach makes green. Our makhana stays proudly beige.</p></span>
+      </span></button>
+      <button class="flip reveal" style="--f:#E4DDF7" aria-label="No trans fat — flip for details"><span class="inner">
+        <span class="face front"><span class="x">✗ never</span><span class="t">Trans fat</span><span class="tap">tap / hover to flip</span></span>
+        <span class="face back"><span class="t">Why baked?</span><p>Everything is baked or roasted, never deep-fried. Loud crunch, quiet conscience.</p></span>
+      </span></button>
+    </div>
+  </div>
+</section>
+
+<!-- south slab -->
+<section class="south">
+  <div class="wrap south-g">
+    <div class="reveal">
+      <h2 class="disp">Hello, <span class="lm">South India.</span></h2>
+      <p>Now delivering across Karnataka, Tamil Nadu, Telangana, Andhra Pradesh and Kerala — with flavours
+        made for southern kitchens: curry-leaf makhana, ragi and jowar flours, millet murukku and baked chakli.</p>
+      <div class="chips">
+        <span>Bengaluru</span><span>Chennai</span><span>Hyderabad</span><span>Kochi</span>
+        <span>Coimbatore</span><span>Mysuru</span><span>Visakhapatnam</span><span>Madurai</span>
+      </div>
+    </div>
+    <div class="south-card reveal">
+      <span class="cat">Southern favourite</span>
+      <h3>Simply South Makhana</h3>
+      <p>Curry leaf, roasted the honest way. The flavour the South said "finally" to.</p>
+      <div class="row"><span class="pr">Rs. 160</span>
+      <button class="add addable" data-name="Simply South Makhana">Add to cart</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- voices -->
+<section class="voices">
+  <div class="wrap">
+    <h2 class="disp reveal">Loud <span class="o">reviews.</span></h2>
+    <div class="v-g">
+      <div class="v reveal"><div class="st">★★★★★</div><q>The curry-leaf makhana tastes like home. The South was not an afterthought.</q>
+        <div class="who">Lakshmi</div><div class="lo">Chennai</div></div>
+      <div class="v reveal"><div class="st">★★★★★</div><q>Appa is diabetic. The atta changed our rotis without changing our rotis.</q>
+        <div class="who">Amandeep</div><div class="lo">Delhi</div></div>
+      <div class="v reveal"><div class="st">★★★★★</div><q>Read the label out loud at work. Everyone understood every word. That is the review.</q>
+        <div class="who">Riya</div><div class="lo">Mumbai</div></div>
+    </div>
+    <p class="v-note">Representative voices — live ratings sync from your store at launch.</p>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <div class="wrap">
+    <div class="cta-in reveal">
+      <h2 class="disp">Ready to snack <span class="lm">loud?</span></h2>
+      <p>62 clean-label products, pan-India delivery, UPI and COD. The label stays quiet so the crunch can shout.</p>
+      <form onsubmit="return false" aria-label="Newsletter">
+        <input type="email" placeholder="Your email address" aria-label="Email address" required>
+        <button class="btn lemon" data-toast="Concept demo — connects to your newsletter tool">Sign me up</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="ft">
+      <span class="lg">Whole<em>Foods</em></span>
+      <div class="links">
+        <a href="https://wholefoods.co.in/pages/whole-story">Whole Story</a>
+        <a href="https://wholefoods.co.in/pages/contact-us">Contact</a>
+        <a href="https://wholefoods.co.in/apps/parcelpanel">Track Order</a>
+        <a href="https://wholefoods.co.in/pages/terms">Terms</a>
+      </div>
+    </div>
+    <div class="ft-note">© Whole Foods · Operated by Haldiram Marketing Private Limited — Option 2 · "Citrus Slam" (new template) · representative catalog; live data syncs from Shopify</div>
+  </div>
+</footer>
+
+<!-- dock -->
+<nav class="dock" aria-label="Quick actions">
+  <a href="#belt">Shop</a>
+  <a href="#claims">Label</a>
+  <button class="cart" id="cartBtn">Cart · <b id="cartN">0</b></button>
+</nav>
+
+<div class="toast" id="toast">Added</div>
+
+<script>
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const MQ1=['No maida ever','Baked, never fried','Free delivery above Rs. 499','COD and UPI accepted','From the house of Haldiram\u2019s'];
+const MQ2=['0% maida','No preservatives','No artificial colours','Trans fat free','100% vegetarian'];
+function fill(id,items){const el=document.getElementById(id);const h=items.map(t=>`<span>${t}</span>`).join('');el.innerHTML=h+h;}
+fill('mq1',MQ1);fill('mq2',MQ2);
+
+/* deck */
+const DECK=[
+ ['Simply South Makhana','Makhana',160,'#CDEFC4'],
+ ['Fig & Almond Cookies','Cookies',190,'#FFE3BC'],
+ ['Peri Peri Makhana','Makhana',160,'#FFC9D9'],
+ ['Diabetic-Friendly Atta','Flours',350,'#F4E4B8'],
+ ['Jaggery Almonds','Coated Nuts',330,'#E4DDF7']
+];
+const deck=document.getElementById('deck');
+deck.innerHTML=DECK.map(([n,cat,pr,c],i)=>`
+  <div class="dcard" data-pos="${i}" style="--c:${c}">
+    <div class="top"><span class="cat">${cat}</span><span class="pr">Rs.${pr}</span></div>
+    <span class="mk">${n[0]}</span>
+    <div class="nm"><span class="veg" aria-label="Vegetarian"><i></i></span>${n}</div>
+    <button class="add addable" data-name="${n}">Add to cart</button>
+  </div>`).join('');
+let deckIdx=0;
+const deckNote=document.getElementById('deckNote');
+function reposition(){
+  const cards=[...deck.querySelectorAll('.dcard')];
+  cards.forEach(c=>{
+    const pos=(parseInt(c.dataset.i??c.dataset.pos,10));
+  });
+}
+/* maintain order array */
+let order=[0,1,2,3,4];
+function applyOrder(){
+  order.forEach((cardIdx,pos)=>{
+    deck.children[cardIdx].setAttribute('data-pos',pos);
+  });
+  deckNote.textContent='Card '+(order[0]+1)+' of 5';
+}
+applyOrder();
+document.getElementById('shuffleBtn').addEventListener('click',()=>{
+  const topCard=deck.children[order[0]];
+  if(!reduced){topCard.classList.add('fly');}
+  setTimeout(()=>{
+    order.push(order.shift());
+    topCard.classList.remove('fly');
+    applyOrder();
+  },reduced?0:320);
+});
+
+/* conveyor */
+const BELT=[
+ ['Blueberry Cookies',135,'#FFE3BC'],['Nutty Buddy Makhana',170,'#CDEFC4'],['Ragi Crackers',155,'#FFD9CB'],
+ ['Choco Delight Makhana',175,'#CDEFC4'],['Millet Murukku',160,'#FFE9B8'],['Whole Wheat Rusk',120,'#F2E7CD'],
+ ['Honey Cinnamon Almonds',320,'#E4DDF7'],['Cheesy Bites Makhana',160,'#CDEFC4'],['Multigrain Jaggery Cookies',150,'#FFE3BC'],
+ ['Jowar Puffs',150,'#FFE9B8']
+];
+document.getElementById('beltRow').innerHTML=BELT.map(([n,pr,c])=>`
+  <div class="bc"><span class="bub">Rs.${pr}</span>
+    <div class="sw" style="--c:${c}">${n[0]}</div>
+    <div class="nm"><span class="veg" aria-label="Vegetarian"><i></i></span>${n}</div>
+    <button class="add addable" data-name="${n}">Add</button>
+  </div>`).join('');
+if(!reduced){
+  const rail=document.getElementById('beltRow');
+  let down=false,sx=0,sl=0;
+  rail.addEventListener('pointerdown',e=>{down=true;sx=e.clientX;sl=rail.scrollLeft;rail.classList.add('dragging');});
+  addEventListener('pointerup',()=>{down=false;rail.classList.remove('dragging');});
+  rail.addEventListener('pointermove',e=>{if(!down)return;rail.scrollLeft=sl-(e.clientX-sx);});
+}
+
+/* flips (touch) */
+document.querySelectorAll('.flip').forEach(f=>f.addEventListener('click',()=>f.classList.toggle('go')));
+
+/* count-ups */
+function countUp(el){const t=+el.dataset.count,suf=el.dataset.suffix||'';
+  if(reduced||t===0){el.textContent=t+suf;return;}
+  const t0=performance.now();(function s(n){const p=Math.min(1,(n-t0)/1200),e=1-Math.pow(1-p,3);
+  el.textContent=Math.round(t*e)+suf;if(p<1)requestAnimationFrame(s);})(t0);}
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){countUp(e.target);cio.unobserve(e.target);}}),{threshold:.6});
+document.querySelectorAll('[data-count]').forEach(el=>cio.observe(el));
+
+/* cart */
+let cart=0;
+const cartN=document.getElementById('cartN'),toast=document.getElementById('toast');
+function showToast(m){toast.textContent=m;toast.classList.add('show');clearTimeout(toast._t);
+  toast._t=setTimeout(()=>toast.classList.remove('show'),2200);}
+document.addEventListener('click',e=>{const b=e.target.closest('.addable');if(!b)return;
+  cart++;cartN.textContent=cart;showToast(b.dataset.name+' added');});
+document.getElementById('cartBtn').addEventListener('click',()=>showToast(cart?cart+' item(s) — checkout connects to Shopify (concept)':'Cart is empty — shuffle the deck'));
+document.querySelectorAll('[data-toast]').forEach(el=>el.addEventListener('click',()=>showToast(el.dataset.toast)));
+
+/* reveals */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,243 @@
+{
+  "items": [
+    {
+      "id": "product-001",
+      "name": "Commercial Solar Panel Modules (550W)",
+      "category": "Energy & Solar",
+      "availability": "Available",
+      "featured": true,
+      "addedOn": "2026-09-02",
+      "moq": "1 pallet (31 modules)",
+      "origin": "Sourced via approved manufacturers",
+      "image": "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "High-efficiency 550W monocrystalline modules for commercial rooftops and ground-mount projects across the GCC.",
+      "description": "Tier-focused 550W monocrystalline solar modules suitable for commercial rooftops, carports and small utility projects. We coordinate supply in pallet or container quantities, with datasheets, warranty documentation and delivery to site or port. Complementary items — inverters, mounting structures and cabling — can be quoted as a combined package for contractors.",
+      "specs": [
+        {"label": "Rated output", "value": "550W monocrystalline"},
+        {"label": "Efficiency", "value": "Up to ~21.3%"},
+        {"label": "Warranty", "value": "12-year product / 25-year performance (manufacturer terms)"},
+        {"label": "Supply unit", "value": "Pallet or 40ft container"},
+        {"label": "Delivery", "value": "UAE site delivery or FOB/CIF export"}
+      ]
+    },
+    {
+      "id": "product-002",
+      "name": "Ergonomic Office Workstation Sets",
+      "category": "Furniture & Fit-Out",
+      "availability": "Available",
+      "featured": false,
+      "addedOn": "2026-08-25",
+      "moq": "10 sets",
+      "origin": "Multiple approved suppliers",
+      "image": "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "Complete workstation sets — desk, ergonomic chair and pedestal — for offices, co-working spaces and fit-out projects.",
+      "description": "A practical bundle for office openings and refurbishments: a 140–160cm desk, a certified ergonomic task chair and a mobile pedestal, delivered and optionally assembled on site in the UAE. Finishes and fabric colours can be matched to your brand, and reception counters, meeting tables and acoustic booths can be added to the same order.",
+      "specs": [
+        {"label": "Set contents", "value": "Desk + ergonomic chair + 3-drawer pedestal"},
+        {"label": "Desk sizes", "value": "140cm / 160cm, cable management included"},
+        {"label": "Chair", "value": "Mesh back, adjustable lumbar and arms"},
+        {"label": "Lead time", "value": "Typically 2–4 weeks depending on quantity"},
+        {"label": "Service", "value": "Delivery and assembly available in the UAE"}
+      ]
+    },
+    {
+      "id": "product-003",
+      "name": "Industrial Diesel Generators (30–250 kVA)",
+      "category": "Industrial Equipment",
+      "availability": "On Request",
+      "featured": true,
+      "addedOn": "2026-08-30",
+      "moq": "1 unit",
+      "origin": "Sourced per specification",
+      "image": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "Silent-canopy diesel generators for construction sites, events and standby power, supplied to specification.",
+      "description": "We source new silent-canopy diesel generator sets in the 30–250 kVA range for construction, events, agriculture and standby applications, in the UAE and for export to Gulf and African markets. Share your load requirement and duty cycle and we return options with engine brand, alternator details, fuel-tank capacity, ATS compatibility and delivery terms.",
+      "specs": [
+        {"label": "Range", "value": "30 kVA to 250 kVA (larger on request)"},
+        {"label": "Configuration", "value": "Silent canopy, 50Hz, three-phase"},
+        {"label": "Options", "value": "ATS panels, extended fuel tanks, trailers"},
+        {"label": "Markets", "value": "UAE supply and export"},
+        {"label": "Documentation", "value": "Test certificates and manuals provided"}
+      ]
+    },
+    {
+      "id": "product-004",
+      "name": "Enterprise Android Tablets (Bulk)",
+      "category": "Electronics & IT",
+      "availability": "Available",
+      "featured": false,
+      "addedOn": "2026-09-06",
+      "moq": "50 units",
+      "origin": "Authorised distribution channels",
+      "image": "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "Bulk 10-inch Android tablets for schools, restaurants, field teams and kiosk deployments.",
+      "description": "Volume supply of 10-inch Android tablets suited to education rollouts, restaurant ordering, warehouse operations and kiosk installations. Units can be supplied with rugged cases, MDM pre-enrolment and asset tagging. We quote per configuration and quantity, with staged delivery available for phased deployments across the UAE.",
+      "specs": [
+        {"label": "Display", "value": "10.1\" HD, capacitive touch"},
+        {"label": "Memory", "value": "4–8GB RAM / 64–128GB storage options"},
+        {"label": "Connectivity", "value": "Wi-Fi standard; 4G variants available"},
+        {"label": "Extras", "value": "Rugged cases, MDM enrolment, tagging"},
+        {"label": "Warranty", "value": "12 months standard"}
+      ]
+    },
+    {
+      "id": "product-005",
+      "name": "Site Safety PPE Packages",
+      "category": "Safety & PPE",
+      "availability": "Available",
+      "featured": false,
+      "addedOn": "2026-08-15",
+      "moq": "25 packages",
+      "origin": "Certified suppliers",
+      "image": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1541888946425-d81bb19240f5?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "Per-worker PPE kits — helmet, hi-vis, gloves, glasses and safety boots — for contractors and facility teams.",
+      "description": "Standardised per-worker safety kits for construction and facilities companies: certified helmet, high-visibility vest, cut-resistant gloves, safety glasses and steel-toe boots, packed and labelled per size. Company logos can be printed on vests and helmets for larger orders. Recurring monthly replenishment can be arranged for ongoing projects.",
+      "specs": [
+        {"label": "Kit contents", "value": "Helmet, hi-vis vest, gloves, glasses, boots"},
+        {"label": "Standards", "value": "Items supplied with conformity certificates"},
+        {"label": "Sizing", "value": "Packed per worker size list"},
+        {"label": "Branding", "value": "Logo printing available on volume orders"},
+        {"label": "Replenishment", "value": "Monthly supply agreements available"}
+      ]
+    },
+    {
+      "id": "product-006",
+      "name": "Premium Oud & Fragrance Gift Sets",
+      "category": "Consumer Goods",
+      "availability": "Available",
+      "featured": true,
+      "addedOn": "2026-09-09",
+      "moq": "100 sets",
+      "origin": "UAE-based fragrance houses",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "Corporate and retail gift sets built around oud, bakhoor and eau de parfum, with custom packaging options.",
+      "description": "Gift sets developed with established UAE fragrance houses — combinations of eau de parfum, oud oil and bakhoor presented in premium boxes. Popular for corporate gifting seasons (National Day, Ramadan, Eid) and for retailers building a Gulf-inspired range. Custom sleeves, logos and mixed assortments are available at volume.",
+      "specs": [
+        {"label": "Set options", "value": "EDP 50ml + oud oil / bakhoor combinations"},
+        {"label": "Packaging", "value": "Rigid gift box; custom sleeves at volume"},
+        {"label": "Branding", "value": "Corporate logo printing available"},
+        {"label": "Seasonal", "value": "Ramadan / National Day editions"},
+        {"label": "Export", "value": "Documentation for GCC & Africa provided"}
+      ]
+    },
+    {
+      "id": "product-007",
+      "name": "Commercial Kitchen Equipment Line",
+      "category": "HoReCa Equipment",
+      "availability": "On Request",
+      "featured": false,
+      "addedOn": "2026-08-19",
+      "moq": "Project-based",
+      "origin": "Sourced per project",
+      "image": "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1581299894007-aaa50297cf16?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "Stainless-steel cooking lines, refrigeration and prep equipment for restaurants, cafés and cloud kitchens.",
+      "description": "End-to-end kitchen equipment supply for new restaurants, cafés and cloud kitchens: cooking ranges, fryers, refrigeration, stainless fabrication and small wares. Send your kitchen layout or concept and we return an itemised quotation, with delivery, positioning and commissioning coordinated with your fit-out contractor.",
+      "specs": [
+        {"label": "Scope", "value": "Cooking, refrigeration, prep, fabrication"},
+        {"label": "Approach", "value": "Itemised quotes from layout or BOQ"},
+        {"label": "Brands", "value": "Options across budget tiers"},
+        {"label": "Service", "value": "Delivery and commissioning coordination"},
+        {"label": "After-sales", "value": "Supplier warranty terms passed through"}
+      ]
+    },
+    {
+      "id": "product-008",
+      "name": "Arabica Green Coffee Beans (60kg Bags)",
+      "category": "Foodstuff Trading",
+      "availability": "On Request",
+      "featured": false,
+      "addedOn": "2026-08-05",
+      "moq": "20 bags",
+      "origin": "Multiple origins per season",
+      "image": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "Seasonal green Arabica lots for UAE roasters and regional buyers, with samples before commitment.",
+      "description": "We connect UAE and regional roasters with seasonal green Arabica lots across grades and origins. Cupping samples are provided before any commitment, and logistics can be handled to your roastery or bonded warehouse. Tell us your target profile, grade and monthly volume, and we respond with current availability and indicative terms.",
+      "specs": [
+        {"label": "Packing", "value": "60kg jute bags, GrainPro on request"},
+        {"label": "Grades", "value": "Per origin and season"},
+        {"label": "Samples", "value": "Cupping samples before order"},
+        {"label": "Logistics", "value": "Delivered UAE or export terms"},
+        {"label": "Volumes", "value": "From 20 bags to container lots"}
+      ]
+    },
+    {
+      "id": "product-009",
+      "name": "LED High-Bay Warehouse Lighting",
+      "category": "Electrical & Lighting",
+      "availability": "Available",
+      "featured": false,
+      "addedOn": "2026-09-11",
+      "moq": "20 units",
+      "origin": "Approved manufacturers",
+      "image": "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1553413077-190dd305871c?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "150W–240W UFO high-bay LED fittings for warehouses, workshops and sports halls, with photometric support.",
+      "description": "Energy-efficient UFO-style high-bay fittings for warehouses, factories and sports facilities. We support your electrical contractor with lux-level guidance and quantity planning based on mounting height and floor area, and supply in project quantities with drivers, hooks and dimming options as required.",
+      "specs": [
+        {"label": "Wattages", "value": "150W / 200W / 240W"},
+        {"label": "Efficacy", "value": "Up to ~160 lm/W"},
+        {"label": "Beam options", "value": "60° / 90° / 120°"},
+        {"label": "Control", "value": "1-10V dimming, sensors optional"},
+        {"label": "Warranty", "value": "5 years (manufacturer terms)"}
+      ]
+    },
+    {
+      "id": "product-010",
+      "name": "Hotel Linen & Towel Programme",
+      "category": "Hospitality Supplies",
+      "availability": "Unavailable",
+      "featured": false,
+      "addedOn": "2026-07-22",
+      "moq": "Programme-based",
+      "origin": "Certified mills",
+      "image": "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "shortDescription": "Ongoing supply programmes for hotel bed linen, towels and bathrobes. Currently at capacity — join the waitlist.",
+      "description": "Structured supply programmes for hotels and holiday-home operators: percale and sateen bed linen, ring-spun towels and bathrobes with par-level planning and scheduled replenishment. This programme is currently at capacity with existing clients. Submit an enquiry to join the waitlist and we will contact you as allocation opens.",
+      "specs": [
+        {"label": "Linen", "value": "T200–T300 percale & sateen"},
+        {"label": "Towels", "value": "500–650 GSM ring-spun"},
+        {"label": "Programme", "value": "Par-level planning & replenishment"},
+        {"label": "Status", "value": "Waitlist only at present"}
+      ]
+    }
+  ]
+}

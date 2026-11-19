@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Whole Foods — Healthy that hits different | Desi snacks, clean labels</title>
+<meta name="description" content="Whole Foods makes desi snacks with 5 ingredients max — protein chikki, masala makhana, millet bars. Macros that slap, zero refined sugar, delivered in 10 minutes. Padh le label — sab saaf hai." />
+<meta name="theme-color" content="#FFF6E9" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#221507;          /* roasted ink */
+    --paper:#FFF6E9;        /* malai cream */
+    --paper-2:#FFEFD8;
+    --mango:#FFB800;        /* mango yellow */
+    --chili:#2E7D32;        /* wholefoods green (was chili red) */
+    --pista:#7DC242;        /* pista green */
+    --kulfi:#FF8FB1;        /* rose kulfi */
+    --grape:#6C4AB6;        /* jamun */
+    --card:#FFFFFF;
+    --line:rgba(34,21,7,.9);
+    --shadow:4px 4px 0 var(--ink);
+    --shadow-lg:7px 7px 0 var(--ink);
+    --maxw:1260px;
+    --bounce:cubic-bezier(.34,1.56,.64,1);
+    --ease:cubic-bezier(.22,.61,.36,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;overflow-x:hidden;width:100%}
+  body{background:var(--paper);color:var(--ink);font-family:"Inter",system-ui,sans-serif;font-size:15.5px;
+    line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden;width:100%;position:relative}
+  a{color:inherit;text-decoration:none}
+  button{font:inherit;cursor:pointer;background:none;border:none;color:inherit}
+  img{display:block;max-width:100%}
+  ::selection{background:var(--mango);color:var(--ink)}
+  :focus-visible{outline:3px solid var(--grape);outline-offset:3px;border-radius:6px}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 clamp(20px,4.5vw,52px)}
+
+  .disp{font-family:"Bricolage Grotesque","Arial Black",sans-serif;font-weight:800;letter-spacing:-.02em;line-height:.98}
+  .scribble{font-family:"Kalam",cursive;font-weight:700}
+  .cap{font-size:11px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+
+  /* sticker system */
+  .stick{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:2.5px solid var(--ink);
+    border-radius:100px;padding:8px 16px;font-weight:700;font-size:13px;box-shadow:var(--shadow);
+    transition:transform .35s var(--bounce),box-shadow .35s}
+  .stick:hover{transform:translate(-2px,-2px) rotate(-1deg);box-shadow:6px 6px 0 var(--ink)}
+  .stick.mango{background:var(--mango)}
+  .stick.chili{background:var(--chili);color:var(--paper)}
+  .stick.pista{background:var(--pista)}
+  .stick.kulfi{background:var(--kulfi)}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:15px;padding:16px 28px;
+    border:2.5px solid var(--ink);border-radius:100px;background:var(--card);box-shadow:var(--shadow);
+    transition:transform .35s var(--bounce),box-shadow .35s,background .3s;white-space:nowrap}
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:var(--shadow-lg)}
+  .btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+  .btn.mango{background:var(--mango)}
+  .btn.chili{background:var(--chili);color:var(--paper)}
+  .btn.ink{background:var(--ink);color:var(--paper)}
+  .btn svg{width:16px;height:16px}
+
+  /* ---------- top ticker ---------- */
+  .ticker-bar{background:var(--ink);color:var(--paper);overflow:hidden;border-bottom:2.5px solid var(--ink)}
+  .ticker{display:flex;width:max-content;animation:mq 30s linear infinite}
+  .ticker span{font-family:"Bricolage Grotesque";font-weight:700;font-size:12.5px;letter-spacing:.1em;
+    text-transform:uppercase;padding:9px 0;display:inline-flex;align-items:center}
+  .ticker span::after{content:"★";color:var(--mango);margin:0 22px;font-size:11px}
+  @keyframes mq{to{transform:translateX(-50%)}}
+
+  /* ---------- nav ---------- */
+  header.nav{position:sticky;top:0;z-index:70;background:var(--paper);border-bottom:2.5px solid var(--ink)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:72px;gap:20px}
+  .logo{font-family:"Bricolage Grotesque";font-weight:800;font-size:28px;letter-spacing:-.02em;display:flex;align-items:center;gap:6px}
+  .logo .dot{width:12px;height:12px;border-radius:50%;background:var(--chili);border:2.5px solid var(--ink)}
+  .logo img{height:44px;width:auto}
+  .logo .wmtxt{display:none;align-items:center;gap:6px}
+  .logo.noimg img{display:none}
+  .logo.noimg .wmtxt{display:inline-flex}
+  nav.links{display:flex;gap:4px}
+  nav.links a{font-weight:700;font-size:14px;padding:9px 16px;border-radius:100px;border:2.5px solid transparent;transition:.25s}
+  nav.links a:hover{border-color:var(--ink);background:var(--mango)}
+  .nav-right{display:flex;align-items:center;gap:12px}
+  .nav-right .btn{padding:11px 20px;font-size:13.5px}
+  .burger{display:none;flex-direction:column;gap:5px;padding:10px}
+  .burger span{width:24px;height:3px;background:var(--ink);border-radius:3px}
+
+  .mobile-menu{position:fixed;inset:0;background:var(--mango);z-index:90;transform:translateY(-102%);
+    transition:transform .55s var(--bounce);display:flex;flex-direction:column;padding:24px;overflow-y:auto}
+  .mobile-menu.open{transform:none}
+  .mobile-menu .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:26px}
+  .mobile-menu .close{font-size:34px;line-height:1}
+  .mobile-menu a.mlink{font-family:"Bricolage Grotesque";font-weight:800;font-size:40px;padding:12px 0;
+    border-bottom:2.5px dashed var(--ink)}
+  .mobile-menu .btn{margin-top:24px;justify-content:center}
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;overflow:hidden;padding:clamp(44px,6vw,80px) 0 clamp(52px,7vw,96px);
+    background:
+      radial-gradient(420px 420px at 88% 12%,rgba(255,184,0,.4),transparent 65%),
+      radial-gradient(360px 360px at 6% 82%,rgba(125,194,66,.28),transparent 65%),
+      var(--paper)}
+  .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(30px,4vw,60px);align-items:center;position:relative;z-index:2}
+  .hero h1{font-size:clamp(46px,7.2vw,104px)}
+  .hero h1 .hl{background:var(--mango);padding:0 .1em;border-radius:10px;box-shadow:inset 0 -0.12em 0 rgba(34,21,7,.15)}
+  .hero .sub{font-size:clamp(15.5px,1.4vw,19px);margin-top:22px;max-width:46ch;font-weight:500}
+  .hero .sub .scribble{color:var(--chili);font-size:1.15em}
+  .hero-cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:32px}
+  .qcom{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;align-items:center}
+  .qcom .cap{color:rgba(34,21,7,.6)}
+  .qchip{font-weight:800;font-size:13px;padding:9px 16px;border:2.5px solid var(--ink);border-radius:100px;
+    background:var(--card);box-shadow:3px 3px 0 var(--ink);transition:transform .3s var(--bounce)}
+  .qchip:hover{transform:translate(-2px,-2px) rotate(-1.5deg)}
+  .qchip.z{background:#EBDDFF}
+  .qchip.b{background:#FFE86F}
+  .qchip.i{background:#FFD9B0}
+
+  /* pack + label counter — signature */
+  .pack-zone{position:relative;display:flex;justify-content:center}
+  .pack{width:min(360px,80vw);border:3px solid var(--ink);border-radius:26px;background:var(--mango);
+    box-shadow:9px 9px 0 var(--ink);padding:24px;position:relative;transform:rotate(2deg);
+    transition:transform .5s var(--bounce)}
+  .pack:hover{transform:rotate(0deg) translateY(-4px)}
+  .pack .notch{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:110px;height:16px;
+    background:var(--paper);border:3px solid var(--ink);border-top:none;border-radius:0 0 12px 12px}
+  .pack .pname{font-family:"Bricolage Grotesque";font-weight:800;font-size:30px;letter-spacing:-.02em;margin-top:14px}
+  .pack .pflav{font-family:"Kalam";font-weight:700;font-size:19px;color:var(--chili);margin-top:2px}
+  .pack .divider{border-top:2.5px dashed var(--ink);margin:16px 0}
+  .pack .cap{opacity:.75}
+  .ing-list{margin-top:10px;display:flex;flex-direction:column;gap:8px;min-height:132px}
+  .ing{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;opacity:0;transform:translateY(8px) scale(.96);
+    transition:opacity .4s var(--bounce),transform .4s var(--bounce)}
+  .ing.on{opacity:1;transform:none}
+  .ing .tick{width:22px;height:22px;border:2.5px solid var(--ink);border-radius:50%;background:var(--pista);
+    display:flex;align-items:center;justify-content:center;flex:0 0 22px}
+  .ing .tick svg{width:12px;height:12px}
+  .ing.bas{font-family:"Kalam";font-weight:700;font-size:20px;color:var(--chili)}
+  .ing.bas .tick{background:var(--chili)}
+  .ing.bas .tick svg{color:var(--paper)}
+  .pack .macros{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .pack .m{background:var(--paper);border:2.5px solid var(--ink);border-radius:10px;padding:7px 12px;font-weight:800;font-size:13px}
+  .vs-tag{position:absolute;right:-8px;bottom:-26px;transform:rotate(-4deg)}
+  .vs-tag .stick{font-family:"Kalam";font-weight:700;font-size:15px}
+  .vs-tag b{font-family:"Bricolage Grotesque";font-size:18px;min-width:34px;text-align:center;display:inline-block}
+  .doodle{position:absolute;font-family:"Kalam";font-weight:700;color:var(--ink);opacity:.85;pointer-events:none}
+  .doodle.d1{top:-6px;left:-8%;transform:rotate(-8deg);font-size:15px}
+  .doodle.d1 svg{display:block;margin:4px auto 0}
+
+  /* ---------- badge marquee ---------- */
+  .badges{background:var(--pista);border-top:2.5px solid var(--ink);border-bottom:2.5px solid var(--ink);overflow:hidden}
+  .badges .ticker span::after{color:var(--ink)}
+  .badges .ticker span{color:var(--ink);padding:11px 0;font-size:13px}
+
+  /* ---------- sections ---------- */
+  section{position:relative}
+  .sec{padding:clamp(64px,9vw,120px) 0}
+  .sec-head{max-width:760px;margin-bottom:clamp(34px,4.5vw,54px)}
+  .sec-head.center{margin-left:auto;margin-right:auto;text-align:center}
+  .sec-head h2{font-size:clamp(32px,4.8vw,60px);margin-top:14px}
+  .sec-head h2 .un{box-shadow:inset 0 -0.28em 0 var(--kulfi);border-radius:4px;padding:0 .06em}
+  .sec-head p{font-size:16.5px;margin-top:14px;font-weight:500}
+  .reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* ---------- lineup ---------- */
+  .prod-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .prod{border:3px solid var(--ink);border-radius:24px;background:var(--card);box-shadow:var(--shadow);
+    overflow:hidden;transition:transform .45s var(--bounce),box-shadow .45s;display:flex;flex-direction:column}
+  .prod:hover{transform:translate(-3px,-3px) rotate(-.4deg);box-shadow:var(--shadow-lg)}
+  .prod .swatch{height:150px;position:relative;border-bottom:3px solid var(--ink);display:flex;align-items:center;justify-content:center}
+  .prod .swatch .big{font-family:"Bricolage Grotesque";font-weight:800;font-size:56px;color:rgba(34,21,7,.9)}
+  .prod .swatch .fl{position:absolute;top:12px;left:14px}
+  .prod .bd{padding:20px 20px 22px;display:flex;flex-direction:column;gap:12px;flex:1}
+  .prod h3{font-family:"Bricolage Grotesque";font-weight:800;font-size:21px;letter-spacing:-.01em;line-height:1.1}
+  .prod .tag{font-family:"Kalam";font-weight:700;font-size:15.5px;color:var(--chili)}
+  .receipt{border:2.5px dashed var(--ink);border-radius:12px;padding:11px 14px;font-size:12.5px;font-weight:700;
+    display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;background:var(--paper)}
+  .receipt b{justify-self:end}
+  .prod .row{display:flex;gap:10px;margin-top:auto}
+  .prod .row .btn{flex:1;justify-content:center;padding:13px 14px;font-size:13.5px}
+  .prod .p{font-family:"Bricolage Grotesque";font-weight:800;font-size:18px;align-self:center}
+
+  /* ---------- receipt of NOs ---------- */
+  .nos{background:var(--chili);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink);color:var(--paper)}
+  .nos .grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:center}
+  .nos h2{font-size:clamp(34px,5vw,64px);color:var(--paper)}
+  .nos h2 .scribble{color:var(--mango)}
+  .nos p{margin-top:16px;font-weight:500;max-width:44ch}
+  .no-receipt{background:var(--paper);color:var(--ink);border:3px solid var(--ink);border-radius:20px;
+    box-shadow:8px 8px 0 var(--ink);padding:26px;transform:rotate(-1.5deg);max-width:420px;justify-self:center;width:100%}
+  .no-receipt .rt{font-family:"Bricolage Grotesque";font-weight:800;font-size:18px;text-align:center;letter-spacing:.06em}
+  .no-receipt .rl{border-top:2.5px dashed var(--ink);margin:14px 0}
+  .no-item{display:flex;justify-content:space-between;font-weight:700;font-size:15px;padding:7px 0}
+  .no-item .x{color:var(--chili);font-family:"Bricolage Grotesque";font-weight:800}
+  .no-receipt .total{display:flex;justify-content:space-between;font-family:"Bricolage Grotesque";font-weight:800;font-size:17px;padding-top:12px}
+  .no-receipt .thanks{text-align:center;font-family:"Kalam";font-weight:700;margin-top:12px;font-size:15px}
+
+  /* ---------- occasions ---------- */
+  .occ-row{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+  .occ{border:3px solid var(--ink);border-radius:22px;padding:24px 22px;box-shadow:var(--shadow);min-height:210px;
+    display:flex;flex-direction:column;gap:10px;transition:transform .45s var(--bounce)}
+  .occ:hover{transform:translate(-3px,-3px) rotate(.5deg)}
+  .occ .t{font-family:"Bricolage Grotesque";font-weight:800;font-size:22px;line-height:1.05}
+  .occ .k{font-family:"Kalam";font-weight:700;font-size:16px}
+  .occ .pick{margin-top:auto;font-size:12.5px;font-weight:700;display:inline-flex;gap:7px;align-items:center}
+  .occ .pick svg{width:13px;height:13px}
+  .occ.o1{background:var(--ink);color:var(--paper)}
+  .occ.o1 .k{color:var(--mango)}
+  .occ.o2{background:var(--mango)}
+  .occ.o2 .k{color:var(--chili)}
+  .occ.o3{background:var(--kulfi)}
+  .occ.o3 .k{color:var(--ink)}
+  .occ.o4{background:var(--pista)}
+  .occ.o4 .k{color:var(--ink)}
+
+  /* ---------- label fight ---------- */
+  .fight .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:stretch}
+  .card-cmp{border:3px solid var(--ink);border-radius:22px;padding:28px;box-shadow:var(--shadow);background:var(--card)}
+  .card-cmp .who{font-family:"Bricolage Grotesque";font-weight:800;font-size:20px}
+  .card-cmp .count{font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(64px,8vw,104px);line-height:1;margin:12px 0 4px}
+  .card-cmp .lbl{font-weight:700;font-size:13.5px}
+  .card-cmp.us{background:var(--pista)}
+  .card-cmp.them{background:var(--paper-2)}
+  .card-cmp.them .count{color:var(--chili)}
+  .card-cmp .fine{font-family:"Kalam";font-weight:700;font-size:15px;margin-top:10px}
+  .fight .note{text-align:center;margin-top:20px;font-family:"Kalam";font-weight:700;font-size:17px}
+
+  /* ---------- UGC wall ---------- */
+  .ugc{background:var(--mango);border-top:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+  .ugc-row{display:flex;gap:18px;overflow-x:auto;padding:10px 4px 24px;scroll-snap-type:x mandatory;scrollbar-width:thin}
+  .ugc-row::-webkit-scrollbar{height:6px}
+  .ugc-row::-webkit-scrollbar-thumb{background:var(--ink);border-radius:10px}
+  .polaroid{scroll-snap-align:start;flex:0 0 260px;background:var(--card);border:3px solid var(--ink);
+    border-radius:16px;box-shadow:var(--shadow);padding:14px 14px 18px;transform:rotate(var(--r,0deg));
+    transition:transform .4s var(--bounce)}
+  .polaroid:hover{transform:rotate(0) translateY(-5px)}
+  .polaroid .ph{height:140px;border:2.5px solid var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:center;
+    font-family:"Bricolage Grotesque";font-weight:800;font-size:40px}
+  .polaroid q{display:block;font-family:"Kalam";font-weight:700;font-size:15.5px;margin-top:12px;line-height:1.45;quotes:"“" "”"}
+  .polaroid .who{font-size:12px;font-weight:700;margin-top:8px;opacity:.75}
+  .ugc .fine{text-align:center;font-family:"Kalam";font-weight:700;font-size:16px;margin-top:6px}
+
+  /* ---------- founder ---------- */
+  .founder .box{border:3px solid var(--ink);border-radius:24px;background:var(--card);box-shadow:var(--shadow-lg);
+    display:grid;grid-template-columns:auto 1fr;gap:26px;padding:clamp(24px,3.5vw,40px);align-items:center;max-width:900px;margin:0 auto}
+  .founder .face{width:110px;height:110px;border-radius:50%;border:3px solid var(--ink);background:var(--kulfi);
+    display:flex;align-items:center;justify-content:center;font-family:"Bricolage Grotesque";font-weight:800;font-size:42px}
+  .founder q{font-family:"Kalam";font-weight:700;font-size:clamp(17px,1.8vw,21px);line-height:1.5;display:block;quotes:"“" "”"}
+  .founder .who{margin-top:12px;font-weight:700;font-size:13.5px}
+  .founder .who span{opacity:.65;font-weight:600}
+
+  /* ---------- FAQ ---------- */
+  .faq{max-width:780px;margin:0 auto}
+  .qa{border:3px solid var(--ink);border-radius:18px;background:var(--card);box-shadow:var(--shadow);margin-bottom:14px;overflow:hidden}
+  .qa button.q{width:100%;text-align:left;padding:19px 22px;display:flex;justify-content:space-between;gap:16px;align-items:center;
+    font-family:"Bricolage Grotesque";font-weight:800;font-size:17.5px}
+  .qa .ic{flex:0 0 26px;width:26px;height:26px;border:2.5px solid var(--ink);border-radius:50%;background:var(--mango);
+    display:flex;align-items:center;justify-content:center;transition:transform .4s var(--bounce)}
+  .qa.open .ic{transform:rotate(45deg);background:var(--chili)}
+  .qa .ic svg{width:13px;height:13px}
+  .qa .ans{max-height:0;overflow:hidden;transition:max-height .45s var(--ease)}
+  .qa .ans p{padding:0 22px 20px;font-weight:500;font-size:14.5px}
+  .qa .ans .scribble{color:var(--chili)}
+
+  /* ---------- CTA ---------- */
+  .cta .panel{border:3px solid var(--ink);border-radius:28px;background:var(--grape);color:var(--paper);
+    box-shadow:9px 9px 0 var(--ink);padding:clamp(44px,7vw,90px) clamp(24px,5vw,70px);text-align:center;position:relative;overflow:hidden}
+  .cta h2{font-size:clamp(38px,6vw,84px);color:var(--paper)}
+  .cta h2 .hl{background:var(--mango);color:var(--ink);padding:0 .12em;border-radius:12px;display:inline-block;transform:rotate(-1.2deg)}
+  .cta p{margin:18px auto 0;max-width:46ch;font-weight:500}
+  .cta .row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:34px}
+  .cta .conf{position:absolute;font-family:"Kalam";font-weight:700;opacity:.35;font-size:22px}
+
+  /* ---------- footer ---------- */
+  footer{background:var(--ink);color:var(--paper);padding:clamp(52px,7vw,80px) 0 28px;border-top:3px solid var(--ink)}
+  .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1.3fr;gap:38px;padding-bottom:40px;border-bottom:2.5px dashed rgba(255,246,233,.3)}
+  .foot-logo{font-family:"Bricolage Grotesque";font-weight:800;font-size:32px}
+  .foot-logo .dot{display:inline-block;width:11px;height:11px;border-radius:50%;background:var(--chili);margin-left:5px}
+  .foot-brand p{font-size:13.5px;opacity:.75;max-width:30ch;margin-top:12px}
+  .pay-chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+  .pay-chips span{font-size:11px;font-weight:700;border:2px solid rgba(255,246,233,.35);border-radius:8px;padding:5px 10px}
+  .fcol h4{font-family:"Kalam";font-weight:700;font-size:16px;color:var(--mango);margin-bottom:16px}
+  .fcol a{display:block;font-size:14px;opacity:.85;margin-bottom:11px;transition:.25s}
+  .fcol a:hover{opacity:1;color:var(--mango);transform:translateX(4px)}
+  .foot-bot{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-top:24px;font-size:12.5px;opacity:.7}
+  .foot-mark{font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(44px,10.5vw,150px);line-height:1;text-align:center;
+    margin:36px 0 0;color:transparent;-webkit-text-stroke:2px rgba(255,246,233,.2);user-select:none;transition:.5s}
+  .foot-mark:hover{color:var(--mango);-webkit-text-stroke:2px var(--mango)}
+
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:var(--paper);
+    padding:14px 22px;border-radius:100px;border:2.5px solid var(--paper);font-weight:700;font-size:14px;
+    opacity:0;pointer-events:none;transition:.4s var(--bounce);z-index:99}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media(max-width:1024px){
+    .prod-grid{grid-template-columns:1fr 1fr}
+    .occ-row{grid-template-columns:1fr 1fr}
+  }
+  @media(max-width:880px){
+    nav.links{display:none}
+    .nav-right .btn.mango{display:none}
+    .burger{display:flex}
+    .hero-grid{grid-template-columns:1fr;gap:48px}
+    .nos .grid,.fight .grid{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr 1fr;gap:30px}
+    .founder .box{grid-template-columns:1fr;text-align:center;justify-items:center}
+  }
+  @media(max-width:620px){
+    .prod-grid,.occ-row{grid-template-columns:1fr}
+    .foot-grid{grid-template-columns:1fr}
+    .btn{white-space:normal;text-align:center}
+    .hero-cta .btn,.cta .row .btn{width:100%;justify-content:center}
+    .vs-tag{right:4px}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+    .reveal{opacity:1;transform:none}
+    .ing{opacity:1;transform:none}
+  }
+</style>
+</head>
+<body>
+
+<!-- ticker -->
+<div class="ticker-bar" aria-hidden="true"><div class="ticker" id="tick1"></div></div>
+
+<!-- nav -->
+<header class="nav">
+  <div class="wrap nav-in">
+    <a href="#top" class="logo" id="brandLogo"><img src="https://wholefoods.co.in/cdn/shop/files/wholefood_logo-Photoroom_1.png" alt="Whole Foods India" onerror="document.getElementById('brandLogo').classList.add('noimg')"><span class="wmtxt">WholeFoods<span class="dot"></span></span></a>
+    <nav class="links" aria-label="Primary">
+      <a href="#lineup">The Lineup</a>
+      <a href="#nos">What's NOT Inside</a>
+      <a href="#fight">Label Fight</a>
+      <a href="#fam">The Fam</a>
+    </nav>
+    <div class="nav-right">
+      <a href="#lineup" class="btn mango">Build Your Stash</a>
+      <button class="burger" id="burger" aria-label="Open menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <div class="top"><span class="logo noimg"><span class="wmtxt" style="display:inline-flex">WholeFoods<span class="dot"></span></span></span>
+    <button class="close" id="closeMenu" aria-label="Close menu">&times;</button></div>
+  <a class="mlink" href="#lineup">The Lineup</a>
+  <a class="mlink" href="#nos">What's NOT Inside</a>
+  <a class="mlink" href="#fight">Label Fight</a>
+  <a class="mlink" href="#fam">The Fam</a>
+  <a href="#lineup" class="btn mango">Build Your Stash</a>
+</div>
+
+<!-- hero -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="stick chili">Desi snacks · 5 ingredients max</span>
+      <h1 class="disp" style="margin-top:22px">Healthy that <span class="hl">hits different.</span></h1>
+      <p class="sub">Dadi-approved flavours. Gym-bro macros. Zero refined sugar, zero palm oil, zero 47-letter chemicals.
+        <span class="scribble">Padh le label — sab saaf hai.</span></p>
+      <div class="hero-cta">
+        <a href="#lineup" class="btn ink">Build Your Stash
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <a href="#fight" class="btn">See the Label Fight</a>
+      </div>
+      <div class="qcom">
+        <span class="cap">10-min delivery on:</span>
+        <button class="qchip z" data-toast="Concept demo — Zepto listing goes here">Zepto</button>
+        <button class="qchip b" data-toast="Concept demo — Blinkit listing goes here">Blinkit</button>
+        <button class="qchip i" data-toast="Concept demo — Instamart listing goes here">Instamart</button>
+      </div>
+    </div>
+
+    <!-- pack with live ingredient counter -->
+    <div class="pack-zone reveal in">
+      <div class="doodle d1">taste toh<br>pagal hai
+        <svg width="40" height="26" viewBox="0 0 40 26" fill="none"><path d="M2 2c10 16 24 20 36 12M38 14l-7-1M38 14l-2 7" stroke="#221507" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="pack" aria-label="Whole Foods Gud Peanut Protein Chikki pack with ingredient list">
+        <div class="notch"></div>
+        <div class="cap" style="margin-top:8px">WHOLE FOODS ORIGINALS</div>
+        <div class="pname">Protein Chikki</div>
+        <div class="pflav">gud + peanut · 12g protein</div>
+        <div class="divider"></div>
+        <div class="cap">Ingredients (all of them):</div>
+        <div class="ing-list" id="ingList">
+          <div class="ing"><span class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="M20 7 9 18l-5-5" stroke="#221507" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Peanuts (bhuna hua)</div>
+          <div class="ing"><span class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="M20 7 9 18l-5-5" stroke="#221507" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Jaggery (asli gud)</div>
+          <div class="ing"><span class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="M20 7 9 18l-5-5" stroke="#221507" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Ghee (thoda sa)</div>
+          <div class="ing bas"><span class="tick"><svg viewBox="0 0 24 24" fill="none"><path d="M20 7 9 18l-5-5" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Bas. That's it.</div>
+        </div>
+        <div class="macros">
+          <span class="m">12g protein</span><span class="m">138 kcal</span><span class="m">0g added sugar</span>
+        </div>
+      </div>
+      <div class="vs-tag"><span class="stick">that "healthy" bar: <b id="themCount">23</b> ingredients</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- badges -->
+<div class="badges" aria-hidden="true"><div class="ticker" id="tick2"></div></div>
+
+<!-- lineup -->
+<section class="sec" id="lineup">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="stick mango">The Lineup</span>
+      <h2 class="disp">Snacks your <span class="un">nani</span> would recognise.</h2>
+      <p>Every pack: 5 ingredients max, macros printed like a receipt, flavours from home — not from a lab in New Jersey.</p>
+    </div>
+    <div class="prod-grid" id="prodGrid"></div>
+  </div>
+</section>
+
+<!-- receipt of NOs -->
+<section class="sec nos" id="nos">
+  <div class="wrap grid">
+    <div class="reveal">
+      <span class="stick">The saaf promise</span>
+      <h2 class="disp" style="margin-top:18px">What's NOT inside. <span class="scribble">(the full list)</span></h2>
+      <p>Most snack labels are a chemistry paper. Ours is a grocery list. Here's the receipt of everything we refused to add — total damage: zero.</p>
+    </div>
+    <div class="no-receipt reveal" aria-label="Receipt of ingredients we never use">
+      <div class="rt">WHOLE FOODS — RECEIPT</div>
+      <div class="cap" style="text-align:center;opacity:.6;margin-top:4px">Things we said NO to</div>
+      <div class="rl"></div>
+      <div class="no-item"><span>Maida</span><span class="x">✗ ₹0</span></div>
+      <div class="no-item"><span>Palm oil</span><span class="x">✗ ₹0</span></div>
+      <div class="no-item"><span>Refined sugar</span><span class="x">✗ ₹0</span></div>
+      <div class="no-item"><span>Preservatives</span><span class="x">✗ ₹0</span></div>
+      <div class="no-item"><span>Artificial colours</span><span class="x">✗ ₹0</span></div>
+      <div class="no-item"><span>47-letter chemicals</span><span class="x">✗ ₹0</span></div>
+      <div class="rl"></div>
+      <div class="total"><span>TOTAL BAKWAAS</span><span>₹0.00</span></div>
+      <div class="thanks">dhanyavaad, aayiye phir se</div>
+    </div>
+  </div>
+</section>
+
+<!-- occasions -->
+<section class="sec" id="moments">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="stick kulfi">Kab khaana hai?</span>
+      <h2 class="disp">No bad time. <span class="un">Sirf sahi time.</span></h2>
+    </div>
+    <div class="occ-row">
+      <div class="occ o1 reveal"><div class="t">3AM Assignment Fuel</div><div class="k">Deadline hai. Maggi mat khol.</div><span class="pick">Grab: Filter Coffee Bar <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="occ o2 reveal"><div class="t">Post-Gym Bhookh</div><div class="k">Protein turant. Shower baad mein.</div><span class="pick">Grab: Protein Chikki <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="occ o3 reveal"><div class="t">Hostel Stash</div><div class="k">Roommate se chhupa ke rakhna.</div><span class="pick">Grab: Masala Makhana <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+      <div class="occ o4 reveal"><div class="t">Monday Class Dash</div><div class="k">8AM lecture. 8-second breakfast.</div><span class="pick">Grab: Ragi Laddoo <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- label fight -->
+<section class="sec fight" id="fight" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="stick chili">The Label Fight</span>
+      <h2 class="disp">Count the <span class="un">ingredients.</span> We'll wait.</h2>
+    </div>
+    <div class="grid">
+      <div class="card-cmp us reveal">
+        <div class="who">Whole Foods Protein Chikki</div>
+        <div class="count" id="usCount">0</div>
+        <div class="lbl">ingredients. All pronounceable.</div>
+        <div class="fine">peanuts, gud, ghee. done.</div>
+      </div>
+      <div class="card-cmp them reveal">
+        <div class="who">That "healthy" chocolate bar</div>
+        <div class="count" id="themBig">0</div>
+        <div class="lbl">ingredients… and still counting</div>
+        <div class="fine">humectant (INS 422)?? bro what</div>
+      </div>
+    </div>
+    <p class="note">Screenshot this. Send it to the friend who reads labels out loud.</p>
+  </div>
+</section>
+
+<!-- UGC wall -->
+<section class="sec ugc" id="fam">
+  <div class="wrap">
+    <div class="sec-head reveal" style="margin-bottom:26px">
+      <span class="stick">The Fam</span>
+      <h2 class="disp">Posted, not paid. <span class="scribble" style="font-size:.55em">(promise)</span></h2>
+    </div>
+  </div>
+  <div class="wrap">
+    <div class="ugc-row" id="ugcRow"></div>
+    <p class="fine">Tag @wholefoodsindia — best posts end up here + free stash for a month.</p>
+  </div>
+</section>
+
+<!-- founder -->
+<section class="sec founder">
+  <div class="wrap">
+    <div class="box reveal">
+      <div class="face">S</div>
+      <div>
+        <q>Main nutritionist hoon, mera bhai foodie hai. Har recipe pe hum dono ka jhagda hota hai — jab dono haan bolte
+          hain, tabhi launch hota hai. Isliye taste bhi hai, macros bhi.</q>
+        <div class="who">The Whole Foods kitchen <span>· concept placeholder — brand story goes here</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head center reveal">
+      <span class="stick pista">Sawaal-Jawaab</span>
+      <h2 class="disp">Pooch le, sharma mat.</h2>
+    </div>
+    <div class="faq" id="faqList"></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="sec cta" id="stash" style="padding-top:0">
+  <div class="wrap">
+    <div class="panel reveal">
+      <span class="conf" style="top:14%;left:8%;transform:rotate(-10deg)">macros!</span>
+      <span class="conf" style="bottom:16%;right:9%;transform:rotate(8deg)">saaf!</span>
+      <h2 class="disp">Stash bhar le. <span class="hl">Guilt nahi.</span></h2>
+      <p>Starter stash from ₹299. Delivered in 10 minutes via quick commerce, ya seedha humse — UPI, COD, sab chalega.</p>
+      <div class="row">
+        <a href="#lineup" class="btn mango">Build Your Stash
+          <svg viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+        <button class="btn" data-toast="Concept demo — WhatsApp community link goes here">Join the Group Chat</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- footer -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="foot-logo">WholeFoods<span class="dot"></span></div>
+        <p>Desi snacks with 5 ingredients max. Healthy that hits different — made with pyaar in India.</p>
+        <div class="pay-chips"><span>UPI</span><span>GPay</span><span>PhonePe</span><span>Paytm</span><span>COD</span></div>
+      </div>
+      <div class="fcol">
+        <h4>Shop</h4>
+        <a href="#lineup">Protein Chikki</a><a href="#lineup">Masala Makhana</a><a href="#lineup">Millet Bars</a><a href="#lineup">Ragi Laddoos</a>
+      </div>
+      <div class="fcol">
+        <h4>The Brand</h4>
+        <a href="#nos">The Saaf Promise</a><a href="#fight">Label Fight</a><a href="#fam">The Fam</a><a href="#faq">FAQs</a>
+      </div>
+      <div class="fcol">
+        <h4>Hisaab-Kitaab</h4>
+        <a href="#">Lab Reports (public)</a><a href="#">Shipping &amp; Returns</a><a href="#">Privacy</a><a href="#">Careers — join the rasoi</a>
+      </div>
+    </div>
+    <div class="foot-mark" aria-hidden="true">WHOLEFOODS</div>
+    <div class="foot-bot">
+      <span>© Whole Foods · Operated by Haldiram Marketing Private Limited — concept design.</span>
+      <span>Healthy that hits different.</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">Concept demo</div>
+
+<script>
+const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* tickers */
+const T1=['5 ingredients max','No refined sugar','No palm oil','No maida','Sweetened with gud & dates','Made in India','Padh le label'];
+const T2=['Protein that slaps','Nani-approved','10-min delivery','0g added sugar','Hostel budget friendly','Screenshot the label'];
+function fillTicker(id,items){const el=document.getElementById(id);const h=items.map(t=>`<span>${t}</span>`).join('');el.innerHTML=h+h;}
+fillTicker('tick1',T1);fillTicker('tick2',T2);
+
+/* ingredient stamp loop */
+(function(){
+  const ings=[...document.querySelectorAll('#ingList .ing')];
+  if(reduced){ings.forEach(i=>i.classList.add('on'));return;}
+  function run(){
+    ings.forEach(i=>i.classList.remove('on'));
+    ings.forEach((i,idx)=>setTimeout(()=>i.classList.add('on'),500+idx*650));
+    setTimeout(run,500+ings.length*650+3200);
+  }
+  new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){run();o.disconnect();}},{threshold:.4})
+    .observe(document.getElementById('ingList'));
+})();
+
+/* products */
+const PRODS=[
+ ['Gud Peanut Protein Chikki','Dadi ki recipe, gym waale macros.','12g protein','138 kcal','3 ingredients','0g added sugar','₹49','var(--mango)','CH'],
+ ['Masala Makhana','Chips se better. Fight mat kar.','4g protein','98 kcal','4 ingredients','Roasted, not fried','₹59','var(--pista)','MA'],
+ ['Ragi Date Laddoo','Nani-approved gains.','10g protein','121 kcal','5 ingredients','Sweetened with dates','₹45','var(--kulfi)','LA'],
+ ['Filter Coffee Millet Bar','South se aaya, sabka ho gaya.','11g protein','142 kcal','5 ingredients','Real filter kaapi','₹65','#C89B6D','FC'],
+ ['Rose Kulfi Millet Bar','Shaadi waali kulfi, minus the crash.','10g protein','139 kcal','5 ingredients','0g added sugar','₹65','#FFC9DB','RK'],
+ ['Imli Chatka Bites','Khatta. Meetha. Zero bakwaas.','2g protein','89 kcal','4 ingredients','No artificial colour','₹39','#F2A03D','IM']
+];
+document.getElementById('prodGrid').innerHTML=PRODS.map(([n,tag,p1,p2,p3,p4,pr,col,ab])=>`
+  <article class="prod reveal">
+    <div class="swatch" style="background:${col}">
+      <span class="big">${ab}</span>
+      <span class="fl"><span class="stick" style="padding:5px 12px;font-size:11px">${p3}</span></span>
+    </div>
+    <div class="bd">
+      <h3>${n}</h3>
+      <div class="tag">${tag}</div>
+      <div class="receipt">
+        <span>Protein</span><b>${p1.replace(' protein','')}</b>
+        <span>Energy</span><b>${p2}</b>
+        <span>Extra</span><b>${p4}</b>
+        <span>Added sugar</span><b>0g</b>
+      </div>
+      <div class="row">
+        <button class="btn ink" data-toast="Concept demo — cart flow goes here">Add · ${pr}</button>
+        <button class="btn" data-toast="Concept demo — quick-commerce link goes here" style="flex:0 0 auto" aria-label="10 minute delivery">10-min</button>
+      </div>
+    </div>
+  </article>`).join('');
+
+/* label fight counters */
+(function(){
+  const us=document.getElementById('usCount'),them=document.getElementById('themBig'),themSmall=document.getElementById('themCount');
+  if(reduced){us.textContent='3';them.textContent='23+';themSmall.textContent='23';return;}
+  themSmall.textContent='23';
+  let started=false;
+  new IntersectionObserver((es,o)=>{
+    if(!es[0].isIntersecting||started)return;started=true;o.disconnect();
+    let u=0;const ui=setInterval(()=>{u++;us.textContent=u;if(u>=3)clearInterval(ui);},420);
+    let t=0;const ti=setInterval(()=>{t++;them.textContent=t;if(t>=23){clearInterval(ti);them.textContent='23+';}},110);
+  },{threshold:.5}).observe(us);
+})();
+
+/* UGC wall */
+const UGC=[
+ ['CH','chikki finished in 2 days. not sorry.','Ananya, 21 · DU hostel','var(--mango)',-2],
+ ['MA','makhana > chips and i said what i said','Ishaan, 19 · Pune','var(--pista)',2],
+ ['FC','filter coffee bar at 3am saved my sem','Meghna, 22 · Manipal','#C89B6D',-1.5],
+ ['LA','mom asked where i bought the laddoos. MOM.','Aarav, 20 · Jaipur','var(--kulfi)',1.5],
+ ['RK','kulfi bar in my bag at all times, non-negotiable','Zoya, 23 · Mumbai','#FFC9DB',-2.5],
+ ['IM','imli bites hit like childhood, macros hit like 2026','Kabir, 21 · Indore','#F2A03D',2.5]
+];
+document.getElementById('ugcRow').innerHTML=UGC.map(([ab,q,who,col,r])=>`
+  <figure class="polaroid" style="--r:${r}deg">
+    <div class="ph" style="background:${col}">${ab}</div>
+    <q>${q}</q><figcaption class="who">${who} · concept demo</figcaption>
+  </figure>`).join('');
+
+/* FAQ */
+const FAQS=[
+ ['Sirf 5 ingredients mein taste kaise aayega?','Kyunki asli cheezein use ki hain — bhuna peanut, asli gud, real filter coffee. Flavour labs ki zaroorat unhe padti hai jinke paas asli flavour nahi hota. <span class="scribble">Humein nahi padti.</span>'],
+ ['Gym nahi jaata/jaati. Phir bhi mere liye hai?','Bilkul. Whole Foods gym waalon ke liye nahi, bhookh waalon ke liye hai. Protein sabko chahiye — assignment likhne mein bhi muscle lagta hai.'],
+ ['"No added sugar" matlab sweet nahi hoga?','Sweet hoga — gud aur dates se. Refined sugar ka crash nahi milega, bas. Meetha bhi, dhokha nahi.'],
+ ['Hostel budget mein aata hai kya?','₹39 se shuru. Ek vada pav se thoda zyada, ek regret se bahut kam.'],
+ ['Lab reports sach mein public hain?','Haan — har batch ka report link label pe hoga. Jhooth bolna mehenga padta hai, isliye bolte hi nahi.']
+];
+document.getElementById('faqList').innerHTML=FAQS.map(([q,a])=>`
+  <div class="qa">
+    <button class="q">${q}<span class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#221507" stroke-width="3" stroke-linecap="round"/></svg></span></button>
+    <div class="ans"><p>${a}</p></div>
+  </div>`).join('');
+document.querySelectorAll('.qa .q').forEach(b=>b.onclick=()=>{
+  const qa=b.parentElement,ans=qa.querySelector('.ans'),open=qa.classList.contains('open');
+  document.querySelectorAll('.qa.open').forEach(o=>{if(o!==qa){o.classList.remove('open');o.querySelector('.ans').style.maxHeight=null;}});
+  qa.classList.toggle('open');ans.style.maxHeight=open?null:ans.scrollHeight+'px';
+});
+
+/* toast */
+const toast=document.getElementById('toast');
+document.querySelectorAll('[data-toast]').forEach(el=>el.addEventListener('click',e=>{
+  e.preventDefault();
+  toast.textContent=el.dataset.toast;
+  toast.classList.add('show');
+  clearTimeout(toast._t);toast._t=setTimeout(()=>toast.classList.remove('show'),2600);
+}));
+
+/* mobile menu */
+const mm=document.getElementById('mobileMenu');
+document.getElementById('burger').onclick=()=>mm.classList.add('open');
+document.getElementById('closeMenu').onclick=()=>mm.classList.remove('open');
+mm.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mm.classList.remove('open')));
+
+/* reveals */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.12});
+document.querySelectorAll('.reveal').forEach((el,i)=>{el.style.transitionDelay=(Math.min(i%4,3)*.06)+'s';io.observe(el);});
+</script>
+</body>
+</html>

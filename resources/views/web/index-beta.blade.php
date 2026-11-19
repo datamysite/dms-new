@@ -1,0 +1,811 @@
+@extends('web.includes.master')
+@section('metaAddition')
+	<link rel="preload" as="image" href="{{URL::to('/public')}}/assets/img/background/banner.webp" fetchpriority="high"/>
+	<link rel="preload" as="image" href="{{URL::to('/public/loader-gif-m.gif')}}">
+@endsection
+@section('addStyle')
+	
+	<link rel="preload" as="style" href="{{URL::to('/public')}}/assets/css/home-faq.css">
+	<link href="{{URL::to('/public')}}/assets/css/home-faq.css" rel="stylesheet">
+	<style type="text/css">
+		.hero .blockquote {
+		  color: #fff;
+		  padding-left: 20px;
+		  border-left: 2px solid #e04a43;
+		  margin: 14px 0;
+		}
+		.hero-title-sec h1 {
+		    font-family: system-ui !important;
+			font-size:34px;
+		}
+		.circle-percentage{
+			background-color: #fff;
+		}
+			@media (max-width: 767px) {
+			    .hero-title-sec h1 {
+			        font-size: 42px;
+			        line-height: 52px;
+			    }
+			}
+	</style>
+@endsection
+@section('content')
+
+	<main class="main">
+
+	    <!-- Hero Section -->
+	    <section id="hero" class="hero section dark-background">
+
+	      <img src="{{URL::to('/public')}}/assets/img/background/banner.webp"  class="hero-img-bg" alt="Hero Image" loading="lazy">
+
+          	<div class="hide-desktop hide-click">
+          		<div class="float-badge">
+			      <div class="badge-num">20+</div>
+			      <div class="badge-label">Years</div>
+			    </div>
+
+          		<div class="float-badge2">
+			      <div class="badge-inner">
+			        <div class="badge-dot"></div>
+			        <span class="badge-txt">Dubai's #1 Agency</span>
+			      </div>
+			    </div>
+          	</div>
+
+	      <div class="container">
+
+	        <div class="row split-block">
+	          <div class="col-xl-1 hide-mobile">
+	          	<p class="hero-title">DataMySite</p>
+	          </div>
+	          <div class="col-xl-4">
+	          	<div class="hero-img">
+	          		<form action="{{route('enquiry.submit')}}" id="home-enquiry-form">
+	  					@csrf
+			          	<div class="form1-wrapper">
+						    <div class="form1-bg">
+						      <h2 class="form1-headline">Ready to Get <span>Results?</span></h2>
+						      <p class="form1-sub">Drop us your details — our experts respond within 60 minutes.</p>
+
+						      <div class="form1-field">
+						        <input type="text" placeholder="Your Full Name" name="name" required>
+						      </div>
+
+						      <div class="form1-field">
+							      <input type="tel" class="form-control" name="mainphone" id="phone-field6" required="">
+							      <input type="hidden" name="phone" id="fullphone-field6" required="">
+						      </div>
+
+						      <div class="form1-field">
+						        <input type="email" placeholder="Your Email Address" class="aside-email" name="email" required>
+						      </div>
+
+						      <div class="form1-field">
+						        <textarea class="form1-textarea" name="description" placeholder="Tell us what you need — the more detail, the better we can help." required></textarea>
+						      </div>
+
+						      <button class="form1-btn" type="submit">
+						        Get Free Consultation
+						        <span class="form1-btn-arrow">→</span>
+						      </button>
+
+						      <div class="form1-trust">
+						        <div class="form1-trust-item">
+						          <svg viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+						          No spam, ever
+						        </div>
+						        <div class="form1-trust-item">
+						          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+						          Reply in 60 min
+						        </div>
+						        <div class="form1-trust-item">
+						          <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+						          100% Private
+						        </div>
+						      </div>
+						    </div>
+						</div>
+					</form>
+
+					<div class="home-form-loader">
+						<img src="{{URL::to('/public/loader-gif-m.gif')}}" width="30px">
+					</div>
+		        </div>
+	          </div>
+	          <div class="col-xl-5 hero-title-sec">
+	          	<div class="hero-spacing hide-mobile"></div>
+	          	<h6 class="text-theme text-bold">D M S</h6>
+	            <h1>Advertising and Marketing Agency in Dubai</h1>
+	            <br>
+	            <p>A Dubai campaign can start from AED 3,000 a month on lift screens or run past AED 30,000 for a Sheikh Zayed Road billboard takeover, and we plan both. DataMysite is a full-service advertising and marketing agency: outdoor, transit, radio, OTT, SEO, social, PR and lead generation, run by a team that buys this media every week and knows what each format actually returns. Pick a service below, or tell us the budget and we'll tell you what it buys.</p>
+
+	            <div class="home-btns">
+		            <button class="form1-btn home-btn" type="button">
+				        Schedule a call
+				        <span class="form1-btn-arrow">→</span>
+			      	</button>
+			      	<a href="{{route('caseStudies')}}" class="btn btn-secondary">
+			          Our Work ↗
+			        </a>
+			    </div>
+	          </div>
+	        </div>
+	      </div>
+
+	    </section><!-- /Hero Section -->
+
+
+
+	    <!-- Services Section -->
+	    <section class="home-business">
+
+	      <div class="container">
+
+	        <div class="row home-service-row gy-4">
+
+	          <div class="col-lg-3 business-first">
+	            <div>
+	              <h5 class="text-theme">BEST SOLUTIONS</h5>
+	              <h2 class="text-bold-700" style="font-size:40px">For Your Business</h2>
+	            </div>
+	          </div>
+	          <!-- End Service Item -->
+
+	          <div class="col-lg-3 business-item">
+	          	<a href="{{URL::to('/outdoor-advertising/billboards-advertising')}}">
+		          	<img src="{{URL::to('/public/assets/img/service/1.png')}}" alt="Billboards Advertising dubai uae" loading="lazy">
+		          	<p class="business-title">Billboards Advertising</p>
+		          	<p class="main-service-desc">Billboards dominate outdoor advertising with their commanding presence in high-traffic areas.</p>
+		          </a>
+	           
+	          </div><!-- End Service Item -->
+
+	          <div class="col-lg-3 business-item"  >
+	          	<a href="{{URL::to('/influencer-marketing')}}">
+		          	<img src="{{URL::to('/public/assets/img/service/2.png')}}" alt="Influencer Marketing dubai uae" loading="lazy">
+		          	<p class="business-title">Influencer Marketing</p>
+		          	<p class="main-service-desc">Access 4,500+ influencers across the GCC to boost your brand and drive targeted engagement.</p>
+		          </a>
+	           
+	          </div><!-- End Service Item -->
+
+	          <div class="col-lg-3 business-item"  >
+	          	<a href="{{URL::to('/public-relations-pr-coverage')}}">
+		          	<img src="{{URL::to('/public/assets/img/service/3.png')}}" alt="PR Coverage dubai uae" loading="lazy">
+		          	<p class="business-title">PR Coverage</p>
+		          	<p class="main-service-desc">Elevate your brand’s presence with TOP PR Media houses internationally that secure high-impact media placements and amplify your message.</p>
+		          </a>
+	           
+	          </div><!-- End Service Item -->
+	          <div class="col-lg-12 home-service-btn">
+	          		<button type="button">
+	          			<img src="{{URL::to('/public/read-more.png')}}" alt="Read More icon">
+	          		</button>
+	          </div>
+	        </div>
+
+	      </div>
+
+	    </section><!-- /Services Section -->
+
+
+	    <!-- Services Section -->
+	    <section class="section home-service-mobile">
+
+	      <div class="container">
+
+	        <div class="row home-service-row gy-4">
+	        	<div class="col-lg-12">
+	        		<div class="client-logos-block">
+                <div class="service-slider">
+
+                     <div class="service-item business-item">
+					          	<a href="{{URL::to('/outdoor-advertising/billboards-advertising')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/1.png')}}" alt="Billboards Advertising dubai uae" loading="lazy">
+						          	<p class="business-title">Billboards Advertising</p>
+						          	<p class="main-service-desc">Billboards dominate outdoor advertising with their commanding presence in high-traffic areas.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					          <div class="service-item business-item"  >
+					          	<a href="{{URL::to('/influencer-marketing')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/2.png')}}" alt="Influencer Marketing dubai uae" loading="lazy">
+						          	<p class="business-title">Influencer Marketing</p>
+						          	<p class="main-service-desc">Access 4,500+ influencers across the GCC to boost your brand and drive targeted engagement.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					          <div class="service-item business-item"  >
+					          	<a href="{{URL::to('/public-relations-pr-coverage')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/3.png')}}" alt="PR Coverage dubai uae" loading="lazy">
+						          	<p class="business-title">PR Coverage</p>
+						          	<p class="main-service-desc">Elevate your brand’s presence with TOP PR Media houses internationally that secure high-impact media placements and amplify your message.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					           <div class="service-item business-item">
+					          	<a href="{{URL::to('/outdoor-advertising/billboards-advertising')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/1.png')}}" alt="Billboards Advertising dubai uae" loading="lazy">
+						          	<p class="business-title">Billboards Advertising</p>
+						          	<p class="main-service-desc">Billboards dominate outdoor advertising with their commanding presence in high-traffic areas.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					          <div class="service-item business-item"  >
+					          	<a href="{{URL::to('/influencer-marketing')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/2.png')}}" alt="Influencer Marketing dubai uae" loading="lazy">
+						          	<p class="business-title">Influencer Marketing</p>
+						          	<p class="main-service-desc">Access 4,500+ influencers across the GCC to boost your brand and drive targeted engagement.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					          <div class="service-item business-item"  >
+					          	<a href="{{URL::to('/public-relations-pr-coverage')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/3.png')}}" alt="PR Coverage dubai uae" loading="lazy">
+						          	<p class="business-title">PR Coverage</p>
+						          	<p class="main-service-desc">Elevate your brand’s presence with TOP PR Media houses internationally that secure high-impact media placements and amplify your message.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					           <div class="service-item business-item">
+					          	<a href="{{URL::to('/outdoor-advertising/billboards-advertising')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/1.png')}}" alt="Billboards Advertising dubai uae" loading="lazy">
+						          	<p class="business-title">Billboards Advertising</p>
+						          	<p class="main-service-desc">Billboards dominate outdoor advertising with their commanding presence in high-traffic areas.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					          <div class="service-item business-item"  >
+					          	<a href="{{URL::to('/influencer-marketing')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/2.png')}}" alt="Influencer Marketing dubai uae" loading="lazy">
+						          	<p class="business-title">Influencer Marketing</p>
+						          	<p class="main-service-desc">Access 4,500+ influencers across the GCC to boost your brand and drive targeted engagement.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					          <div class="service-item business-item"  >
+					          	<a href="{{URL::to('/public-relations-pr-coverage')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/3.png')}}" alt="PR Coverage dubai uae" loading="lazy">
+						          	<p class="business-title">PR Coverage</p>
+						          	<p class="main-service-desc">Elevate your brand’s presence with TOP PR Media houses internationally that secure high-impact media placements and amplify your message.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					           <div class="service-item business-item">
+					          	<a href="{{URL::to('/outdoor-advertising/billboards-advertising')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/1.png')}}" alt="Billboards Advertising dubai uae" loading="lazy">
+						          	<p class="business-title">Billboards Advertising</p>
+						          	<p class="main-service-desc">Billboards dominate outdoor advertising with their commanding presence in high-traffic areas.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					          <div class="service-item business-item"  >
+					          	<a href="{{URL::to('/influencer-marketing')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/2.png')}}" alt="Influencer Marketing dubai uae" loading="lazy">
+						          	<p class="business-title">Influencer Marketing</p>
+						          	<p class="main-service-desc">Access 4,500+ influencers across the GCC to boost your brand and drive targeted engagement.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+
+					          <div class="service-item business-item"  >
+					          	<a href="{{URL::to('/public-relations-pr-coverage')}}">
+						          	<img src="{{URL::to('/public/assets/img/service/3.png')}}" alt="PR Coverage dubai uae" loading="lazy">
+						          	<p class="business-title">PR Coverage</p>
+						          	<p class="main-service-desc">Elevate your brand’s presence with TOP PR Media houses internationally that secure high-impact media placements and amplify your message.</p>
+						          </a>
+					           
+					          </div><!-- End Service Item -->
+                </div>
+            	</div>
+	        	</div>
+	         
+	          <div class="col-lg-12 text-center home-service-mob-btn">
+	          		<button type="button">See More</button>
+	          </div>
+	        </div>
+
+	      </div>
+
+	    </section><!-- /Services Section -->
+
+
+
+	    <div class="section-striped">
+				@include('web.includes.elements.clients')
+			</div>
+
+
+
+		<!-- ===== STYLE (shared by all 4 sections) ===== -->
+		<style>
+		.w2-sec { padding: 60px 0; }
+		.w2-sec h2 { margin-bottom: 30px; text-align: center; }
+		.w2-sec h3 { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+		.w2-card { height: 100%; padding: 26px; border: 1px solid rgba(0,0,0,.08); border-radius: 6px; background: #fff; }
+		.w2-card a { color: #f44d46; }
+		.w2-tile { display: block; height: 100%; padding: 22px; border: 1px solid rgba(0,0,0,.08); border-radius: 6px; background: #fff; color: inherit; text-decoration: none; transition: border-color .2s; }
+		.w2-tile:hover { border-color: #f44d46; }
+		.w2-tile h3 { font-size: 18px; margin-bottom: 6px; }
+		.w2-tile p { margin: 0; font-size: 15px; }
+		.w2-step-num { display: inline-block; width: 38px; height: 38px; line-height: 38px; text-align: center; border-radius: 50%; background: #f44d46; color: #fff; font-weight: 700; margin-bottom: 12px; }
+		.w2-team ul { padding-left: 18px; }
+		.w2-team li { margin-bottom: 6px; }
+		.w2-team a { color: #f44d46; }
+		@media (max-width: 767px) { .w2-sec { padding: 40px 0; } }
+		</style>
+		
+		
+		<!-- ===== SECTION 1: What We Do (12 hubs) ===== -->
+		<section id="what-we-do" class="w2-sec w2-services">
+		<div class="container">
+			<h2 class="text-theme">What We Do</h2>
+			<div class="row gy-4">
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/outdoor-advertising"><h3>Outdoor Advertising</h3><p>Billboards, unipoles and bridge banners on Dubai's busiest roads.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/transit-media"><h3>Transit Media</h3><p>Taxis, buses and the metro, seen across the city every day.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/radio-advertising"><h3>Radio Advertising</h3><p>English, Arabic and Asian stations, planned by audience and drive time.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/digital-advertising/dooh-advertising"><h3>Digital Screens (DOOH)</h3><p>Lift, mall and roadside screens you can switch on within a week.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/digital-advertising/ott-advertising"><h3>OTT Advertising</h3><p>Ads on streaming TV, targeted to UAE households.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/seo-services"><h3>SEO Services</h3><p>Rankings and enquiries from Google, priced per month in AED.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/digital-marketing/social-media-marketing"><h3>Social Media Marketing</h3><p>Content, community and paid social run by one team.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/public-relations-pr-coverage"><h3>PR Coverage</h3><p>Placements in UAE and international media houses.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/influencer-marketing"><h3>Influencer Marketing</h3><p>4,500+ creators across the GCC, matched to your audience.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/event-marketing"><h3>Event Marketing</h3><p>Launches, activations and brand experiences, planned end to end.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/lead-generation"><h3>Lead Generation</h3><p>Qualified enquiries delivered to your sales team, tracked by source.</p></a></div>
+			<div class="col-lg-3 col-md-4 col-sm-6"><a class="w2-tile" href="https://datamysite.com/website-development"><h3>Website Development</h3><p>Fast sites, stores and landing pages built to rank and convert.</p></a></div>
+			</div>
+		</div>
+		</section>
+
+		<!-- Service Cards Section -->
+	    <section id="service-cards" class="service-cards section">
+
+	      <div class="container">
+
+	        <div class="row gy-4 first-row">
+
+	          <div class="col-lg-6"  >
+	          	<div class="row">
+	          		<div class="col-lg-4 col-sm-6 col-xs-6">
+			            <div class="box-circle">
+					      <div class="circle-border red-background" data-color1="#fff" data-color2="#f44d46" style="background-color: rgb(244, 77, 70); background-image: linear-gradient(223.2deg, transparent 50%, rgb(244, 77, 70) 50%), linear-gradient(90deg, rgb(255, 255, 255) 50%, transparent 50%);"> 
+					        <div class="circle-percentage">
+					          <span class="percentage" data-percentage="87">87%</span>
+					        </div>
+					      </div>
+					    </div>
+					    <p class="wwd-para">Digital Media Buying</p>
+	          		</div>
+
+	          		<div class="col-lg-4 col-sm-6 col-xs-6">
+			            <div class="box-circle">
+					      <div class="circle-border red-background" data-color1="#fff" data-color2="#f44d46" style="background-color: rgb(244, 77, 70); background-image: linear-gradient(255.6deg, transparent 50%, rgb(244, 77, 70) 50%), linear-gradient(90deg, rgb(255, 255, 255) 50%, transparent 50%);">
+					        <div class="circle-percentage">
+					          <span class="percentage" data-percentage="96">96%</span>
+					        </div>
+					      </div>
+					    </div>
+					    <p class="wwd-para">OOH Media Buying</p>
+	          		</div>
+
+	          		<div class="col-lg-4 col-sm-6 col-xs-6 service-card-last">
+			            <div class="box-circle">
+					      <div class="circle-border red-background" data-color1="#fff" data-color2="#f44d46" style="background-color: rgb(244, 77, 70); background-image: linear-gradient(198deg, transparent 50%, rgb(244, 77, 70) 50%), linear-gradient(90deg, rgb(255, 255, 255) 50%, transparent 50%);">
+					        <div class="circle-percentage">
+					          <span class="percentage" data-percentage="80">80%</span>
+					        </div>
+					      </div>
+					    </div>
+					    <p class="wwd-para">Experiential Marketing</p>
+	          		</div>
+	          	</div>
+	          </div><!-- End Card Item -->
+
+	          <div class="col-lg-6 mob-text-center"  >
+	            <span class="text-theme">DataMySite</span>
+	            <h2 class="text-bold-700">Marketing Solutions for Your Business's Growth</h2>
+	          </div><!-- End Card Item -->
+
+	        </div>
+
+	      </div>
+
+	    </section><!-- /Service Cards Section -->
+
+
+		
+
+
+	     <!-- Service Cards Section -->
+	    <section id="service-cards" class="service-cards section">
+	    	<!-- Section Title -->
+	      <div class="container section-title">
+	        <h2 class="text-theme">Our Successful Projects</h2>
+	        <p class="service-tp">
+	        	Every great brand has a story. At DataMySite, we help you write the next chapter with powerful campaigns across billboards, DOOH, influencer marketing, PR coverage, lead generation, event marketing, and sponsorships. Your success story starts here. 
+
+	        </p>
+	      </div><!-- End Section Title -->
+	      <div class="container">
+
+	        <div class="row">
+          		<div class="col-lg-3 col-sm-6 col-xs-6">
+		            <div class="counter-container">
+		            	<div>
+							      <div class="counter">1219</div>
+							      <div><label>+</label></div>
+							    </div>
+						      <span>Successful Project</span>
+						    </div>
+          		</div>
+
+          		<div class="col-lg-3 col-sm-6 col-xs-6">
+		            <div class="counter-container">
+		            	<div>
+							      <div class="counter">20</div>
+							      <div><label>+</label></div>
+							    </div>
+						      <span>Team Experience</span>
+						    </div>
+          		</div>
+
+          		<div class="col-lg-3 col-sm-6 col-xs-6">
+		            <div class="counter-container">
+		            	<div>
+							      <div class="counter">5</div>
+							      <div><label>+</label></div>
+							    </div>
+						      <span>Winning Awards</span>
+						    </div>
+          		</div>
+
+          		<div class="col-lg-3 col-sm-6 col-xs-6">
+		            <div class="counter-container">
+		            	<div>
+							      <div class="counter">81</div>
+							      <div><label>+</label></div>
+							    </div>
+						      <span>Satisfied Clients</span>
+						    </div>
+          		</div>
+          	</div>
+
+	      </div>
+
+	    </section><!-- /Service Cards Section -->
+
+
+		
+		<!-- ===== SECTION 2: Why Clients Pick Us ===== -->
+		<section id="why-clients-pick-us" class="w2-sec w2-proof section-striped">
+		<div class="container">
+			<h2 class="text-theme">Why Clients Pick Us</h2>
+			<div class="row gy-4">
+			<div class="col-lg-4">
+				<div class="w2-card">
+				<h3>We book the media directly</h3>
+				<p>We deal with the media owners ourselves, so there is no middle agency adding a margin. That covers billboards, unipoles and <a href="https://datamysite.com/outdoor-advertising/bridge-banners">bridge banners</a>, taxis, <a href="https://datamysite.com/transit-media/bus-advertising">buses</a> and the metro, lift and mall screens, <a href="https://datamysite.com/radio-advertising/english-stations">English</a> and <a href="https://datamysite.com/radio-advertising/arabic-stations">Arabic radio</a>, and <a href="https://datamysite.com/sponsorships/entertainment">entertainment sponsorships</a>. We also hold our own hoarding on Al Khail Road. The team has spent more than 20 years buying media in Dubai, so we can tell you which sites and stations earn their rate and which ones only look good on a map.</p>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="w2-card">
+				<h3>Work you can check</h3>
+				<p>We have delivered more than 1,200 campaigns for more than 80 clients, across outdoor, transit, digital, PR, influencer marketing and <a href="https://datamysite.com/lead-generation">lead generation</a>. Our <a href="https://datamysite.com/client-case-studies">client case studies</a> show what ran, where it ran and what it did for the business. If you want to speak to a client in your own sector before you sign, ask us and we will arrange it.</p>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="w2-card">
+				<h3>Prices in AED before you commit</h3>
+				<p>Every service page shows its 2026 price bands in AED, and the <a href="https://datamysite.com/advertising-cost-in-dubai-complete-2026-price-list">full advertising price list</a> puts all of them on one page. Your quote lists media, production and permits on separate lines, so the number you approve is the number you pay. If a rate changes before booking, we tell you before you sign.</p>
+				</div>
+			</div>
+			</div>
+		</div>
+		</section>
+
+
+
+        <section id="testimonials" class="testimonials section-striped case-studies-section section">
+            <!-- Section Title -->
+	          <div class="container section-title" style="padding-bottom: 15px;">
+	            <h2 class="text-theme">Case Studies</h2>
+	            <p class="service-tp">
+	                At DataMySite, we believe in transparency and trust. Sharing case studies allows us to demonstrate the tangible impact of our marketing and advertising solutions.
+	            </p>
+	          </div><!-- End Section Title -->
+	          <div class="container case-studies-swiper">
+	            <div class="swiper" data-swiper='{
+	                  "slidesPerView": 1,
+	                  "spaceBetween": 0,
+	                  "loop": true,
+	                  "autoplay": {
+	                    "delay": 1500,
+	                    "disableOnInteraction": false
+	                  },
+	                  "breakpoints": {
+	                    "400": {
+	                      "slidesPerView": 1
+	                    },
+	                    "600": {
+	                      "slidesPerView": 1,
+	                      "spaceBetween": 0
+	                    },
+	                    "900": {
+	                      "slidesPerView": 4,
+	                      "spaceBetween": 16
+	                    },
+	                    "1200": {
+	                      "slidesPerView": 4,
+	                      "spaceBetween": 16
+	                    },
+	                    "1400": {
+	                      "slidesPerView": 4,
+	                      "spaceBetween": 24
+	                    }
+	                  }
+	                }'>
+	                <div class="swiper-wrapper">
+	                    <div class="swiper-slide">
+	                        <a href="{{URL::to('/public/case-studies/bnw.pdf')}}" target="_blank" class="open-case-study">
+	                            <img src="{{URL::to('/public/case-studies/cover/bnw.jpg')}}" class="case-studies-img" width="100%" alt="Case Studies">
+	                            <h5><span>BNW Developers</span> x <span>DMS</span> |  Case Study</h5>
+	                        </a>
+	                    </div>
+	                    <div class="swiper-slide">
+	                        <a href="{{URL::to('/public/case-studies/ays.pdf')}}" target="_blank" class="open-case-study">
+	                            <img src="{{URL::to('/public/case-studies/cover/ays.jpg')}}" class="case-studies-img" width="100%" alt="Case Studies">
+	                            <h5><span>AYS Developers</span> x <span>DMS</span> |  Case Study</h5>
+	                        </a>
+	                    </div>
+	                    <div class="swiper-slide">
+	                        <a href="{{URL::to('/public/case-studies/jetour.pdf')}}" target="_blank" class="open-case-study">
+	                            <img src="{{URL::to('/public/case-studies/cover/jetour.jpg')}}" class="case-studies-img-even" width="100%" alt="Case Studies">
+	                            <h5><span>Jetour</span> x <span>DMS</span> |  Case Study</h5>
+	                        </a>
+	                    </div>
+	                    <div class="swiper-slide">
+	                        <a href="{{URL::to('/public/case-studies/tranquil.pdf')}}" target="_blank" class="open-case-study">
+	                            <img src="{{URL::to('/public/case-studies/cover/tranquil.jpg')}}" class="case-studies-img" width="100%" alt="Case Studies">
+	                            <h5><span>Tranquil Developers</span> x <span>DMS</span> |  Case Study</h5>
+	                        </a>
+	                    </div>
+	                    <div class="swiper-slide">
+	                        <a href="{{URL::to('/public/case-studies/ilg.pdf')}}" target="_blank" class="open-case-study">
+	                            <img src="{{URL::to('/public/case-studies/cover/ilg.jpg')}}" class="case-studies-img-even" width="100%" alt="Case Studies">
+	                            <h5><span>ILG Luxury Group</span> x <span>DMS</span> |  Case Study</h5>
+	                        </a>
+	                    </div>
+	                    <div class="swiper-slide">
+	                        <a href="{{URL::to('/public/case-studies/dubai-duty-free.pdf')}}" target="_blank" class="open-case-study">
+	                            <img src="{{URL::to('/public/case-studies/cover/dubai-duty-free.jpg')}}" class="case-studies-img" width="100%" alt="Case Studies">
+	                            <h5><span>Dubai Duty Free</span> x <span>DMS</span> |  Case Study</h5>
+	                        </a>
+	                    </div>
+	                    <div class="swiper-slide">
+	                        <a href="{{URL::to('/public/case-studies/danube.pdf')}}" target="_blank" class="open-case-study">
+	                            <img src="{{URL::to('/public/case-studies/cover/danube.jpg')}}" class="case-studies-img" width="100%" alt="Case Studies">
+	                            <h5><span>Danube</span> x <span>DMS</span> |  Case Study</h5>
+	                        </a>
+	                    </div>
+	                    <div class="swiper-slide">
+	                        <a href="{{URL::to('/public/case-studies/ksa.pdf')}}" target="_blank" class="open-case-study">
+	                            <img src="{{URL::to('/public/case-studies/cover/lenskart-p.png')}}" class="case-studies-img-even" width="100%" alt="Case Studies">
+	                            <h5><span>KSA Influencers</span> x <span>DMS</span> |  Case Study</h5>
+	                        </a>
+	                    </div>
+
+
+
+	                </div>
+	            </div>    
+	        </div>
+
+        </section>
+
+
+
+		
+ 
+			<!-- ===== SECTION 3: How a Campaign Comes Together ===== -->
+			<section id="how-a-campaign-comes-together" class="w2-sec w2-steps">
+			<div class="container">
+				<h2 class="text-theme">How a Campaign Comes Together</h2>
+				<div class="row gy-4">
+				<div class="col-lg-3 col-md-6">
+					<div class="w2-card">
+					<span class="w2-step-num">1</span>
+					<h3>Brief and budget</h3>
+					<p>Tell us who you need to reach, where, by when and what you can spend. One call or one WhatsApp message is enough to start.</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="w2-card">
+					<span class="w2-step-num">2</span>
+					<h3>Media plan in AED</h3>
+					<p>You get a plan with the formats, sites or channels, dates and the cost of each line in AED, plus what we expect each one to deliver.</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="w2-card">
+					<span class="w2-step-num">3</span>
+					<h3>Production and permits</h3>
+					<p>We produce the creative, print or upload it, and secure the RTA or municipality approvals that outdoor and transit formats need.</p>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="w2-card">
+					<span class="w2-step-num">4</span>
+					<h3>Live reporting</h3>
+					<p>Proof of display, leads, clicks and spend are reported while the campaign runs, so the budget can move to whatever is working.</p>
+					</div>
+				</div>
+				</div>
+			</div>
+			</section>
+			
+
+
+
+	     
+	    
+	    <!-- Services Section -->
+	    <section id="services" class="services section-striped section">
+
+	      <!-- Section Title -->
+	      <div class="container section-title">
+	        <h2 class="text-theme">Our Services</h2>
+	        <p class="service-p">Elevate Your Brand Visibility and Boost Sales</p>
+	        <p class="service-tp">
+	        	We use services like outdoor advertising, CGI advertising and more to maximize your brand’s visibility and impact. Let's craft a strategy to drive your business success!
+	        </p>
+	      </div><!-- End Section Title -->
+
+	      <div class="container">
+
+	        <div class="row service-row gy-4">
+
+	        	@foreach($header_services as $val)
+		          <div class="col-lg-4 col-md-6 service-item d-flex"  >
+		            <div class="icon flex-shrink-0"><i class="{{$val->icon}}" style="color: #f44d46;"></i></div>
+		            <div>
+		              <h4 class="title">{{$val->name}}</h4>
+		              <p class="description">{{$val->description}}</p>
+		              <a href="{{URL::to('/'.$val->slug)}}" class="readmore stretched-link"><i class="bi bi-arrow-right"></i></a>
+		            </div>
+		          </div>
+		          <!-- End Service Item -->
+	          @endforeach
+	          
+	        </div>
+
+	      </div>
+
+	    </section><!-- /Services Section -->
+
+
+		
+		<!-- ===== SECTION 4: Who We Are ===== -->
+		<section id="who-we-are" class="w2-sec w2-team">
+		<div class="container">
+			<div class="row gy-4">
+			<div class="col-lg-6">
+				<h2 class="text-theme" style="text-align:left">Who We Are</h2>
+				<p>DataMySite is a Dubai advertising and marketing agency founded and led by Abhishek, Founder and Growth Strategy Lead, with a team that brings more than 20 years of experience in Dubai media. Each discipline has its own lead, so the person planning your campaign is the person who knows that channel.</p>
+				<p>Our office is Office 205, Al Bayan Building, Dubai Investment Park, Dubai. Call or WhatsApp <a href="https://api.whatsapp.com/send/?phone=971525287259" target="_blank" rel="noopener">+971 52 528 7259</a> or email <a href="mailto:contact@datamysite.com">contact@datamysite.com</a>.</p>
+				<!-- REGISTERED ENTITY LINE: add your legal name + trade licence, e.g.
+				<p><small>[Legal company name], Dubai trade licence no. [number].</small></p> -->
+				<!-- CLUTCH / GOODFIRMS BADGES: add here once the profiles are live. -->
+			</div>
+			<div class="col-lg-6 vertical-center"> 
+				<h3>The team leads</h3>
+				<ul>
+				<li><strong>Abhishek</strong> - Founder and Growth Strategy Lead</li>
+				<li><strong>Aan</strong> - Traditional and Out-of-Home Media Lead</li>
+				<li><strong>Kasturi</strong> - Content, Creator and PR Lead</li>
+				<li><strong>Pooja</strong> - Social Media and Paid Media Lead</li>
+				<li><strong>Waseem</strong> -  Technical Lead</li>
+				</ul>
+			</div>
+			</div>
+		</div>
+		</section>
+
+
+
+	     <!-- Service Cards Section -->
+	    <section id="service-cards" class="service-cards section">
+
+	      	@include('web.includes.elements.testimonials')
+
+	    </section><!-- /Service Cards Section -->
+
+
+
+        <section id="service-cards" class="blog-section section-striped section pr-blogs-section">
+
+          <div class="container pb-0">
+          	<div class="text-center">
+          		<span class="text-theme">BLOGS</span>
+                <h3 class="text-bold">What’s Going On in the Industry?</h3>
+          	</div>
+          </div>
+          <div class="container">
+            <div class="row gy-4 blog-portrait-card first-row">
+                @foreach($blogs as $val)
+                    <div class="col-lg-4">
+                        <a href="{{route('blogs.detail', [$val->slug])}}">
+                          <div class="popular-card blog-card-2 flex-grow-1" bis_skin_checked="1">
+                            <div class="card-image" bis_skin_checked="1">
+                              <img src="{{URL::to('public/storage/blogs/'.$val->banner)}}" alt="{{$val->banner_alt}}">
+                            </div>
+                            <div class="popular-text" bis_skin_checked="1">
+                              <h6 class="mt-2" title="{{$val->heading}}">{{$val->heading}}</h6>
+                              <p class="line-break-3">{{$val->short_description}}</p>
+                              <small>by <font class="text-theme2">{{$val->author->name}}</font> - <font class="text-bold">{{date('F d, Y', strtotime($val->created_at))}}</font></small>
+                            </div>
+                          </div>
+                        </a>
+                    </div>
+                @endforeach
+                <div class="col-lg-12  text-center">
+                    <a href="{{URL::to('/blogs/pr-and-media-relations')}}" class="see-all-btn" target="_blank">See All Blogs</a>
+                </div>
+            </div>
+
+          </div>
+
+        </section>
+
+
+	    
+	    <!-- Home FAQs Section -->
+	    <section id="services" class="services  section">
+
+	      @include('web.includes.elements.home-faq')
+
+	    </section><!-- /Home FAQs Section -->
+
+
+	    <!-- Call To Action Section -->
+	    <section id="call-to-action" class="call-to-action section dark-background">
+
+	      <img src="{{URL::to('/public')}}/assets/img/background/call-to.webp" alt="Call to action background">
+
+	      <div class="container">
+	        <div class="row justify-content-center">
+	          <div class="col-xl-10">
+	          	<div class="hero-spacing hide-mobile"></div>
+	            <div class="text-center">
+	              <p class="text-theme" style="text-transform: uppercase;">Schedule Your Appointment Today</p>
+	              <h3>Don't Miss Out on This Opportunity to <br>Elevate Your Advertising Game</h3>
+	              <br>
+	              <p><span class="text-theme">Smarter Marketing, Better Outcomes.</span>
+					<br>Boost your brand’s visibility, enhance campaign performance</p>
+	              <a class="cta-btn" href="{{route('contact')}}">Get Started - Free Consultation →</a>
+	            </div>
+	          	<div class="hero-spacing hide-mobile"></div>
+	          </div>
+	        </div>
+	      </div>
+
+	    </section><!-- /Call To Action Section -->
+
+	</main>
+
+
+@endsection
+@section('addScript')
+	
+  <script src="{{URL::to('/public')}}/assets/js/home-faq.js" defer></script>
+
+@endsection

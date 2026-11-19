@@ -1,0 +1,232 @@
+{{--
+|==========================================================================
+| TERMS V2 — redesigned Terms & Conditions (independent copy of web.terms)
+|--------------------------------------------------------------------------
+| Self-contained page: this view + public/assets/css/terms-v2.css + public/assets/js/terms-v2.js
+| Uses the shared V2 shell (web.home-v2.master) and the Home V2 design system (home-v2.css / home-v2.js).
+| Does not include or depend on the live view or any other V2 page layer. Same text as the live page.
+| Custom 3D decoration for this page only.
+|==========================================================================
+--}}
+@extends('web.home-v2.master')
+@php require_once resource_path('views/web/home-v2/helpers.php'); @endphp
+
+@section('metaAddition')
+	<meta name="robots" content="noindex, follow">
+	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},8000);})();</script>
+	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.png') }}">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400..900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+@endsection
+
+@section('addStyle')
+	<link href="{{ URL::to('/public/assets/css/home-v2.css') }}?v={{ @filemtime(public_path('assets/css/home-v2.css')) }}" rel="stylesheet">
+	<link href="{{ URL::to('/public/assets/css/terms-v2.css') }}?v={{ @filemtime(public_path('assets/css/terms-v2.css')) }}" rel="stylesheet">
+@endsection
+
+@php
+	$hv2Img = URL::to('/public/assets/img');
+	$tmvPhoto = is_file(public_path('assets/img/title/faqs.png')) ? $hv2Img . '/title/faqs.png' : null;
+@endphp
+
+@section('content')
+<main class="main hv2 tmv" id="hv2">
+	<div class="hv2-progress" aria-hidden="true"><span></span></div>
+	<div class="hv2-cursor" aria-hidden="true"><span class="hv2-cursor-dot"></span><span class="hv2-cursor-ring"></span></div>
+	<div class="hv2-grain" aria-hidden="true"></div>
+	<button type="button" class="hv2-top" id="hv2-top" aria-label="Back to top">
+		<svg class="hv2-top-ring" viewBox="0 0 48 48" aria-hidden="true"><circle class="trk" cx="24" cy="24" r="21"/><circle class="bar" cx="24" cy="24" r="21"/></svg>
+		<i class="bi bi-arrow-up hv2-top-arrow" aria-hidden="true"></i>
+		<span class="hv2-top-label" aria-hidden="true">Top</span>
+	</button>
+	<svg class="hv2-defs" width="0" height="0" aria-hidden="true" focusable="false">
+		<filter id="hv2-distort" x="-10%" y="-10%" width="120%" height="120%">
+			<feTurbulence type="fractalNoise" baseFrequency="0.012 0.02" numOctaves="2" seed="3" result="noise"/>
+			<feDisplacementMap in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G"/>
+		</filter>
+	</svg>
+
+	<section class="hv2-hero hv2-dark tmv-hero" id="hv2-hero">
+		<div class="hv2-hero-bg" aria-hidden="true">
+			@if($tmvPhoto)<span class="tmv-hero-photo" style="background-image: url('{{ $tmvPhoto }}')"></span>@endif
+			<span class="hv2-blob hv2-blob--1"></span><span class="hv2-blob hv2-blob--2"></span><span class="hv2-blob hv2-blob--3"></span>
+			<span class="hv2-grid-lines"></span>
+		</div>
+		<div class="hv2-streaks" aria-hidden="true">
+			@for($s = 0; $s < 8; $s++)<i style="top: {{ 10 + $s * 11 }}%; --t: {{ 2.8 + ($s % 4) * .7 }}s; --dl: {{ $s * .5 }}s"></i>@endfor
+		</div>
+		<div class="tmv-deco tmv-deco--dark" aria-hidden="true"><div class="tmv-hs tmv-hs--n1" data-tmv-depth="0.06"><div class="tmv-hp"><div class="tmv-sign"><svg viewBox="0 0 190 100" width="190" height="100" aria-hidden="true"><line x1="10" y1="82" x2="180" y2="82" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-dasharray="3 6"/><path class="sg" d="M14,70 C24,20 40,20 38,56 C36,86 56,24 66,46 C74,64 86,40 98,52 S128,70 144,40 C150,28 160,60 176,34" fill="none" stroke="#f44d46" stroke-width="5" stroke-linecap="round"/></svg></div></div></div><div class="tmv-stage tmv-stage--h1" data-tmv-depth="0.05"><div class="tmv-scale tmv-p"><span class="tmv-pole"></span><span class="tmv-beam"><i class="l"></i><i class="r"></i></span></div></div><div class="tmv-stage tmv-stage--h2" data-tmv-depth="-0.08"><div class="tmv-contract tmv-p"><span class="tmv-doc"><i></i><i></i><i></i><i></i></span><span class="tmv-seal"><b>✓</b></span></div></div><div class="tmv-stage tmv-stage--h3" data-tmv-depth="0.1"><div class="tmv-gavel tmv-p"><span class="tmv-ghead"></span><span class="tmv-ghandle"></span><span class="tmv-gblock"></span></div></div></div>
+		<div class="hv2-container hv2-hero-inner">
+			<div class="hv2-hero-copy">
+				@include('web.home-v2.breadcrumbs', ['crumbs' => [['Home', URL::to('/')], ['Terms & Conditions', null]]])
+				<div class="tmv-hero-body"><h1 data-reveal="up" data-delay="1">Terms & Conditions</h1></div>
+			</div>
+		</div>
+		<a href="#tmv-main" class="hv2-scroll-cue" data-scrollto="#tmv-main" aria-label="Scroll to content"></a>
+	</section>
+	<span class="js-count-particles" hidden></span>
+
+	<section class="hv2-section hv2-tint tmv-sec tmv-main" id="tmv-main">
+		<div class="tmv-deco" aria-hidden="true"><div class="tmv-stage tmv-stage--m1" data-tmv-depth="0.1"><div class="tmv-scale tmv-p"><span class="tmv-pole"></span><span class="tmv-beam"><i class="l"></i><i class="r"></i></span></div></div><div class="tmv-stage tmv-stage--m2" data-tmv-depth="-0.08"><div class="tmv-contract tmv-p"><span class="tmv-doc"><i></i><i></i><i></i><i></i></span><span class="tmv-seal"><b>✓</b></span></div></div><div class="tmv-stage tmv-stage--m3" data-tmv-depth="0.06"><div class="tmv-gavel tmv-p"><span class="tmv-ghead"></span><span class="tmv-ghandle"></span><span class="tmv-gblock"></span></div></div><span class="tmv-dots" data-tmv-depth="-0.06"></span><span class="tmv-plus p1" data-tmv-depth="0.18">+</span><span class="tmv-plus p2" data-tmv-depth="-0.14">+</span><span class="tmv-glow g1" data-tmv-depth="0.08"></span><span class="tmv-glow g2" data-tmv-depth="-0.1"></span></div>
+		<div class="hv2-container tmv-grid">
+			<aside class="tmv-toc" id="tmv-toc" aria-label="Contents" hidden><p class="tmv-toc-label">Contents</p><ol></ol></aside>
+			<article class="tmv-article" id="tmv-article" data-reveal="up">
+                    <p><strong>DMS(DataMySite)</strong>, owns and operates this website and related subdomains. Terms of Use Agreement states the terms and conditions under which you may access and use this website. You agree to be bound by these terms and conditions by accessing and using this website.</p>
+
+                    <h4>NOTE: WE OFTEN EARN COMMISSIONS FROM REVIEWS, BANNERS, LINKS POSTS AND ARTICLES ON THIS OR ANY OF OUR OTHER OWNED WEBSITES WE LINK TO.</h4>
+
+                    <p>If you do not accept the terms and conditions of the <strong>DMS(DataMySite)</strong> website, you must discontinue using it.</p>
+                    
+                    <p><strong>DMS(DataMySite)</strong> may revise this Agreement at any time by updating this website. Use of the website after such changes are posted will indicate your agreement to these revised terms. You should visit this page periodically to review this Agreement.</p>
+
+                    <h4>Ownership of Material, Software Licences & Intellectual Property Rights</h4>
+
+                    <p>All materials displayed or otherwise accessible through this website, including, without limitation, articles, text, photographs, images, illustrations, computer software and code and the website itself, are protected under International copyright or other laws and are owned by <strong>DMS(DataMySite)</strong>.</p>
+                    
+                    <p>Any use, reproduction, modification, alteration, public performance or display, uploading or posting onto the internet (including placing on another website ), transmission, redistribution, or other exploitation of this website or any content, whether in whole or in part, other than expressly set out herein, is prohibited without the express written permission of <strong>DMS(DataMySite)</strong> </p>
+                    
+                    <p>All software embedded in or located on or at this website, including, without limitation, all computer code of all types, including all files and/or images contained in or generated by such software (Software), is protected by copyright and may be protected by other rights. All such Software is owned by <strong>DMS(DataMySite)</strong>, its licensors or the party accredited with ownership of such Software. You are hereby granted the right to access and use the Software embedded and integrated into this website, subject to</p>
+                    <ol>
+                        <li>to the terms of this Agreement and</li>
+                        <li>to any other terms and conditions that may apply to your downloading and use of such Software, a personal, non-transferable, non-exclusive license to</li>
+                        <li>install and run one copy of the Software in object-code format on a non-networked computer for your personal, non-commercial use; and</li>
+                        <li>to reproduce the Software only as reasonably required to install, run and make reasonable backup copies as allowed by law.</li>
+                    </ol>
+                    
+                    <p>Except to the extent expressly permitted in this Agreement, you may not:<p>
+                        <ol>
+                            <li>use, reproduce, modify, adapt, translate, upload, download, or transmit the Software in whole or in part;</li>
+                            <li>sell, rent, lease, license, trade, transfer, or otherwise provide access to the Software;</li>
+                            <li>alter, remove, or cover any trademarks or proprietary notices included in the Software; and/or</li>
+                            <li>disassemble, decrypt, extract, or reverse engineer the Software or assist others.</li>
+                        </ol>
+                        
+                    <p>Nothing contained in this website shall be construed as granting you any right, title, interest, or another license in or to any Software embedded or integrated into this website or made available for download from this website, including but not limited to, any intellectual property rights in the Software.</p>
+                    
+                    <p>All Software embedded or integrated into this website is provided as Is, without warranties of any kind, either expressed or implied, including, without limitation, any warranty.</p>
+                        <ol>
+                            <li>that the Software is of merchantable quality or is fit for any particular purpose;</li>
+                            <li>that the Software will conform with any specification(s) relating to the Software;</li>
+                            <li>that the Software will be free from material defects;</li>
+                            <li>that the Software contains no computer viruses or other contaminants; or</li>
+                            <li>that the Software shall process date-related and time-related data without causing processing interruptions, abnormal termination or process or manipulation of any time-related data.</li>
+                        </ol>
+                    <br>
+                    <h4>Disclaimer</h4>
+                    <p>This website and all content are provided on an ‘as is’ basis. By accessing and using this website, you acknowledge and agree that the use of this website and the content is entirely at your own risk.<p>
+                        
+                    <p><strong>DMS(DataMySite)</strong> makes no representations nor warranties regarding this website and the content, including, without limitation, no representation or warranty:</p>
+                    <ol>
+                        <li>that this website and/or content will be complete, accurate, reliable, suitable, or timely;</li>
+                        <li>that any content, including, without limitation, any information, data, software, product, or service contained in or made available through this website will be of merchantable quality or fitness for a particular purpose;</li>
+                        <li>that the operation of this website will be uninterrupted or error-free;</li>
+                        <li>that defects or errors in this website will be corrected;</li>
+                        <li>that this website will be free from viruses or harmful components; and</li>
+                        <li>that communications to or from this website will be secure or not intercepted.</li>
+                    </ol>
+                    
+
+                    <p>The information contained on this website is for information purposes only. It is not intended to provide you with accounting, legal, investment, financial or other advice and you should not rely on the information to provide such advice.</p>
+                    
+                    <p>All information posted on this website is intended only as a basis for further discussion, inquiry, and study. <strong>DMS(DataMySite)</strong> any liability for direct, indirect or consequential loss arising in connection with the use of this website or reliance on those contents by any person or organization, whether in its original form or altered in some way by the user.</p>
+                    
+                    <p><strong>DMS(DataMySite)</strong> gives no warranties, nor does <strong>DMS(DataMySite)</strong> make any representation in respect of the contents of this website. <strong>DMS(DataMySite)</strong> advises users of this website to seek their own appropriate independent professional advice on matters raised on this website.</p>
+                    <br>
+                    <h4>Limitation of Liability</h4>
+                    
+                    <p><strong>(A)</strong> To the extent permitted by law, <strong>DMS(DataMySite)</strong> aggregate liability to you, whether for breach of these terms or in negligence or any other tort or for any other common law or statutory cause of action arising about these terms, the site or the content is limited to the following, the choice of which is at <strong>DMS(DataMySite)</strong> sole discretion:</p>
+                    
+                    <ol>
+                        <li>In the case of goods, any one or more of the following:</li>
+                            <ul>
+                                <li>the replacement of the goods or the supply of equivalent goods;</li>
+                                <li>the repair of the goods;</li>
+                                <li>the payment of the cost of replacing the goods or of acquiring equivalent goods; or</li>
+                                <li>the payment of the cost of having the goods repaired; or</li>
+                            </ul>
+                        <li>in the case of services:</li>
+                            <ul>
+                                <li>the supply of the services again; or</li>
+                                <li>the payment of the cost of having the services resupplied.</li>
+                            </ul>
+                    </ol>
+                    
+                    <p><strong>(B)</strong> To the extent permitted by law <strong>DMS(DataMySite)</strong> will not be liable for any direct, incidental, consequential, or indirect damages, loss or corruption of data, loss of profits, goodwill, bargain or opportunity or loss of anticipated savings resulting from your access to, or use of, or inability to use the site and the content, whether based on warranty, contract, tort, negligence or any other legal theory, and whether or not we know of the possibility of such damage.</p>
+                    
+                    <p><strong>(C)</strong> If a jurisdiction does not allow the exclusion or limitation of liability by paragraph (a) or (b) but allows a limitation of a certain maximum extent, then our liability is limited to that extent.</p>
+                    
+                    <p><strong>DMS(DataMySite)</strong>  expressly disclaims any and all liability for the acts, omissions, or conduct of any third-party user of this website or any advertiser or sponsor. Under no circumstances shall <strong>DMS(DataMySite)</strong>  and its officers, directors, employees, agents licensors, be liable for any injury, loss, damage (including special, indirect, incidental, or consequential damages), or expense arising in any manner whatsoever from (i) the acts, omissions or conduct of any third-party user; and (ii) any use or inability to use any materials, software, content, goods or services located at or made available at any web site linked to or from this website.</p>
+                    
+                    <p>If you decide to access or use any linked website or content, materials, software, goods, or services from a website linked to this website, you do so entirely at your own risk.</p>
+                    
+                    <p>You hereby release<strong>DMS(DataMySite)</strong> and its officers, directors, employees, agents, and their respective successors and assigns from any damages that you incur and agree not to assert any claims against them arising from your purchase or use of any products or services made available through this website or by third parties through this website.</p>
+                    <br>
+                    <h4>Links, Downloads, Features, and Advertisements</h4>
+                    
+                    <p>This website contains links to third-party websites. These links are provided solely as a convenience to you and not as an endorsement by <strong>DMS(DataMySite)</strong> of the contents of such third-party websites.</p>
+                    
+                    <p>We take no responsibility for the accuracy, content, or any aspect of that material and disclaim any liability to you for such material or for any consequence of your decision to use the links provided or your use of such material. We also disclaim all liability and make no representations or warranties for any products or services sold or provided to you by any third party.</p>
+                    
+                    <p>Your purchase of products or services through one of those other sites is subject to agreements and/or the terms and conditions in effect between you and the providers of products and services at those other sites. You agree not to bring a suit or claim against <strong>DMS(DataMySite)</strong> or any of our affiliates arising from or based on your purchase or use of products or services through those other sites. </p>
+                    
+                    <p>Links do not imply that <strong>DMS(DataMySite)</strong> or any of our affiliates sponsors, endorses, is affiliated or associated with or is legally authorised to use any trademark, trade name, logo or copyright symbol displayed in or accessible through the links, or that any linked site is authorized to use any trademark, trade name, logo, or copyright symbol of <strong>DMS(DataMySite)</strong> or any of our affiliates.</p>
+                    
+                    <p><strong>DMS(DataMySite)</strong> is not responsible for the content of any third-party website, nor does it make any representation or warranty of any kind regarding any third-party website, including, without limitation</p>
+                    <ol>
+                        <li>any representation or warranty regarding the legality, accuracy, reliability, completeness, timeliness, or suitability of any content on any third-party website;</li>
+                        <li>any representation or warranty regarding the merchantability or fitness for a particular purpose of any material, content, software, goods, or services located at or made available through such third-party websites; or</li>
+                        <li>any representation or warranty that the operation of the third-party websites will be uninterrupted or error-free, that defects or errors in such third-party websites will be corrected, or that such third-party websites will be free from viruses or other harmful components.</li>
+                    </ol>
+                    
+                    <p>While <strong>DMS(DataMySite)</strong> encourages links to this website, it does not wish to be linked to or from any third-party website which:</p>
+                    
+                        <ol>
+                            <li>contains, posts, or transmits any unlawful, threatening, abusive, libelous, defamatory, obscene, vulgar, pornographic, profane, or indecent information of any kind, including, without limitation, any content constituting or encouraging conduct that would constitute a criminal offense, give rise to civil liability or otherwise violate any local, state, national or international law, a regulation which may be damaging or detrimental to the activities, operations, credibility or integrity of <strong>DMS(DataMySite)</strong> or which contains, posts or transmits any material or information of any kind which promotes racism, bigotry, hatred or physical harm of any kind against any group or individual, could be harmful to minors, harasses or advocates harassment of another person, provides material that exploits people under the age of 18 sexually or violently, provides instructional information about illegal activities, including, without limitation, the making or buying of illegal weapons; or</li>
+
+                            <li>contains, posts, or transmits any information, software, or other material that violates or infringes upon the rights of others, including material that is an invasion of privacy or protected by copyright, trademark, or other proprietary rights. <strong>DMS(DataMySite)</strong> reserves the right to prohibit or refuse to accept any link to this website, including, without limitation, any link which contains or makes available any content or information of the aforementioned nature, at any time. You agree to remove any link you may have to this website upon the request of <strong>DMS(DataMySite)</strong>. </li>
+                        </ol>
+                        <br>
+                    <h4>Indemnity</h4>
+                    
+                    <p>You agree to indemnify, defend and hold harmless <strong>DMS(DataMySite)</strong> and its officers, directors, employees, agents, licensors, and their respective successors and assigns, from and against any and all claims, demands, liabilities, costs, or expenses whatsoever, including, without limitation, legal fees and disbursements resulting directly or indirectly from:</p>
+                    
+                    <ol>
+                        <li>your breach of any of the terms and conditions of this Agreement;</li> 
+                        <li>your access, use, or inability to access or use the<strong>DMS(DataMySite)</strong> website or any <strong>DMS(DataMySite)</strong> website Content or other content to which the <strong>DMS(DataMySite)</strong> website is or may be linked from time to time; </li>
+                        <li>your use of, reliance on, publication, communication or distribution, uploading or downloading of anything on or from the <strong>DMS(DataMySite)</strong> website; and/or </li>
+                        <li>your violation of any law or regulation.</li>
+                    </ol>
+                    <br>
+                    <h4>Registration and Use of Passwords</h4>
+                    
+                    <p>To access particular pages and features of this website, you may be asked to register with <strong>DMS(DataMySite)</strong>. You agree:</p>
+                    
+                    <ol>
+                        <li>that <strong>DMS(DataMySite)</strong> reserves the right to refuse registration access to any individual or organization at any time</li>
+                        <li>to provide true, accurate, current, and complete information about yourself as prompted by any form supplied by <strong>DMS(DataMySite)</strong> and</li>
+                        <li>to maintain and promptly update the information you provide to keep it true, accurate, current, and complete.</li>
+                    </ol>
+
+                    <p>If <strong>DMS(DataMySite)</strong> has reasonable grounds to suspect that such information is misleading, inaccurate, not current,incomplete, <strong>DMS(DataMySite)</strong> has the right to suspend or terminate your access to and use of this website <strong>DMS(DataMySite)</strong>use of any personally identifying information you provide as part of the registration process is governed by the terms of <strong>DMS(DataMySite)</strong> </p>
+
+                    <p>To access particular pages of this website, you may need to use a username and password, which you will receive through our website registration process. It is your responsibility to maintain the confidentiality of the password and account, and you are responsible for all activities that occur using your password or account. You agree to notify <strong>DMS(DataMySite)</strong> immediately of any unauthorized use of your password or account or any other security breach and to ensure that you exit your account at the end of each session. <strong>DMS(DataMySite)</strong> cannot and will not be liable for any loss or damage arising from your failure or <strong>DMS(DataMySite)</strong> failure to protect your password or account information.</p>
+                    <br>
+                    <h4>Security of Information on the Internet</h4>
+                    <p>You should note that information sent or received online is generally unsecured. <strong>DMS(DataMySite)</strong> cannot and does not make any representation or warranty concerning the security of any communication to or from this website or any representation or warranty regarding the interception by third parties of personal or other information.</p>
+                    <br>
+                    <h4>Governing Law and Jurisdiction</h4>
+                    <p>This website (excluding linked Web sites) is controlled by <strong>DMS(DataMySite)</strong>  based in Dubai, United Arab Emirates. By accessing or using this website, you agree that all matters relating to your access to, or use of, this website shall be governed by the laws of the state of Dubai and the laws of the United Arab Emirates. You agree and hereby submit to the non-exclusive jurisdiction of the Federal Court of United Arab Emirates and/or the courts of the state of Dubai concerning such matters.</p>
+
+
+                </article>
+		</div>
+	</section>
+</main>
+@endsection
+
+@section('addScript')
+	<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
+	<script src="{{ URL::to('/public/assets/js/home-v2.js') }}?v={{ @filemtime(public_path('assets/js/home-v2.js')) }}" defer></script>
+	<script src="{{ URL::to('/public/assets/js/terms-v2.js') }}?v={{ @filemtime(public_path('assets/js/terms-v2.js')) }}" defer></script>
+@endsection

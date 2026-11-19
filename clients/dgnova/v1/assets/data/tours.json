@@ -1,0 +1,264 @@
+{
+  "items": [
+    {
+      "id": "tour-001",
+      "title": "Maldives Overwater Escape",
+      "destination": "Maldives",
+      "country": "Maldives",
+      "region": "Indian Ocean",
+      "durationDays": 5,
+      "durationLabel": "5 Days / 4 Nights",
+      "styles": ["Honeymoon", "Luxury"],
+      "packageType": "Resort Package",
+      "featured": true,
+      "available": true,
+      "addedOn": "2026-09-03",
+      "image": "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1514282401047-d79a71a590e8?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1544550581-5f7ceaf7f992?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "highlights": ["Overwater villa stay", "Seaplane or speedboat transfers", "Sunset dolphin cruise", "Couples' spa session", "Half-board dining"],
+      "overview": "A short flight from the UAE and a world away. This five-day Maldives escape pairs an overwater villa with unhurried days — snorkelling the house reef, spa afternoons and dinners over the lagoon. We tailor the resort tier, meal plan and transfers around your dates and budget.",
+      "itinerary": [
+        {"day": 1, "title": "Arrival & lagoon sunset", "detail": "Fly from Dubai or Abu Dhabi to Malé, connect by seaplane or speedboat to your resort, and settle into your overwater villa before a welcome dinner."},
+        {"day": 2, "title": "House reef & spa", "detail": "Morning snorkelling on the house reef, a relaxed lunch, then a couples' treatment at the overwater spa."},
+        {"day": 3, "title": "Island day", "detail": "A free day for water sports, a sandbank picnic or simply the villa deck. Optional excursions can be arranged in advance."},
+        {"day": 4, "title": "Dolphin cruise", "detail": "Late-afternoon dolphin cruise followed by a beachfront dinner under the stars."},
+        {"day": 5, "title": "Departure", "detail": "Breakfast over the water, transfer back to Malé and your return flight to the UAE."}
+      ],
+      "included": ["Return economy flights from the UAE", "Resort transfers", "4 nights' accommodation", "Daily breakfast (half-board upgrade available)", "Sunset dolphin cruise", "Travel support before and during the trip"],
+      "excluded": ["Travel insurance", "Personal expenses", "Optional excursions", "Meals not stated"],
+      "travelInfo": ["Visa on arrival for most UAE residents and many nationalities — we confirm for your passport", "Best season: November to April", "Flight time from Dubai: about 4 hours"]
+    },
+    {
+      "id": "tour-002",
+      "title": "Istanbul & Cappadocia Discovery",
+      "destination": "Istanbul & Cappadocia",
+      "country": "Türkiye",
+      "region": "Europe & Middle East",
+      "durationDays": 7,
+      "durationLabel": "7 Days / 6 Nights",
+      "styles": ["City Break", "Adventure", "Family"],
+      "packageType": "Guided Tour",
+      "featured": true,
+      "available": true,
+      "addedOn": "2026-08-26",
+      "image": "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1541432901042-2d8bd64b4a9b?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1526481280693-3bfa7568e0f3?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1570939274717-7eda259b50ed?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "highlights": ["Hagia Sophia & Blue Mosque", "Bosphorus dinner cruise", "Cappadocia hot-air balloon option", "Cave hotel night", "Grand Bazaar time"],
+      "overview": "Two of Türkiye's greatest experiences in one week: Istanbul's layered old city and Cappadocia's surreal valleys. The pace balances guided mornings with free afternoons, and the famous sunrise balloon flight can be added on your preferred day.",
+      "itinerary": [
+        {"day": 1, "title": "Arrive in Istanbul", "detail": "Fly from the UAE, private transfer to your hotel near Sultanahmet, evening at leisure."},
+        {"day": 2, "title": "Old city walking day", "detail": "Guided visits to Hagia Sophia, the Blue Mosque, the Hippodrome and the Basilica Cistern."},
+        {"day": 3, "title": "Bazaars & Bosphorus", "detail": "Morning at the Grand Bazaar and Spice Market, evening Bosphorus dinner cruise."},
+        {"day": 4, "title": "Fly to Cappadocia", "detail": "Short domestic flight, check in to a cave hotel, sunset viewpoint at Göreme."},
+        {"day": 5, "title": "Valleys & workshops", "detail": "Optional sunrise balloon flight, then Göreme Open-Air Museum, Pigeon Valley and a pottery workshop in Avanos."},
+        {"day": 6, "title": "Underground city", "detail": "Derinkuyu underground city and Uçhisar Castle, with a free evening in Göreme."},
+        {"day": 7, "title": "Return to the UAE", "detail": "Fly to Istanbul and connect home."}
+      ],
+      "included": ["Return flights from the UAE", "Domestic Istanbul–Cappadocia flights", "6 nights' accommodation incl. cave hotel", "Daily breakfast", "Guided tours as listed", "All transfers"],
+      "excluded": ["Hot-air balloon flight (optional add-on)", "Travel insurance", "Lunches and dinners unless stated", "Personal expenses"],
+      "travelInfo": ["Many nationalities receive e-visas; we confirm requirements for your passport", "Best seasons: April–June and September–November", "Flight time from Dubai: about 5 hours"]
+    },
+    {
+      "id": "tour-003",
+      "title": "Swiss Alps & Lakes Journey",
+      "destination": "Zurich, Lucerne & Interlaken",
+      "country": "Switzerland",
+      "region": "Europe",
+      "durationDays": 8,
+      "durationLabel": "8 Days / 7 Nights",
+      "styles": ["Family", "Luxury", "Leisure"],
+      "packageType": "Self-Guided Rail",
+      "featured": true,
+      "available": true,
+      "addedOn": "2026-08-20",
+      "image": "https://images.unsplash.com/photo-1527668752968-14dc70a27c95?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1527668752968-14dc70a27c95?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1530122037265-a5f1f91d3b99?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "highlights": ["Swiss Travel Pass included", "Mount Titlis or Jungfraujoch excursion", "Lake Lucerne cruise", "Interlaken free day", "Scenic Golden Pass rail line"],
+      "overview": "Switzerland by train is the easiest 'wow' trip from the UAE — cool summer air, lakes, and mountain excursions that children and grandparents enjoy equally. This self-guided itinerary includes rail passes, hand-picked hotels and a day-by-day plan you can adjust freely.",
+      "itinerary": [
+        {"day": 1, "title": "Arrive in Zurich", "detail": "Fly from the UAE, train to your hotel, evening walk along the Limmat."},
+        {"day": 2, "title": "Zurich & Rhine Falls", "detail": "Old town morning, afternoon excursion to the Rhine Falls."},
+        {"day": 3, "title": "To Lucerne", "detail": "Train to Lucerne, Chapel Bridge and lakefront at leisure."},
+        {"day": 4, "title": "Mountain day", "detail": "Full-day Mount Titlis excursion with the rotating cable car and glacier park."},
+        {"day": 5, "title": "Lake cruise to Interlaken", "detail": "Morning boat on Lake Lucerne, Golden Pass rail to Interlaken."},
+        {"day": 6, "title": "Jungfrau region", "detail": "Optional Jungfraujoch 'Top of Europe' excursion or a gentler Harder Kulm afternoon."},
+        {"day": 7, "title": "Free day", "detail": "Paragliding, Lake Brienz, or simply Höhematte park and chocolate shopping."},
+        {"day": 8, "title": "Return", "detail": "Train to Zurich Airport and fly home."}
+      ],
+      "included": ["Return flights from the UAE", "7 nights' accommodation", "Swiss Travel Pass (8 days)", "Daily breakfast", "Mount Titlis excursion", "Day-by-day travel plan and support"],
+      "excluded": ["Schengen visa fees (assistance provided)", "Jungfraujoch supplement", "Travel insurance", "Lunches and dinners"],
+      "travelInfo": ["Schengen visa required for many residents — we assist with the file", "Best seasons: June–September for summer, December–February for snow", "Flight time from Dubai: about 7 hours"]
+    },
+    {
+      "id": "tour-004",
+      "title": "Bali Family Adventure",
+      "destination": "Ubud & Nusa Dua",
+      "country": "Indonesia",
+      "region": "Southeast Asia",
+      "durationDays": 6,
+      "durationLabel": "6 Days / 5 Nights",
+      "styles": ["Family", "Adventure", "Leisure"],
+      "packageType": "Private Tour",
+      "featured": false,
+      "available": true,
+      "addedOn": "2026-09-07",
+      "image": "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1512100356356-de1b84283e18?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "highlights": ["Ubud rice terraces", "Private driver throughout", "Waterfall & swing day", "Beach resort finale", "Balinese cooking class"],
+      "overview": "Three nights of green Ubud — terraces, waterfalls and temples — followed by two easy beach nights in Nusa Dua. A private driver keeps the pace family-friendly, and every activity can be swapped to suit younger children or teens.",
+      "itinerary": [
+        {"day": 1, "title": "Arrive in Bali", "detail": "Fly from the UAE to Denpasar, private transfer to your Ubud resort."},
+        {"day": 2, "title": "Terraces & temples", "detail": "Tegalalang rice terraces, Tirta Empul water temple and a family cooking class."},
+        {"day": 3, "title": "Waterfalls & swings", "detail": "Tibumana waterfall, jungle swing photo stop and free evening in Ubud town."},
+        {"day": 4, "title": "To the coast", "detail": "Transfer to Nusa Dua, afternoon on the beach."},
+        {"day": 5, "title": "Reef day", "detail": "Optional glass-bottom boat and turtle island trip, sunset dinner on the sand."},
+        {"day": 6, "title": "Departure", "detail": "Morning at leisure, transfer to the airport and fly home."}
+      ],
+      "included": ["Return flights from the UAE", "5 nights' accommodation (3 Ubud + 2 beach)", "Private air-conditioned car and driver", "Daily breakfast", "Cooking class and listed activities", "All transfers"],
+      "excluded": ["Travel insurance", "Optional boat trips", "Lunches and dinners unless stated", "Personal expenses"],
+      "travelInfo": ["Visa on arrival available for many nationalities — we confirm for your passport", "Best season: April to October", "Flight time from Dubai: about 8.5 hours"]
+    },
+    {
+      "id": "tour-005",
+      "title": "Georgia Mountains & Old Tbilisi",
+      "destination": "Tbilisi, Kazbegi & Kakheti",
+      "country": "Georgia",
+      "region": "Caucasus",
+      "durationDays": 5,
+      "durationLabel": "5 Days / 4 Nights",
+      "styles": ["Adventure", "Leisure", "Family"],
+      "packageType": "Guided Tour",
+      "featured": false,
+      "available": true,
+      "addedOn": "2026-08-31",
+      "image": "https://images.unsplash.com/photo-1565008576549-57569a49371d?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1565008576549-57569a49371d?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "highlights": ["Old Tbilisi walking tour", "Kazbegi mountain day trip", "Gergeti Trinity Church", "Kakheti wine-country lunch", "Cable car & sulphur bath district"],
+      "overview": "Short flight, big scenery. Georgia has become one of the UAE's favourite quick escapes: cobbled Tbilisi, the drive up the Military Highway to Kazbegi, and long countryside lunches in Kakheti. Excellent value for couples, friends and families alike.",
+      "itinerary": [
+        {"day": 1, "title": "Arrive in Tbilisi", "detail": "Fly from the UAE, transfer to your hotel, evening stroll through the old town."},
+        {"day": 2, "title": "Old Tbilisi", "detail": "Guided walking tour: Narikala fortress by cable car, sulphur bath district, Metekhi church and the bridge of peace."},
+        {"day": 3, "title": "Kazbegi day trip", "detail": "Drive the Georgian Military Highway to Kazbegi, 4x4 up to Gergeti Trinity Church, mountain lunch."},
+        {"day": 4, "title": "Kakheti countryside", "detail": "Sighnaghi 'city of love', countryside lunch and a relaxed drive back."},
+        {"day": 5, "title": "Departure", "detail": "Free morning for shopping, transfer to the airport and fly home."}
+      ],
+      "included": ["Return flights from the UAE", "4 nights' accommodation", "Daily breakfast", "Guided tours and day trips as listed", "All transfers"],
+      "excluded": ["Travel insurance", "Lunches and dinners unless stated", "Personal expenses"],
+      "travelInfo": ["Visa-free or visa on arrival for many UAE residents — we confirm for your passport", "Best seasons: May–October; December–February for snow", "Flight time from Dubai: about 3.5 hours"]
+    },
+    {
+      "id": "tour-006",
+      "title": "London Classic City Break",
+      "destination": "London",
+      "country": "United Kingdom",
+      "region": "Europe",
+      "durationDays": 5,
+      "durationLabel": "5 Days / 4 Nights",
+      "styles": ["City Break", "Family", "Luxury"],
+      "packageType": "Self-Guided City Break",
+      "featured": false,
+      "available": true,
+      "addedOn": "2026-08-14",
+      "image": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1533929736458-ca588d08c8be?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "highlights": ["Central hotel near Hyde Park", "Hop-on hop-off sightseeing", "West End show option", "Harrods & Oxford Street time", "Thames river cruise"],
+      "overview": "The classic London week done comfortably: a central hotel, sightseeing at your own pace, a Thames cruise, and evenings free for the West End or dinner reservations we can arrange. Popular with UAE families for Eid and summer breaks.",
+      "itinerary": [
+        {"day": 1, "title": "Arrive in London", "detail": "Fly from the UAE, private transfer to your hotel, evening at leisure."},
+        {"day": 2, "title": "Icons day", "detail": "Hop-on hop-off route past Westminster, Buckingham Palace and Tower Bridge; Thames cruise in the afternoon."},
+        {"day": 3, "title": "Museums & parks", "detail": "Natural History Museum morning, Hyde Park afternoon, optional West End show."},
+        {"day": 4, "title": "Shopping day", "detail": "Free day for Harrods, Oxford Street and Covent Garden."},
+        {"day": 5, "title": "Departure", "detail": "Transfer to Heathrow and fly home."}
+      ],
+      "included": ["Return flights from the UAE", "4 nights' central accommodation", "Daily breakfast", "Airport transfers", "48-hour sightseeing pass and river cruise"],
+      "excluded": ["UK visa fees (assistance provided)", "West End tickets (bookable on request)", "Travel insurance", "Lunches and dinners"],
+      "travelInfo": ["UK visa required for many residents — we assist with the application", "Best seasons: May–September; December for festive lights", "Flight time from Dubai: about 7.5 hours"]
+    },
+    {
+      "id": "tour-007",
+      "title": "Thailand Islands & Bangkok",
+      "destination": "Bangkok & Phuket",
+      "country": "Thailand",
+      "region": "Southeast Asia",
+      "durationDays": 7,
+      "durationLabel": "7 Days / 6 Nights",
+      "styles": ["Leisure", "Honeymoon", "Family"],
+      "packageType": "Resort Package",
+      "featured": false,
+      "available": true,
+      "addedOn": "2026-08-08",
+      "image": "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1528181304800-259b08848526?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "highlights": ["Grand Palace & temples", "Chao Phraya dinner cruise", "Phi Phi Islands boat day", "Beachfront Phuket resort", "Thai massage session"],
+      "overview": "Two nights of Bangkok's temples, markets and rooftop dinners, then four nights on Phuket's beaches with an island-hopping day to Phi Phi. A balanced first-Thailand itinerary that honeymooners and families both love.",
+      "itinerary": [
+        {"day": 1, "title": "Arrive in Bangkok", "detail": "Fly from the UAE, transfer to your riverside hotel."},
+        {"day": 2, "title": "Temples & river", "detail": "Grand Palace, Wat Pho and Wat Arun, evening Chao Phraya dinner cruise."},
+        {"day": 3, "title": "Fly to Phuket", "detail": "Short flight south, check in to your beachfront resort."},
+        {"day": 4, "title": "Phi Phi Islands", "detail": "Full-day speedboat trip: Maya Bay viewpoint, snorkelling and island lunch."},
+        {"day": 5, "title": "Beach day", "detail": "Free day; optional Old Phuket Town walk and a traditional Thai massage."},
+        {"day": 6, "title": "Leisure", "detail": "Pool, beach and a farewell seafood dinner."},
+        {"day": 7, "title": "Departure", "detail": "Transfer to Phuket airport and fly home."}
+      ],
+      "included": ["Return flights from the UAE", "Domestic Bangkok–Phuket flight", "6 nights' accommodation", "Daily breakfast", "Phi Phi boat day and listed tours", "All transfers"],
+      "excluded": ["Travel insurance", "Optional activities", "Lunches and dinners unless stated"],
+      "travelInfo": ["Visa-free entry for many nationalities — we confirm for your passport", "Best season: November to April", "Flight time from Dubai: about 6 hours"]
+    },
+    {
+      "id": "tour-008",
+      "title": "Singapore Family Stopover",
+      "destination": "Singapore",
+      "country": "Singapore",
+      "region": "Southeast Asia",
+      "durationDays": 4,
+      "durationLabel": "4 Days / 3 Nights",
+      "styles": ["Family", "City Break"],
+      "packageType": "Self-Guided City Break",
+      "featured": false,
+      "available": true,
+      "addedOn": "2026-07-28",
+      "image": "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=1200&q=70",
+      "gallery": [
+        "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=1600&q=75",
+        "https://images.unsplash.com/photo-1496939376851-89342e90adcd?auto=format&fit=crop&w=1600&q=75"
+      ],
+      "highlights": ["Gardens by the Bay", "Sentosa & Universal Studios option", "Marina Bay light show", "Hawker food experience", "Singapore Zoo or River Wonders"],
+      "overview": "Clean, safe and packed with things children genuinely enjoy — Singapore is the easiest long-weekend city from the UAE. This compact plan covers the icons and leaves room for Universal Studios or the zoo, whichever your family prefers.",
+      "itinerary": [
+        {"day": 1, "title": "Arrive in Singapore", "detail": "Fly from the UAE, transfer to your hotel, evening Marina Bay light show."},
+        {"day": 2, "title": "Gardens & bay", "detail": "Gardens by the Bay domes and Supertree Grove, afternoon at the ArtScience Museum or shopping on Orchard Road."},
+        {"day": 3, "title": "Sentosa day", "detail": "Universal Studios or S.E.A. Aquarium, cable car ride, beach sunset."},
+        {"day": 4, "title": "Departure", "detail": "Morning hawker breakfast, transfer to Changi and fly home."}
+      ],
+      "included": ["Return flights from the UAE", "3 nights' accommodation", "Daily breakfast", "Airport transfers", "Gardens by the Bay tickets"],
+      "excluded": ["Universal Studios / attraction tickets (bookable on request)", "Travel insurance", "Lunches and dinners"],
+      "travelInfo": ["Visa-free entry for many nationalities — we confirm for your passport", "Great year-round; expect tropical showers", "Flight time from Dubai: about 7 hours"]
+    }
+  ]
+}
