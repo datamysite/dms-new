@@ -16,7 +16,6 @@
 @section('v2lite', '1')
 
 @section('metaAddition')
-	<meta name="robots" content="noindex, follow">
 	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},2500);})();</script>
 	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.png') }}">
 	{{-- self-hosted fonts: the two key files are preloaded, @font-face is inlined (font-display: swap) --}}

@@ -7,6 +7,9 @@ use App\Helpers\Mailer;
 use App\Http\Controllers\ChatWidgetController;
 use App\Http\Controllers\ChatDashboardController;
 
+// Redesigned (V2) service pages: resources/views/_v2-overrides/web/services-new/master-service.blade.php overrides the live master-service view on the ORIGINAL service URLs.
+\Illuminate\Support\Facades\View::getFinder()->prependLocation(resource_path('views/_v2-overrides'));
+
 
 require __DIR__.'/redirects.php';
 
@@ -62,42 +65,21 @@ Route::namespace('App\Http\Controllers\web')->group(function(){
     Route::get('/', 'WebController@indexNew')->name('home');
     Route::get('/home-new', function () { return redirect(url('/'), 301); })->name('home.new');
 
-    // Service pages V2 preview: /v2/<service-url> runs the SAME service controller action, but
-    // renders it with the new template (resources/views/web/services-v2/page.blade.php).
-    // Live service URLs are untouched.
-    Route::get('/v2/{path}', function ($path) {
-        $sub = \Illuminate\Http\Request::create('/' . trim($path, '/'), 'GET');
-        try { $route = app('router')->getRoutes()->match($sub); } catch (\Throwable $e) { abort(404); }
-        abort_unless(str_contains($route->getActionName(), 'ServiceController@'), 404);
-        \Illuminate\Support\Facades\View::getFinder()->prependLocation(resource_path('views/_v2-overrides'));
-        return $route->bind($sub)->run();
-    })->where('path', '.*')->name('services.v2');
-    // Route::get('/beta', 'WebController@index_beta');
-    Route::get('/services', 'WebController@services')->name('services');
-    // Services landing V2 preview (same data as /services, new template)
-    Route::get('/services-new', 'WebController@servicesNew')->name('services.new');
-    // FAQ / Privacy / Terms V2 previews. Live pages: /faq, /privacy-policy, /terms-conditions.
-    Route::get('/faq-new', 'WebController@faqNew')->name('faq.new');
-    Route::get('/privacy-policy-new', 'WebController@privacyNew')->name('privacy.new');
-    Route::get('/terms-conditions-new', 'WebController@termsNew')->name('terms.new');
-    // Contact V2 preview. Live page: /contact-us (route name 'contact').
-    Route::get('/contact-us-new', 'WebController@contactNew')->name('contact.new');
-    // About V2 preview. Live page: /about-us (route name 'about').
-    Route::get('/about-us-new', 'WebController@aboutNew')->name('about.new');
-    // Case studies landing V2 preview. Live page: /client-case-studies (route name 'caseStudies').
-    Route::get('/client-case-studies-new', 'WebController@caseStudiesNew')->name('caseStudies.new');
-    // Blogs V2 previews: landing (/blogs-new) + post page (/blogs-new/post/<slug>). Live: /blogs and /<blog-slug>.
-    Route::get('/blogs-new', 'BlogController@indexNew')->name('blogs.new');
-    Route::get('/blogs-new/post/{blog_slug}', 'BlogController@detailsNew')->name('blogs.new.detail');
-    Route::get('/blogs-new/category/{slug}', 'BlogController@categoryNew')->name('blogs.new.category');
-    Route::get('/blogs-new/tag/{slug}', 'BlogController@tagsNew')->name('blogs.new.tag');
-    Route::get('/blogs/categories-new', 'BlogController@allCategoriesNew')->name('blogs.categories.new');
-    Route::get('/faq', 'WebController@faq')->name('faq');
-    Route::get('/about-us', 'WebController@about')->name('about');
-    Route::get('/contact-us', 'WebController@contact')->name('contact');
-    Route::get('/privacy-policy', 'WebController@privacyPolicy')->name('privacy');
-    Route::get('/terms-conditions', 'WebController@termsCondition')->name('terms');
-    Route::get('/client-case-studies', 'WebController@caseStudies')->name('caseStudies');
+    // The redesigned pages are served on the ORIGINAL URLs. The old preview URLs (/v2/..., /<page>-new, /blogs-new/...) redirect (301) to them.
+    Route::get('/v2/{path}', function ($path) { return redirect(url('/' . trim($path, '/')), 301); })->where('path', '.*')->name('services.v2');
+    foreach (['services-new' => 'services', 'faq-new' => 'faq', 'privacy-policy-new' => 'privacy-policy', 'terms-conditions-new' => 'terms-conditions', 'contact-us-new' => 'contact-us', 'about-us-new' => 'about-us', 'client-case-studies-new' => 'client-case-studies', 'blogs-new' => 'blogs', 'blogs/categories-new' => 'blogs/categories'] as $from => $to) {
+        Route::get('/' . $from, function () use ($to) { return redirect(url('/' . $to), 301); });
+    }
+    Route::get('/blogs-new/post/{blog_slug}', function ($blog_slug) { return redirect(url('/' . $blog_slug), 301); });
+    Route::get('/blogs-new/category/{slug}', function ($slug) { return redirect(url('/blogs/' . $slug), 301); });
+    Route::get('/blogs-new/tag/{slug}', function ($slug) { return redirect(url('/tag/' . $slug), 301); });
+    Route::get('/services', 'WebController@servicesNew')->name('services');
+    Route::get('/faq', 'WebController@faqNew')->name('faq');
+    Route::get('/about-us', 'WebController@aboutNew')->name('about');
+    Route::get('/contact-us', 'WebController@contactNew')->name('contact');
+    Route::get('/privacy-policy', 'WebController@privacyNew')->name('privacy');
+    Route::get('/terms-conditions', 'WebController@termsNew')->name('terms');
+    Route::get('/client-case-studies', 'WebController@caseStudiesNew')->name('caseStudies');
 
 
     Route::get('/get-google-reviews', 'ReviewController@index');
@@ -347,11 +329,11 @@ Route::namespace('App\Http\Controllers\web')->group(function(){
     Route::get('/get-aside', 'WebController@getAside');
 
     //Blogs
-    Route::get('/blogs', 'BlogController@index')->name('blogs');
-    Route::get('/blogs/categories', 'BlogController@allCategories')->name('blogs.categories');
-    Route::get('/blogs/{slug}', 'BlogController@category');
-    Route::get('/{blog_slug}', 'BlogController@details')->name('blogs.detail');
-    Route::get('/tag/{slug}', 'BlogController@tags');
+    Route::get('/blogs', 'BlogController@indexNew')->name('blogs');
+    Route::get('/blogs/categories', 'BlogController@allCategoriesNew')->name('blogs.categories');
+    Route::get('/blogs/{slug}', 'BlogController@categoryNew');
+    Route::get('/{blog_slug}', 'BlogController@detailsNew')->name('blogs.detail');
+    Route::get('/tag/{slug}', 'BlogController@tagsNew');
 });
 
 

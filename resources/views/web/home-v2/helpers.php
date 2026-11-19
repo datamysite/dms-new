@@ -20,6 +20,8 @@ if (!function_exists('v2_url')) {
 	{
 		static $cache = [], $uris = null;
 		$target = (string) $target;
+		/* PASS-THROUGH: the redesigned pages now live on the ORIGINAL URLs, so no mapping is needed (the code below is kept for future preview pages). */
+		if (true) return $target;
 		if (isset($cache[$target])) return $cache[$target];
 
 		$base = rtrim(\Illuminate\Support\Facades\URL::to('/'), '/');

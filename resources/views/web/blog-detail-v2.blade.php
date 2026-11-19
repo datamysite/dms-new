@@ -14,7 +14,6 @@
 @php require_once resource_path('views/web/home-v2/helpers.php'); @endphp
 
 @section('metaAddition')
-	<meta name="robots" content="noindex, follow">
 	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},8000);})();</script>
 	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.png') }}">
 	<link rel="preconnect" href="https://fonts.googleapis.com">

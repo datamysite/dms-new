@@ -30,6 +30,9 @@ class BlogController extends Controller
         $data['nav'] = 'blogs';
         $data['titleImg'] = 'services.jpg';
         $data['title'] = 'Blogs';
+        if(!empty($_GET['page'])){
+            $data['tags'] = '1';
+        }
         $data['data'] = Blogs::where('status', '1')->orderBy('created_at', 'desc')->paginate(25);
 
         return view('web.blogs-v2')->with($data);
@@ -39,6 +42,9 @@ class BlogController extends Controller
     public function categoryNew($slug){
         $data['nav'] = 'blogs';
         $data['titleImg'] = 'services.jpg';
+        if(!empty($_GET['page'])){
+            $data['tags'] = '1';
+        }
         $category = Categories::where('slug', $slug)->first();
         if(!empty($category->id)){
             $data['title'] = $category->name;
@@ -48,7 +54,7 @@ class BlogController extends Controller
 
             return view('web.blogs-v2')->with($data);
         }
-        return redirect(route('blogs.new'));
+        return redirect(route('blogs'));
     }
 
     // Tag listing V2 preview (same data as tags())
@@ -78,7 +84,7 @@ class BlogController extends Controller
                 return view('web.blogs-v2')->with($data);
             }
         }
-        return redirect(route('blogs.new'));
+        return redirect(route('blogs'));
     }
 
     // All categories V2 preview (same data as allCategories())
@@ -86,6 +92,9 @@ class BlogController extends Controller
         $data['nav'] = 'blogs';
         $data['titleImg'] = 'services.jpg';
         $data['title'] = 'All Blog Categories';
+        if(!empty($_GET['page'])){
+            $data['tags'] = '1';
+        }
         $data['categories'] = Categories::withCount('blogs')->where('status', '1')->orderByDesc('blogs_count')->get();
 
         return view('web.blogs-categories-v2')->with($data);
