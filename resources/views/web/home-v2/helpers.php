@@ -43,7 +43,7 @@ if (!function_exists('v2_url')) {
 			}
 		}
 		if ($path === '') {
-			$out = isset($uris['home-new']) ? $base . '/home-new' : $orig;
+			$out = $orig; /* the redesigned home is served at "/" itself */
 		} elseif (isset($uris[$path . '-new'])) {
 			$out = $base . '/' . $path . '-new';
 		} elseif (isset($uris[$path]) && strpos($uris[$path]->getActionName(), 'ServiceController@') !== false) {

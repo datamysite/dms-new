@@ -58,8 +58,9 @@ Route::get('/broker-growth-mailer', function(){
 //Web 
 
 Route::namespace('App\Http\Controllers\web')->group(function(){
-    Route::get('/', 'WebController@index')->name('home');
-    Route::get('/home-new', 'WebController@indexNew')->name('home.new');
+    // The redesigned home (web.home-v2) is now the live home. The previous controller action WebController@index (view web.index-beta) is kept in the controller.
+    Route::get('/', 'WebController@indexNew')->name('home');
+    Route::get('/home-new', function () { return redirect(url('/'), 301); })->name('home.new');
 
     // Service pages V2 preview: /v2/<service-url> runs the SAME service controller action, but
     // renders it with the new template (resources/views/web/services-v2/page.blade.php).
