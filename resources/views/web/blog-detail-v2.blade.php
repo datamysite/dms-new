@@ -13,17 +13,21 @@
 @extends('web.home-v2.master')
 @php require_once resource_path('views/web/home-v2/helpers.php'); @endphp
 
+@section('v2lite', '1')
+@section('v2form', '1')
+
 @section('metaAddition')
-	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},8000);})();</script>
+	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},2500);})();</script>
 	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.png') }}">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400..900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+	{{-- self-hosted fonts: the two key files are preloaded, @font-face is inlined (font-display: swap) --}}
+	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/league-spartan-latin.woff2') }}">
+	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/nunito-sans-latin.woff2') }}">
+	<style>{!! str_replace('../fonts/', URL::to('/public/assets/fonts') . '/', (string) @file_get_contents(public_path('assets/css/v2-fonts.css'))) !!}</style>
 @endsection
 
 @section('addStyle')
-	<link href="{{ URL::to('/public/assets/css/home-v2.css') }}?v={{ @filemtime(public_path('assets/css/home-v2.css')) }}" rel="stylesheet">
-	<link href="{{ URL::to('/public/assets/css/blog-detail-v2.css') }}?v={{ @filemtime(public_path('assets/css/blog-detail-v2.css')) }}" rel="stylesheet">
+	<link href="{{ v2_asset('assets/css/home-v2.css') }}" rel="stylesheet">
+	<link href="{{ v2_asset('assets/css/blog-detail-v2.css') }}" rel="stylesheet">
 @endsection
 
 @php
@@ -131,7 +135,7 @@
 		</div>
 		<div class="hv2-container bdv-wrap">
 			<div class="bdv-cover" data-reveal="up">
-				<img src="{{ $bdvBanner }}" alt="{{ $data->heading }}">
+				<img {!! v2_img('public/storage/blogs/' . $data->banner, '(max-width: 1020px) 94vw, 980px') !!} alt="{{ $data->heading }}">
 				<div class="bdv-summary">
 					<p class="summary"><strong>Summary</strong>:<br>
 						{{ $data->short_description }}
@@ -183,7 +187,7 @@
 				@foreach($related as $val)
 					<article class="bdv-card" data-tilt data-tilt-max="4" data-reveal="up" data-delay="{{ $loop->iteration }}">
 						<a class="bdv-card-media hv2-media" href="{{ v2_blog_url($val->slug) }}" target="_blank" tabindex="-1" aria-hidden="true">
-							<img src="{{ empty($val->banner) ? 'https://datamysite.com/public/og-logo.jpeg' : URL::to('public/storage/blogs/' . $val->banner) }}" alt="{{ $val->heading }}" loading="lazy">
+							<img {!! v2_img('public/storage/blogs/' . $val->banner, '(max-width: 640px) 92vw, 31vw') !!} alt="{{ $val->heading }}" loading="lazy">
 							<span class="bdv-card-go"><i class="bi bi-arrow-up-right"></i></span>
 						</a>
 						<div class="bdv-card-body">
@@ -336,7 +340,7 @@
 @endsection
 
 @section('addScript')
-	<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
-	<script src="{{ URL::to('/public/assets/js/home-v2.js') }}?v={{ @filemtime(public_path('assets/js/home-v2.js')) }}" defer></script>
-	<script src="{{ URL::to('/public/assets/js/blog-detail-v2.js') }}?v={{ @filemtime(public_path('assets/js/blog-detail-v2.js')) }}" defer></script>
+	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
+	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
+	<script src="{{ v2_asset('assets/js/blog-detail-v2.js') }}" defer></script>
 @endsection

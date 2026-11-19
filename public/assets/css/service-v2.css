@@ -544,11 +544,11 @@
 /* ==========================================================================
    SERVICE HERO 3D — custom pieces per service group (the Home prism is not used on service pages)
    ========================================================================== */
-.sv2h-deco { position: absolute; inset: 0; z-index: 1; pointer-events: none; perspective: 1100px; overflow: hidden; }
+.sv2h-deco { position: absolute; inset: 0; z-index: 1; pointer-events: none; perspective: 2400px; overflow: hidden; }
 .sv2h-hs { position: absolute; width: 220px; height: 200px; transform-style: preserve-3d; animation: sv2h-tumble 9s ease-in-out infinite alternate; }
 .sv2h-hs:nth-child(even) { animation-duration: 11s; animation-direction: alternate-reverse; }
-.sv2h-hs > .sv2h-sp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); filter: drop-shadow(4px 4px 0 #0a3a2c) drop-shadow(0 12px 10px rgba(0,0,0,.25)); }
-@keyframes sv2h-tumble { from { rotate: 1 1 0 -18deg; } to { rotate: 1 1 0 18deg; } }
+.sv2h-hs > .sv2h-sp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);  }
+@keyframes sv2h-tumble { from { rotate: 1 1 0 -10deg; } to { rotate: 1 1 0 10deg; } }
 .sv2h-hs--n1 { left: clamp(300px, 34vw, 560px); top: 12%; } .sv2h-hs--n2 { left: clamp(380px, 43vw, 700px); bottom: 8%; transform: scale(.9); }
 @media (max-width: 1280px) { .sv2h-hs--n2 { display: none; } }
 @media (max-width: 991px) { .sv2h-deco { display: none; } }
@@ -564,10 +564,10 @@
 /* DOOH screen */
 .sv2h-dooh { width: 190px; height: 160px; }
 .sv2h-dh-frame { position: absolute; left: 0; top: 0; width: 190px; height: 118px; display: flex; align-items: flex-end; gap: 8px; padding: 14px 16px; border-radius: 14px; border: 6px solid var(--green, #0b3d2e); background: linear-gradient(145deg, #0f5741, #0b3d2e); box-shadow: 0 22px 34px -14px rgba(11, 61, 46, .6), inset 0 0 0 1px rgba(255, 255, 255, .2); }
-.sv2h-dh-frame i { flex: 1; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--coral-s, #ff8a84), var(--coral)); animation: sv2h-eq 1.8s ease-in-out infinite alternate; }
+.sv2h-dh-frame i { flex: 1; height: 92%; transform-origin: 50% 100%; border-radius: 4px 4px 0 0; background: linear-gradient(180deg, var(--coral-s, #ff8a84), var(--coral)); animation: sv2h-eq 1.8s ease-in-out infinite alternate; }
 .sv2h-dh-frame i:nth-child(2) { animation-delay: -.3s; } .sv2h-dh-frame i:nth-child(3) { animation-delay: -.6s; } .sv2h-dh-frame i:nth-child(4) { animation-delay: -.9s; } .sv2h-dh-frame i:nth-child(5) { animation-delay: -1.2s; } .sv2h-dh-frame i:nth-child(6) { animation-delay: -1.5s; }
 .sv2h-dh-stand { position: absolute; left: 70px; top: 118px; width: 50px; height: 34px; background: linear-gradient(90deg, #0f5741, #082e23); clip-path: polygon(30% 0, 70% 0, 100% 100%, 0 100%); }
-@keyframes sv2h-eq { from { height: 18%; } to { height: 92%; } }
+@keyframes sv2h-eq { from { transform: scaleY(.2); } to { transform: scaleY(1); } }
 
 /* taxi (transit) */
 .sv2h-taxi { width: 210px; height: 110px; }
@@ -577,9 +577,9 @@
 .sv2h-tx-lamp { position: absolute; left: 66px; top: 4px; width: 38px; height: 12px; border-radius: 6px 6px 2px 2px; background: var(--coral); box-shadow: 0 0 18px 4px rgba(244, 77, 70, .6); animation: sv2h-blink 1.4s ease-in-out infinite; z-index: 2; }
 .sv2h-tx-wheel { position: absolute; top: 62px; width: 28px; height: 28px; border-radius: 50%; background: radial-gradient(circle, #cfd8d4 0 28%, #1c2b27 30%); border: 3px solid #0b1f19; animation: sv2h-spin .7s linear infinite; z-index: 2; } .sv2h-tx-wheel.a { left: 28px; } .sv2h-tx-wheel.b { left: 114px; }
 .sv2h-tx-beam { position: absolute; left: 158px; top: 44px; width: 50px; height: 22px; background: linear-gradient(90deg, rgba(255, 224, 150, .7), transparent); clip-path: polygon(0 30%, 100% 0, 100% 100%, 0 70%); }
-.sv2h-tx-road { position: absolute; left: 0; right: 0; top: 94px; height: 4px; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .7) 0 16px, transparent 16px 32px); animation: sv2h-road 1s linear infinite; }
+.sv2h-tx-road { position: absolute; left: -32px; right: 0; top: 94px; height: 4px; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .7) 0 16px, transparent 16px 32px); animation: sv2h-road 1s linear infinite; }
 @keyframes sv2h-drive { from { transform: translateX(-8px); } to { transform: translateX(8px); } }
-@keyframes sv2h-road { to { background-position: -32px 0; } }
+@keyframes sv2h-road { from { transform: translateX(0); } to { transform: translateX(32px); } }
 @keyframes sv2h-spin { to { transform: rotate(360deg); } }
 @keyframes sv2h-blink { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
 
@@ -614,3 +614,6 @@
 
 
 @media (prefers-reduced-motion: reduce) { .sv2h-hs, .sv2h-hs * { animation: none !important; } }
+
+/* NO WRAPPER TUMBLE (see page CSS) */
+.sv2h-hs { animation: none !important; rotate: none !important; transform-style: flat; }

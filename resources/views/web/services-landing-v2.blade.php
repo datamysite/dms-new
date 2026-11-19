@@ -31,6 +31,7 @@
 
 @php
 	$hv2Img = URL::to('/public/assets/img');
+	$svl3d = URL::to('/public/assets/img/3d/services');
 	$svlPhoto = is_file(public_path('assets/img/title/services.webp')) ? $hv2Img . '/title/services.webp' : (is_file(public_path('assets/img/title/services.jpg')) ? $hv2Img . '/title/services.jpg' : null);
 
 	/* ---------- Client logos (same as Home V2 marquee) ---------- */
@@ -76,7 +77,7 @@
 		<div class="hv2-streaks" aria-hidden="true">
 			@for($s = 0; $s < 8; $s++)<i style="top: {{ 10 + $s * 11 }}%; --t: {{ 2.8 + ($s % 4) * .7 }}s; --dl: {{ $s * .5 }}s"></i>@endfor
 		</div>
-		<div class="svl-deco svl-deco--dark svl-deco--hero" aria-hidden="true"><div class="svl-stage2 svl-stage2--h1" data-svl-depth="0.05"><div class="svl-mega svl-sp"><span class="svl-mg-cone"></span><span class="svl-mg-grip"></span><span class="svl-mg-wave w1"></span><span class="svl-mg-wave w2"></span><span class="svl-mg-wave w3"></span></div></div><div class="svl-stage2 svl-stage2--h2" data-svl-depth="-0.08"><div class="svl-dooh svl-sp"><span class="svl-dh-frame"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="svl-dh-stand"></span></div></div><div class="svl-stage2 svl-stage2--h3" data-svl-depth="0.1"><div class="svl-phone svl-sp"><span class="svl-ph-body"><i></i></span><span class="svl-ph-heart h1">♥</span><span class="svl-ph-heart h2">♥</span><span class="svl-ph-heart h3">♥</span></div></div></div>
+		<div class="svl-deco svl-deco--dark svl-deco--hero" aria-hidden="true"><img class="svl-3d svl-3d--h1" src="{{ $svl3d }}/megaphone-480.webp" srcset="{{ $svl3d }}/megaphone-240.webp 240w, {{ $svl3d }}/megaphone-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="480" height="360" alt="" decoding="async" fetchpriority="high" data-svl-depth="0.05"><img class="svl-3d svl-3d--h2" src="{{ $svl3d }}/screen-480.webp" srcset="{{ $svl3d }}/screen-240.webp 240w, {{ $svl3d }}/screen-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="444" height="480" alt="" decoding="async" fetchpriority="high" data-svl-depth="-0.06"></div>
 		<div class="hv2-container hv2-hero-inner">
 			<div class="hv2-hero-copy">
 				@include('web.home-v2.breadcrumbs', ['crumbs' => [['Home', URL::to('/')], ['Services', null]]])
@@ -92,24 +93,7 @@
 	     SERVICES — Home V2 service cards (all shown)
 	==================================================================== --}}
 	<section class="hv2-section hv2-tint hv2-services svl-services" id="hv2-services">
-			<div class="svl-deco" aria-hidden="true"><div class="svl-stage2 svl-stage2--s1" data-svl-depth="0.08"><div class="svl-taxi svl-sp"><span class="svl-tx-lamp"></span><span class="svl-tx-body"><i></i><i></i></span><span class="svl-tx-wheel a"></span><span class="svl-tx-wheel b"></span><span class="svl-tx-beam"></span><span class="svl-tx-road"></span></div></div><div class="svl-stage2 svl-stage2--s2" data-svl-depth="-0.1"><div class="svl-radio svl-sp"><span class="svl-rd-ant"></span><span class="svl-rd-body"><i class="grille"></i><i class="knob"></i></span><span class="svl-rd-wave w1"></span><span class="svl-rd-wave w2"></span></div></div><div class="svl-stage2 svl-stage2--s3" data-svl-depth="0.06"><div class="svl-spot svl-sp"><span class="svl-sp-beam b1"></span><span class="svl-sp-beam b2"></span><span class="svl-sp-disc"></span><span class="svl-sp-star">★</span></div></div><div class="svl-stage2 svl-stage2--s4" data-svl-depth="-0.06"><div class="svl-mega svl-sp"><span class="svl-mg-cone"></span><span class="svl-mg-grip"></span><span class="svl-mg-wave w1"></span><span class="svl-mg-wave w2"></span><span class="svl-mg-wave w3"></span></div></div><div class="svl-stage2 svl-stage2--s5" data-svl-depth="0.1"><div class="svl-phone svl-sp"><span class="svl-ph-body"><i></i></span><span class="svl-ph-heart h1">♥</span><span class="svl-ph-heart h2">♥</span><span class="svl-ph-heart h3">♥</span></div></div>
-				<div class="svl-stage" data-svl-depth="0.10">
-					<div class="svl-cube"><i class="f1"></i><i class="f2"></i><i class="f3"></i><i class="f4"></i><i class="f5"></i><i class="f6"></i></div>
-					<span class="svl-orb"></span>
-					<span class="svl-ring r1"></span><span class="svl-ring r2"></span>
-					<span class="svl-floor"></span>
-				</div>
-				<span class="svl-dots" data-svl-depth="-0.06"></span>
-				<span class="svl-plus p1" data-svl-depth="0.18">+</span>
-				<span class="svl-plus p2" data-svl-depth="-0.14">+</span>
-				<span class="svl-plus p3" data-svl-depth="0.12">+</span>
-				<span class="svl-tri t1" data-svl-depth="-0.2"></span>
-				<span class="svl-tri t2" data-svl-depth="0.16"></span>
-				<span class="svl-glow g1" data-svl-depth="0.08"></span>
-				<span class="svl-glow g2" data-svl-depth="-0.1"></span>
-				<span class="svl-bar b1" data-svl-depth="0.2"></span>
-				<span class="svl-bar b2" data-svl-depth="-0.18"></span>
-			</div>
+			<div class="svl-deco" aria-hidden="true"><img class="svl-3d svl-3d--s1" src="{{ $svl3d }}/taxi-480.webp" srcset="{{ $svl3d }}/taxi-240.webp 240w, {{ $svl3d }}/taxi-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="480" height="303" alt="" decoding="async" loading="lazy" data-svl-depth="0.08"><img class="svl-3d svl-3d--s2" src="{{ $svl3d }}/phone-480.webp" srcset="{{ $svl3d }}/phone-240.webp 240w, {{ $svl3d }}/phone-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="323" height="480" alt="" decoding="async" loading="lazy" data-svl-depth="-0.08"></div>
 		<div class="hv2-container">
 			<div class="hv2-head">
 				<div>
@@ -153,8 +137,8 @@
 	<section class="hv2-section hv2-dark svl-clientele" id="svl-clientele">
 		<span class="svl-clientele-bg" aria-hidden="true" style="background-image: url('{{ $hv2Img }}/clientele.jpg')"></span>
 		<span class="hv2-blob hv2-blob--2" aria-hidden="true"></span>
-		<span class="svl-ring svl-ring--l" data-svl-depth="0.12" aria-hidden="true"></span><span class="svl-ring svl-ring--r" data-svl-depth="-0.1" aria-hidden="true"></span>
-		<div class="svl-deco svl-deco--dark" aria-hidden="true"><div class="svl-stage2 svl-stage2--c1" data-svl-depth="0.08"><div class="svl-dooh svl-sp"><span class="svl-dh-frame"><i></i><i></i><i></i><i></i><i></i><i></i></span><span class="svl-dh-stand"></span></div></div><div class="svl-stage2 svl-stage2--c2" data-svl-depth="-0.08"><div class="svl-spot svl-sp"><span class="svl-sp-beam b1"></span><span class="svl-sp-beam b2"></span><span class="svl-sp-disc"></span><span class="svl-sp-star">★</span></div></div><div class="svl-stage svl-stage--a" data-svl-depth="0.08"><div class="svl-pc"><div class="svl-orbit"><span class="svl-core"></span><span class="svl-path p1"><i></i></span><span class="svl-path p2"><i></i></span><span class="svl-path p3"><i></i></span></div></div></div><div class="svl-stage svl-stage--b" data-svl-depth="-0.1"><div class="svl-pc"><div class="svl-board"><span class="svl-panel"><i></i><i></i><i></i></span><span class="svl-pole l"></span><span class="svl-pole r"></span></div></div></div><span class="svl-dots svl-dots--l"></span><span class="svl-dots svl-dots--r"></span><span class="svl-plus p1" data-svl-depth="0.18">+</span><span class="svl-plus p2" data-svl-depth="-0.14">+</span></div>
+		
+		<div class="svl-deco svl-deco--dark" aria-hidden="true"><img class="svl-3d svl-3d--c1" src="{{ $svl3d }}/stage-480.webp" srcset="{{ $svl3d }}/stage-240.webp 240w, {{ $svl3d }}/stage-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="480" height="451" alt="" decoding="async" loading="lazy" data-svl-depth="0.06"><img class="svl-3d svl-3d--c2" src="{{ $svl3d }}/radio-480.webp" srcset="{{ $svl3d }}/radio-240.webp 240w, {{ $svl3d }}/radio-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="370" height="480" alt="" decoding="async" loading="lazy" data-svl-depth="-0.06"></div>
 		<div class="hv2-container">
 			<div class="svl-clientele-copy">
 				<span class="hv2-eyebrow" data-reveal="up">Clientele</span>
@@ -169,7 +153,7 @@
 	==================================================================== --}}
 	<section class="hv2-section hv2-dark hv2-clients svl-clients" id="hv2-clients">
 		<span class="hv2-watermark" data-parallax="0.12" aria-hidden="true">Clients</span>
-		<div class="svl-deco svl-deco--dark svl-deco--clients" aria-hidden="true"><div class="svl-stage2 svl-stage2--k1" data-svl-depth="0.08"><div class="svl-taxi svl-sp"><span class="svl-tx-lamp"></span><span class="svl-tx-body"><i></i><i></i></span><span class="svl-tx-wheel a"></span><span class="svl-tx-wheel b"></span><span class="svl-tx-beam"></span><span class="svl-tx-road"></span></div></div><div class="svl-stage2 svl-stage2--k2" data-svl-depth="-0.08"><div class="svl-radio svl-sp"><span class="svl-rd-ant"></span><span class="svl-rd-body"><i class="grille"></i><i class="knob"></i></span><span class="svl-rd-wave w1"></span><span class="svl-rd-wave w2"></span></div></div><div class="svl-stage svl-stage--c" data-svl-depth="0.1"><div class="svl-pc"><div class="svl-columns"><i class="svl-tw" style="--h:70px;--w:30px;--dl:0s"></i><i class="svl-tw" style="--h:120px;--w:30px;--dl:.4s"></i><i class="svl-tw" style="--h:170px;--w:30px;--dl:.8s"></i><i class="svl-tw" style="--h:230px;--w:30px;--dl:1.2s"></i></div></div></div><span class="svl-dots svl-dots--r"></span><span class="svl-glow g1" data-svl-depth="0.08"></span><span class="svl-glow g2" data-svl-depth="-0.1"></span><span class="svl-plus p1" data-svl-depth="0.18">+</span><span class="svl-plus p2" data-svl-depth="-0.14">+</span><span class="svl-tri t1" data-svl-depth="-0.2"></span><span class="svl-bar b1" data-svl-depth="0.2"></span></div>
+		<div class="svl-deco svl-deco--dark svl-deco--clients" aria-hidden="true"><img class="svl-3d svl-3d--k1" src="{{ $svl3d }}/billboard-480.webp" srcset="{{ $svl3d }}/billboard-240.webp 240w, {{ $svl3d }}/billboard-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="355" height="480" alt="" decoding="async" loading="lazy" data-svl-depth="0.06"></div>
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split">
 				<div>

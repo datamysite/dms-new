@@ -143,12 +143,12 @@
    DECORATION — shared motifs + the page's custom 3D pieces (all decorative)
    ========================================================================== */
 .abv-deco { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-.abv-deco > * { position: absolute; will-change: transform; }
+.abv-deco > * { position: absolute; }
 .abv-deco--hero { z-index: 1; }
 .abv-dots { left: clamp(10px, 3vw, 60px); top: 44%; width: 130px; height: 130px; opacity: .55; background-image: radial-gradient(circle, rgba(11, 61, 46, .45) 2px, transparent 2.5px); background-size: 20px 20px; animation: abv-float 14s ease-in-out infinite alternate; }
 .abv-plus { font: 300 50px/1 var(--font-heading); color: rgba(244, 77, 70, .6); animation: abv-twirl 12s linear infinite; }
 .abv-plus.p1 { left: 3%; top: 12%; } .abv-plus.p2 { right: 3%; top: 58%; font-size: 38px; color: rgba(11, 61, 46, .4); animation-duration: 16s; }
-.abv-glow { width: 420px; height: 420px; border-radius: 50%; filter: blur(60px); opacity: .5; animation: abv-float 18s ease-in-out infinite alternate; }
+.abv-glow { width: 420px; height: 420px; border-radius: 50%; opacity: .5; animation: abv-float 18s ease-in-out infinite alternate; }
 .abv-glow.g1 { left: -140px; top: 30%; background: radial-gradient(circle, rgba(15, 87, 65, .3), transparent 65%); }
 .abv-glow.g2 { right: -150px; bottom: 6%; background: radial-gradient(circle, rgba(244, 77, 70, .22), transparent 65%); }
 @keyframes abv-float { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(30px, -26px, 0); } }
@@ -175,11 +175,16 @@
 .abv-pin--hero { right: clamp(260px, 26vw, 460px); bottom: 150px; transform: scale(.9); }
 
 /* 2 · Compass (mission / vision) */
-.abv-compass { width: 190px; height: 190px; transform-style: preserve-3d; transform: rotateX(58deg) rotateZ(-20deg); }
+/* upright bezel compass: a solid face with a hard bottom rim for thickness (no near edge-on tilt, which made it read as flat stripes) */
+.abv-compass { width: 170px; height: 170px; border-radius: 50%; transform: perspective(700px) rotateY(-14deg) rotateX(8deg); animation: abv-compass-sway 7s ease-in-out infinite alternate;
+  background: radial-gradient(circle at 38% 30%, #ffffff 0, #f3f7f5 45%, #d8e4de 100%);
+  box-shadow: inset 0 0 0 9px #0f5741, inset 0 0 0 12px #0b3d2e, 0 9px 0 #082e23, 0 26px 30px -14px rgba(11, 61, 46, .55); }
+.abv-compass::before { content: ""; position: absolute; inset: 22px; border-radius: 50%; background: repeating-conic-gradient(from -1.5deg, rgba(11, 61, 46, .55) 0 3deg, transparent 3deg 45deg); -webkit-mask: radial-gradient(circle, transparent 78%, #000 79%); mask: radial-gradient(circle, transparent 78%, #000 79%); }
+@keyframes abv-compass-sway { from { transform: perspective(700px) rotateY(-14deg) rotateX(8deg); } to { transform: perspective(700px) rotateY(14deg) rotateX(-4deg); } }
 .abv-compass--r { right: clamp(0px, 2vw, 40px); top: clamp(40px, 6vw, 100px); }
-.abv-compass-ring { position: absolute; inset: 0; border-radius: 50%; border: 3px solid rgba(11, 61, 46, .55); background: repeating-conic-gradient(rgba(11, 61, 46, .5) 0 1deg, transparent 1deg 15deg); -webkit-mask: radial-gradient(circle, transparent 68%, #000 69%); mask: radial-gradient(circle, transparent 68%, #000 69%); animation: abv-twirl 30s linear infinite; }
-.abv-compass-ring.r2 { inset: 28px; border-color: rgba(244, 77, 70, .7); background: none; -webkit-mask: none; mask: none; border-style: dashed; animation-direction: reverse; }
-.abv-compass-needle { position: absolute; left: 50%; top: 50%; width: 14px; height: 130px; margin: -65px 0 0 -7px; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: linear-gradient(180deg, var(--coral) 50%, var(--green, #0b3d2e) 50%); animation: abv-swing 6s ease-in-out infinite alternate; }
+.abv-compass-ring { display: none; }
+.abv-compass-ring.r2 { display: block; position: absolute; inset: 40px; border-radius: 50%; border: 3px solid rgba(244, 77, 70, .85); background: none; animation: none; }
+.abv-compass-needle { position: absolute; left: 50%; top: 50%; width: 14px; height: 100px; margin: -50px 0 0 -7px; clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); background: linear-gradient(180deg, var(--coral) 50%, var(--green, #0b3d2e) 50%); animation: abv-swing 6s ease-in-out infinite alternate; }
 .abv-compass-dot { position: absolute; left: 50%; top: 50%; width: 14px; height: 14px; margin: -7px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 3px var(--green, #0b3d2e); }
 @keyframes abv-swing { from { transform: rotate(-35deg); } to { transform: rotate(55deg); } }
 
@@ -213,7 +218,7 @@
 .abv-orbit { width: 230px; height: 230px; transform-style: preserve-3d; transform: rotateX(62deg); }
 .abv-orbit--r { right: clamp(0px, 2vw, 40px); top: clamp(30px, 5vw, 90px); }
 .abv-core { position: absolute; left: 50%; top: 50%; width: 54px; height: 54px; margin: -27px; border-radius: 50%; background: radial-gradient(circle at 32% 28%, #fff 0, #ffb3ae 20%, var(--coral) 58%, #a8221c 100%); box-shadow: 0 0 40px rgba(244, 77, 70, .5); }
-.abv-path { position: absolute; inset: 0; border-radius: 50%; border: 1.5px dashed rgba(11, 61, 46, .4); animation: abv-twirl 12s linear infinite; }
+.abv-path { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(11, 61, 46, .45); animation: abv-twirl 12s linear infinite; }
 .abv-path.p2 { inset: 28px; border-color: rgba(244, 77, 70, .55); animation-duration: 8s; animation-direction: reverse; } .abv-path.p3 { inset: 56px; animation-duration: 5s; }
 .abv-path i { position: absolute; left: 50%; top: -7px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%; background: var(--green, #0b3d2e); box-shadow: 0 0 0 4px rgba(11, 61, 46, .15); }
 .abv-path.p2 i { background: var(--coral); box-shadow: 0 0 0 4px rgba(244, 77, 70, .2); }
@@ -354,13 +359,24 @@
    SHARP SOLID 3D — every custom piece is extruded with hard-edged depth (no soft blur) and tumbles in real 3D space
    ========================================================================== */
 .abv-hs > :is(.abv-pc, .abv-hp, .abv-sp, .abv-p),
-.abv-deco > .abv-skyline, .abv-deco > .abv-compass, .abv-deco > .abv-medal, .abv-deco > .abv-columns, .abv-deco > .abv-sheets, .abv-deco > .abv-orbit, .abv-deco > .abv-board, .abv-deco > .abv-gears, .abv-deco > .abv-chain, .abv-deco > .abv-pin { filter: drop-shadow(4px 4px 0 #0a3a2c) drop-shadow(0 12px 10px rgba(0,0,0,.25)); backface-visibility: visible; }
-.abv-deco { perspective: 1100px; }
+.abv-deco > .abv-skyline, .abv-deco > .abv-compass, .abv-deco > .abv-medal, .abv-deco > .abv-columns, .abv-deco > .abv-sheets, .abv-deco > .abv-orbit, .abv-deco > .abv-board, .abv-deco > .abv-gears, .abv-deco > .abv-chain, .abv-deco > .abv-pin {  backface-visibility: visible; }
+.abv-deco { perspective: 2400px; perspective-origin: 50% 50%; }
 .abv-hs { transform-style: preserve-3d; animation: abv-tumble 9s ease-in-out infinite alternate; }
 .abv-hs:nth-child(even) { animation-duration: 11s; animation-direction: alternate-reverse; }
-@keyframes abv-tumble { from { rotate: 1 1 0 -18deg; } to { rotate: 1 1 0 18deg; } }
+@keyframes abv-tumble { from { rotate: 1 1 0 -10deg; } to { rotate: 1 1 0 10deg; } }
 .abv-sheet, .abv-panel { backdrop-filter: none !important; }
 @media (prefers-reduced-motion: reduce) { .abv-hs { animation: none !important; } }
 
 /* off-screen decoration is paused (set by the page script) to keep scrolling smooth */
 .is-paused, .is-paused * { animation-play-state: paused !important; }
+
+/* decoration animations start after the page has loaded and painted (class set by the page script) */
+.abv-deco * { animation-play-state: paused; }
+html.abv-ready .abv-deco * { animation-play-state: running; }
+.is-paused, .is-paused * { animation-play-state: paused !important; }
+
+/* NO WRAPPER TUMBLE — rotating whole flat pieces in 3D made their overlapping parts z-fight (striped/blurred sides). Pieces keep their own animations; wrappers stay flat. */
+.abv-hs { animation: none !important; rotate: none !important; transform-style: flat; }
+.abv-book, .abv-tagpc { transform-style: flat; }
+/* FLAT MULTI-PART pieces: parts that share one plane are drawn flat (no z-fighting); true 3D pieces (cuboids, coins, sheets, chain) keep preserve-3d */
+.abv-board, .abv-orbit, .abv-key { transform-style: flat; }

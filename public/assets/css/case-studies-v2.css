@@ -12,7 +12,7 @@
 .csv-services { position: relative; overflow: hidden; }
 .csv-services > .hv2-container { position: relative; z-index: 2; }
 .csv-deco { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-.csv-deco > * { position: absolute; will-change: transform; }
+.csv-deco > * { position: absolute; }
 
 /* 3D stage (right of the heading) */
 .csv-stage { top: clamp(70px, 8vw, 120px); right: clamp(24px, 9vw, 190px); width: 260px; height: 260px; perspective: 900px; transform-style: preserve-3d; transition: transform .25s ease-out; }
@@ -27,7 +27,7 @@
 @keyframes csv-spin { from { transform: rotateX(-22deg) rotateY(0); } to { transform: rotateX(-22deg) rotateY(360deg); } }
 .csv-orb { position: absolute; right: 6px; top: 10px; width: 62px; height: 62px; border-radius: 50%;
   background: radial-gradient(circle at 32% 28%, #fff 0, #ffb3ae 18%, var(--coral, #f44d46) 55%, #a8221c 100%); box-shadow: 0 18px 30px -10px rgba(244, 77, 70, .55); animation: csv-bob 5s ease-in-out infinite; }
-.csv-stage .csv-ring { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 1.5px dashed rgba(11, 61, 46, .35); transform: translate(-50%, -50%) rotateX(70deg); }
+.csv-stage .csv-ring { position: absolute; left: 50%; top: 50%; border-radius: 50%; border: 2px solid rgba(11, 61, 46, .35); transform: translate(-50%, -50%) rotateX(70deg); }
 .csv-stage .csv-ring.r1 { width: 230px; height: 230px; animation: csv-ring 14s linear infinite; }
 .csv-stage .csv-ring.r2 { width: 170px; height: 170px; border-color: rgba(244, 77, 70, .5); animation: csv-ring 9s linear infinite reverse; }
 @keyframes csv-ring { from { transform: translate(-50%, -50%) rotateX(70deg) rotateZ(0); } to { transform: translate(-50%, -50%) rotateX(70deg) rotateZ(360deg); } }
@@ -41,7 +41,7 @@
 .csv-plus.p1 { left: 4%; top: 18%; } .csv-plus.p2 { right: 3%; top: 56%; font-size: 40px; color: rgba(11, 61, 46, .4); animation-duration: 16s; } .csv-plus.p3 { left: 6%; bottom: 14%; font-size: 34px; }
 .csv-tri { width: 0; height: 0; border-left: 22px solid transparent; border-right: 22px solid transparent; border-bottom: 38px solid rgba(11, 61, 46, .16); animation: csv-twirl 18s linear infinite; }
 .csv-tri.t1 { right: 5%; top: 30%; } .csv-tri.t2 { left: 3%; top: 66%; border-bottom-color: rgba(244, 77, 70, .24); }
-.csv-glow { width: 420px; height: 420px; border-radius: 50%; filter: blur(60px); opacity: .5; animation: csv-drift 18s ease-in-out infinite alternate; }
+.csv-glow { width: 420px; height: 420px; border-radius: 50%; opacity: .5; animation: csv-drift 18s ease-in-out infinite alternate; }
 .csv-glow.g1 { left: -140px; top: 30%; background: radial-gradient(circle, rgba(15, 87, 65, .3), transparent 65%); }
 .csv-glow.g2 { right: -150px; bottom: 6%; background: radial-gradient(circle, rgba(244, 77, 70, .22), transparent 65%); }
 .csv-bar { width: 6px; height: 120px; border-radius: 6px; background: linear-gradient(180deg, var(--coral, #f44d46), transparent); opacity: .5; transform-origin: top; animation: csv-bar 5s ease-in-out infinite; }
@@ -223,7 +223,7 @@
    ========================================================================== */
 .csv-hs{position:absolute;width:220px;height:200px}.csv-hs>.csv-hp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
 .csv-deco--hero2{z-index:1}
-.csv-trophy{position:relative;width:130px;height:170px;animation:csv-sway2 6s ease-in-out infinite alternate}.csv-tr-cup{position:absolute;left:25px;top:0;width:80px;height:84px;border-radius:6px 6px 44px 44px;background:linear-gradient(120deg,var(--coral),#ff8a84 45%,#c93a34);box-shadow:0 18px 26px -10px rgba(244,77,70,.55);overflow:hidden}.csv-tr-cup::after{content:"";position:absolute;top:0;bottom:0;width:22px;left:-30px;background:rgba(255,255,255,.55);transform:skewX(-20deg);animation:csv-shine 3.2s ease-in-out infinite}.csv-tr-h{position:absolute;top:10px;width:34px;height:40px;border:7px solid var(--coral);border-radius:50%}.csv-tr-h.l{left:0}.csv-tr-h.r{right:0}.csv-tr-stem{position:absolute;left:56px;top:82px;width:18px;height:46px;background:linear-gradient(90deg,#0f5741,#0b3d2e)}.csv-tr-base{position:absolute;left:30px;top:126px;width:70px;height:20px;border-radius:6px;background:linear-gradient(180deg,#0f5741,#082e23)}@keyframes csv-shine{0%,40%{left:-30px}100%{left:110px}}@keyframes csv-sway2{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+.csv-trophy{position:relative;width:130px;height:170px;animation:csv-sway2 6s ease-in-out infinite alternate}.csv-tr-cup{position:absolute;left:25px;top:0;width:80px;height:84px;border-radius:6px 6px 44px 44px;background:linear-gradient(120deg,var(--coral),#ff8a84 45%,#c93a34);box-shadow:0 18px 26px -10px rgba(244,77,70,.55);overflow:hidden}.csv-tr-cup::after{content:"";position:absolute;top:0;bottom:0;width:22px;left:-30px;background:rgba(255,255,255,.55);animation:csv-shine 3.2s ease-in-out infinite}.csv-tr-h{position:absolute;top:10px;width:34px;height:40px;border:7px solid var(--coral);border-radius:50%}.csv-tr-h.l{left:0}.csv-tr-h.r{right:0}.csv-tr-stem{position:absolute;left:56px;top:82px;width:18px;height:46px;background:linear-gradient(90deg,#0f5741,#0b3d2e)}.csv-tr-base{position:absolute;left:30px;top:126px;width:70px;height:20px;border-radius:6px;background:linear-gradient(180deg,#0f5741,#082e23)}@keyframes csv-shine{0%,40%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(140px) skewX(-20deg)}}@keyframes csv-sway2{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
 .csv-target{position:relative;width:150px;height:150px}.csv-tg-rings{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,var(--coral) 0 12%,#fff 12% 26%,var(--coral) 26% 40%,#fff 40% 54%,var(--green,#0b3d2e) 54% 68%,#fff 68% 82%,var(--green,#0b3d2e) 82%);box-shadow:0 20px 30px -12px rgba(11,61,46,.5)}.csv-tg-dart{position:absolute;left:76px;top:-40px;width:6px;height:96px;background:linear-gradient(180deg,transparent 0 18%,#cfd8d4 18%);border-radius:3px;transform:rotate(35deg);transform-origin:50% 100%;animation:csv-hit2 3s cubic-bezier(.3,0,.2,1) infinite}.csv-tg-dart::before{content:"";position:absolute;left:-9px;top:0;width:24px;height:30px;background:var(--coral);clip-path:polygon(50% 0,100% 100%,50% 70%,0 100%)}@keyframes csv-hit2{0%{transform:translate(70px,-90px) rotate(35deg);opacity:0}25%{opacity:1}55%,100%{transform:translate(0,0) rotate(35deg);opacity:1}}
 .csv-trend .ln{stroke-dasharray:260;stroke-dashoffset:260;animation:csv-draw 4s ease-in-out infinite}.csv-trend .hd{opacity:0;animation:csv-head 4s ease-in-out infinite}@keyframes csv-draw{0%{stroke-dashoffset:260}55%,100%{stroke-dashoffset:0}}@keyframes csv-head{0%,50%{opacity:0}65%,100%{opacity:1}}
 .csv-clip{position:relative;width:120px;height:160px;padding:30px 14px 0;border-radius:12px;background:#fff;border:3px solid var(--green,#0b3d2e);box-shadow:0 22px 32px -14px rgba(11,61,46,.5);display:grid;align-content:start;gap:14px}.csv-cl-top{position:absolute;left:36px;top:-12px;width:48px;height:20px;border-radius:6px;background:var(--green,#0b3d2e)}.csv-clip i{display:flex;align-items:center;gap:8px;height:22px;background:linear-gradient(rgba(11,61,46,.2),rgba(11,61,46,.2)) right center/60% 6px no-repeat}.csv-clip i b{display:grid;place-items:center;width:20px;height:20px;border-radius:6px;background:var(--coral);color:#fff;font-size:13px;opacity:0;animation:csv-tick 4.5s ease-in-out infinite}.csv-clip i:nth-child(3) b{animation-delay:.8s}.csv-clip i:nth-child(4) b{animation-delay:1.6s}@keyframes csv-tick{0%,10%{opacity:0;transform:scale(.3)}25%,85%{opacity:1;transform:scale(1)}100%{opacity:0}}
@@ -235,13 +235,24 @@
    SHARP SOLID 3D — every custom piece is extruded with hard-edged depth (no soft blur) and tumbles in real 3D space
    ========================================================================== */
 .csv-stage > :is(.csv-pc, .csv-hp, .csv-sp, .csv-p),
-.csv-hs > :is(.csv-pc, .csv-hp, .csv-sp, .csv-p) { filter: drop-shadow(4px 4px 0 #0a3a2c) drop-shadow(0 12px 10px rgba(0,0,0,.25)); backface-visibility: visible; }
-.csv-deco { perspective: 1100px; }
+.csv-hs > :is(.csv-pc, .csv-hp, .csv-sp, .csv-p) {  backface-visibility: visible; }
+.csv-deco { perspective: 2400px; perspective-origin: 50% 50%; }
 .csv-stage, .csv-hs { transform-style: preserve-3d; animation: csv-tumble 9s ease-in-out infinite alternate; }
 .csv-stage:nth-child(even), .csv-hs:nth-child(even) { animation-duration: 11s; animation-direction: alternate-reverse; }
-@keyframes csv-tumble { from { rotate: 1 1 0 -18deg; } to { rotate: 1 1 0 18deg; } }
+@keyframes csv-tumble { from { rotate: 1 1 0 -10deg; } to { rotate: 1 1 0 10deg; } }
 .csv-sheet, .csv-panel { backdrop-filter: none !important; }
 @media (prefers-reduced-motion: reduce) { .csv-stage, .csv-hs { animation: none !important; } }
 
 /* off-screen decoration is paused (set by the page script) to keep scrolling smooth */
 .is-paused, .is-paused * { animation-play-state: paused !important; }
+
+/* decoration animations start after the page has loaded and painted (class set by the page script) */
+.csv-deco * { animation-play-state: paused; }
+html.csv-ready .csv-deco * { animation-play-state: running; }
+.is-paused, .is-paused * { animation-play-state: paused !important; }
+
+/* NO WRAPPER TUMBLE — rotating whole flat pieces in 3D made their overlapping parts z-fight (striped/blurred sides). Pieces keep their own animations; wrappers stay flat. */
+.csv-stage, .csv-hs { animation: none !important; rotate: none !important; transform-style: flat; }
+.csv-book, .csv-tagpc { transform-style: flat; }
+/* FLAT MULTI-PART pieces: parts that share one plane are drawn flat (no z-fighting); true 3D pieces (cuboids, coins, sheets, chain) keep preserve-3d */
+.csv-board, .csv-orbit, .csv-key { transform-style: flat; }

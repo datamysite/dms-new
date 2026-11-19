@@ -55,3 +55,6 @@
     sec.addEventListener('pointerleave', function () { stage.style.transform = ''; });
   }
 })();
+
+/* start the decoration animations after load + one painted frame */
+(function () { var r = document.documentElement; function go() { requestAnimationFrame(function () { setTimeout(function () { r.classList.add('csv-ready'); }, 150); }); } if (document.readyState === 'complete') go(); else addEventListener('load', go, { once: true }); })();

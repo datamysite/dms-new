@@ -73,3 +73,6 @@
   addEventListener('resize', function () { vh = innerHeight; req(); });
   req();
 })();
+
+/* start the decoration animations after load + one painted frame */
+(function () { var r = document.documentElement; function go() { requestAnimationFrame(function () { setTimeout(function () { r.classList.add('fqv-ready'); }, 150); }); } if (document.readyState === 'complete') go(); else addEventListener('load', go, { once: true }); })();

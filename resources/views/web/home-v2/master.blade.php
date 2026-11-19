@@ -15,15 +15,18 @@
      they are released on the first user interaction (or 10 s after window load), so first paint and the main thread stay free.
      swiper / glightbox / intl-tel-input CSS load non-blocking. Other pages are unaffected. */
   $v2Lite = $__env->hasSection('v2lite');
-  $v2Delay = function ($html) use ($v2Lite) {
+  /* pages with the enquiry form add @section('v2form', '1'): the phone-number library (intl-tel-input + input.js) stays on its normal deferred load */
+  $v2Form = $__env->hasSection('v2form');
+  $v2Delay = function ($html) use ($v2Lite, $v2Form) {
     if (!$v2Lite) return $html;
-    return preg_replace_callback('#<script\b([^>]*)>(.*?)</script>#is', function ($m) {
+    return preg_replace_callback('#<script\b([^>]*)>(.*?)</script>#is', function ($m) use ($v2Form) {
       if (preg_match('#type\s*=\s*["\']?(application/(ld\+)?json|text/template|text/x-template)#i', $m[1])) return $m[0];
+      if ($v2Form && preg_match('#src\s*=\s*["\'][^"\']*(intlTelInput|/assets/js/input\.js)#i', $m[1])) return $m[0];
       return '<script type="text/v2-delayed"' . preg_replace('#\stype\s*=\s*("[^"]*"|\'[^\']*\'|\S+)#i', '', $m[1]) . '>' . $m[2] . '</script>';
     }, (string) $html);
   };
-  $v2Css = function ($href) use ($v2Lite) {
-    return $v2Lite
+  $v2Css = function ($href) use ($v2Lite, $v2Form) {
+    return ($v2Lite && !($v2Form && strpos($href, 'intlTelInput') !== false))
       ? '<link rel="stylesheet" href="' . $href . '" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="' . $href . '"></noscript>'
       : '<link rel="stylesheet" href="' . $href . '">';
   };

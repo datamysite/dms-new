@@ -19,11 +19,11 @@
 .plv-sec { position: relative; overflow: hidden; }
 .plv-sec > .hv2-container { position: relative; z-index: 2; }
 .plv-deco { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-.plv-deco > * { position: absolute; will-change: transform; }
+.plv-deco > * { position: absolute; }
 .plv-dots { right: 22%; top: 3%; width: 130px; height: 130px; opacity: .55; background-image: radial-gradient(circle, rgba(11, 61, 46, .45) 2px, transparent 2.5px); background-size: 20px 20px; animation: plv-float 14s ease-in-out infinite alternate; }
 .plv-plus { font: 300 50px/1 var(--font-heading); color: rgba(244, 77, 70, .6); animation: plv-twirl 12s linear infinite; }
 .plv-plus.p1 { left: 3%; top: 10%; } .plv-plus.p2 { right: 3%; top: 62%; font-size: 38px; color: rgba(11, 61, 46, .4); animation-duration: 16s; }
-.plv-glow { width: 420px; height: 420px; border-radius: 50%; filter: blur(60px); opacity: .5; animation: plv-float 18s ease-in-out infinite alternate; }
+.plv-glow { width: 420px; height: 420px; border-radius: 50%; opacity: .5; animation: plv-float 18s ease-in-out infinite alternate; }
 .plv-glow.g1 { left: -140px; top: 30%; background: radial-gradient(circle, rgba(15, 87, 65, .3), transparent 65%); }
 .plv-glow.g2 { right: -150px; bottom: 6%; background: radial-gradient(circle, rgba(244, 77, 70, .22), transparent 65%); }
 @keyframes plv-float { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(30px, -26px, 0); } }
@@ -71,7 +71,7 @@
    ========================================================================== */
 .plv-hs{position:absolute;width:220px;height:200px}.plv-hs>.plv-hp{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
 .plv-deco--hero2{z-index:1}
-.plv-fp{position:relative;width:120px;height:140px;border-radius:20px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.35);overflow:hidden}.plv-fp svg{display:block}.plv-fp-scan{position:absolute;left:0;right:0;height:6px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 16px 4px rgba(244,77,70,.7);animation:plv-scanfp 2.6s ease-in-out infinite alternate}@keyframes plv-scanfp{from{top:0}to{top:134px}}
+.plv-fp{position:relative;width:120px;height:140px;border-radius:20px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.35);overflow:hidden}.plv-fp svg{display:block}.plv-fp-scan{position:absolute;left:0;right:0;top:0;height:6px;background:linear-gradient(90deg,transparent,#fff,transparent);box-shadow:0 0 16px 4px rgba(244,77,70,.7);animation:plv-scanfp 2.6s ease-in-out infinite alternate}@keyframes plv-scanfp{from{transform:translateY(0)}to{transform:translateY(134px)}}
 .plv-hs--n1{right:clamp(20px,23vw,400px);top:8%;transform:scale(.9)}.plv-hs--n2{right:clamp(240px,40vw,680px);bottom:6%;transform:scale(.85)}.plv-hs--n3{right:clamp(10px,12vw,220px);top:40%;transform:scale(.85)}@media(max-width:991px){.plv-hs--n2,.plv-hs--n3{display:none}.plv-hs--n1{right:-10px;top:6%;transform:scale(.55)}}
 @media (prefers-reduced-motion: reduce){.plv-hs *{animation:none!important}}
 
@@ -80,13 +80,24 @@
    SHARP SOLID 3D — every custom piece is extruded with hard-edged depth (no soft blur) and tumbles in real 3D space
    ========================================================================== */
 .plv-stage > :is(.plv-pc, .plv-hp, .plv-sp, .plv-p),
-.plv-hs > :is(.plv-pc, .plv-hp, .plv-sp, .plv-p) { filter: drop-shadow(4px 4px 0 #0a3a2c) drop-shadow(0 12px 10px rgba(0,0,0,.25)); backface-visibility: visible; }
-.plv-deco { perspective: 1100px; }
+.plv-hs > :is(.plv-pc, .plv-hp, .plv-sp, .plv-p) {  backface-visibility: visible; }
+.plv-deco { perspective: 2400px; perspective-origin: 50% 50%; }
 .plv-stage, .plv-hs { transform-style: preserve-3d; animation: plv-tumble 9s ease-in-out infinite alternate; }
 .plv-stage:nth-child(even), .plv-hs:nth-child(even) { animation-duration: 11s; animation-direction: alternate-reverse; }
-@keyframes plv-tumble { from { rotate: 1 1 0 -18deg; } to { rotate: 1 1 0 18deg; } }
+@keyframes plv-tumble { from { rotate: 1 1 0 -10deg; } to { rotate: 1 1 0 10deg; } }
 .plv-sheet, .plv-panel { backdrop-filter: none !important; }
 @media (prefers-reduced-motion: reduce) { .plv-stage, .plv-hs { animation: none !important; } }
 
 /* off-screen decoration is paused (set by the page script) to keep scrolling smooth */
 .is-paused, .is-paused * { animation-play-state: paused !important; }
+
+/* decoration animations start after the page has loaded and painted (class set by the page script) */
+.plv-deco * { animation-play-state: paused; }
+html.plv-ready .plv-deco * { animation-play-state: running; }
+.is-paused, .is-paused * { animation-play-state: paused !important; }
+
+/* NO WRAPPER TUMBLE — rotating whole flat pieces in 3D made their overlapping parts z-fight (striped/blurred sides). Pieces keep their own animations; wrappers stay flat. */
+.plv-stage, .plv-hs { animation: none !important; rotate: none !important; transform-style: flat; }
+.plv-book, .plv-tagpc { transform-style: flat; }
+/* FLAT MULTI-PART pieces: parts that share one plane are drawn flat (no z-fighting); true 3D pieces (cuboids, coins, sheets, chain) keep preserve-3d */
+.plv-board, .plv-orbit, .plv-key { transform-style: flat; }

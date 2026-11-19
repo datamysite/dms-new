@@ -95,3 +95,30 @@ if (!function_exists('v2_asset')) {
 		return \Illuminate\Support\Facades\URL::to('/public/' . $use) . '?v=' . @filemtime(public_path($use));
 	}
 }
+
+if (!function_exists('v2_img')) {
+	/* <img> attributes for a project image (path relative to the project root, e.g. "public/storage/blogs/x.jpg"):
+	   serves the WebP sibling + responsive srcset (x-w480/960/1440.webp) when they exist, plus intrinsic width/height.
+	   Falls back to the original file (or $fallback URL when the image is missing). */
+	function v2_img($rel, $sizes = '100vw', $fallback = 'https://datamysite.com/public/og-logo.jpeg')
+	{
+		$rel = ltrim((string) $rel, '/');
+		$file = base_path($rel);
+		if ($rel === '' || substr($rel, -1) === '/' || !is_file($file)) return 'src="' . e($fallback) . '"';
+		$base = preg_replace('/\.(jpe?g|png)$/i', '', $rel);
+		$url = function ($p) { return \Illuminate\Support\Facades\URL::to('/' . $p); };
+		$out = [];
+		if ($base !== $rel && is_file(base_path($base . '.webp'))) {
+			$out[] = 'src="' . e($url($base . '.webp')) . '"';
+			$set = [];
+			foreach ([480, 960, 1440] as $w) { if (is_file(base_path($base . '-w' . $w . '.webp'))) $set[] = $url($base . '-w' . $w . '.webp') . ' ' . $w . 'w'; }
+			if ($set) { $out[] = 'srcset="' . e(implode(', ', $set)) . '"'; $out[] = 'sizes="' . e($sizes) . '"'; }
+		} else {
+			$out[] = 'src="' . e($url($rel)) . '"';
+		}
+		$dim = @getimagesize($file);
+		if ($dim) { $out[] = 'width="' . (int) $dim[0] . '"'; $out[] = 'height="' . (int) $dim[1] . '"'; }
+		$out[] = 'decoding="async"';
+		return implode(' ', $out);
+	}
+}

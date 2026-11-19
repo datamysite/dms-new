@@ -654,7 +654,7 @@
 				@foreach($blogs as $val)
 					<a href="{{ v2_blog_url($val->slug) }}" class="hv2-blog" data-reveal="up" data-delay="{{ $loop->index + 1 }}" data-distort>
 						<div class="hv2-media hv2-media--blog">
-							<img src="{{ URL::to('public/storage/blogs/'.$val->banner) }}" alt="{{ $val->banner_alt ?: $val->heading }}" loading="lazy">
+							<img {!! v2_img('public/storage/blogs/' . $val->banner, '(max-width: 640px) 92vw, 31vw') !!} alt="{{ $val->banner_alt ?: $val->heading }}" loading="lazy">
 						</div>
 						<time>{{ date('F d, Y', strtotime($val->created_at)) }}</time>
 						<h3 title="{{ $val->heading }}">{{ $val->heading }}</h3>

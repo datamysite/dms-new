@@ -19,11 +19,11 @@
 .tmv-sec { position: relative; overflow: hidden; }
 .tmv-sec > .hv2-container { position: relative; z-index: 2; }
 .tmv-deco { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
-.tmv-deco > * { position: absolute; will-change: transform; }
+.tmv-deco > * { position: absolute; }
 .tmv-dots { right: 22%; top: 3%; width: 130px; height: 130px; opacity: .55; background-image: radial-gradient(circle, rgba(11, 61, 46, .45) 2px, transparent 2.5px); background-size: 20px 20px; animation: tmv-float 14s ease-in-out infinite alternate; }
 .tmv-plus { font: 300 50px/1 var(--font-heading); color: rgba(244, 77, 70, .6); animation: tmv-twirl 12s linear infinite; }
 .tmv-plus.p1 { left: 3%; top: 10%; } .tmv-plus.p2 { right: 3%; top: 62%; font-size: 38px; color: rgba(11, 61, 46, .4); animation-duration: 16s; }
-.tmv-glow { width: 420px; height: 420px; border-radius: 50%; filter: blur(60px); opacity: .5; animation: tmv-float 18s ease-in-out infinite alternate; }
+.tmv-glow { width: 420px; height: 420px; border-radius: 50%; opacity: .5; animation: tmv-float 18s ease-in-out infinite alternate; }
 .tmv-glow.g1 { left: -140px; top: 30%; background: radial-gradient(circle, rgba(15, 87, 65, .3), transparent 65%); }
 .tmv-glow.g2 { right: -150px; bottom: 6%; background: radial-gradient(circle, rgba(244, 77, 70, .22), transparent 65%); }
 @keyframes tmv-float { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(30px, -26px, 0); } }
@@ -80,13 +80,22 @@
    SHARP SOLID 3D — every custom piece is extruded with hard-edged depth (no soft blur) and tumbles in real 3D space
    ========================================================================== */
 .tmv-stage > :is(.tmv-pc, .tmv-hp, .tmv-sp, .tmv-p),
-.tmv-hs > :is(.tmv-pc, .tmv-hp, .tmv-sp, .tmv-p) { filter: drop-shadow(4px 4px 0 #0a3a2c) drop-shadow(0 12px 10px rgba(0,0,0,.25)); backface-visibility: visible; }
-.tmv-deco { perspective: 1100px; }
+.tmv-hs > :is(.tmv-pc, .tmv-hp, .tmv-sp, .tmv-p) {  backface-visibility: visible; }
+.tmv-deco { perspective: 2400px; perspective-origin: 50% 50%; }
 .tmv-stage, .tmv-hs { transform-style: preserve-3d; animation: tmv-tumble 9s ease-in-out infinite alternate; }
 .tmv-stage:nth-child(even), .tmv-hs:nth-child(even) { animation-duration: 11s; animation-direction: alternate-reverse; }
-@keyframes tmv-tumble { from { rotate: 1 1 0 -18deg; } to { rotate: 1 1 0 18deg; } }
+@keyframes tmv-tumble { from { rotate: 1 1 0 -10deg; } to { rotate: 1 1 0 10deg; } }
 .tmv-sheet, .tmv-panel { backdrop-filter: none !important; }
 @media (prefers-reduced-motion: reduce) { .tmv-stage, .tmv-hs { animation: none !important; } }
 
 /* off-screen decoration is paused (set by the page script) to keep scrolling smooth */
 .is-paused, .is-paused * { animation-play-state: paused !important; }
+
+/* decoration animations start after the page has loaded and painted (class set by the page script) */
+.tmv-deco * { animation-play-state: paused; }
+html.tmv-ready .tmv-deco * { animation-play-state: running; }
+.is-paused, .is-paused * { animation-play-state: paused !important; }
+
+/* NO WRAPPER TUMBLE — rotating whole flat pieces in 3D made their overlapping parts z-fight (striped/blurred sides). Pieces keep their own animations; wrappers stay flat. */
+.tmv-stage, .tmv-hs { animation: none !important; rotate: none !important; transform-style: flat; }
+.tmv-book, .tmv-tagpc { transform-style: flat; }
