@@ -54,7 +54,7 @@
   var finishIntro = function () { if (introQueue === true) return; var q = introQueue; introQueue = true; q.forEach(function (fn) { fn(); }); };
   (function () {
     if (!docEl.classList.contains('hv2-loading')) { finishIntro(); return; } /* reduced motion / inline flag missing */
-    var t0 = performance.now(), MIN = 450, SOFT = 1400, MAX = 2200;
+    var t0 = performance.now(), MIN = 200, SOFT = 350, MAX = 500;
     var fontsOk = !(document.fonts && document.fonts.load), loadOk = document.readyState === 'complete';
     if (!fontsOk) {
       Promise.all(['800 24px "League Spartan"', '400 16px "Nunito Sans"', '700 16px "Nunito Sans"'].map(function (f) { return document.fonts.load(f).catch(function () {}); }))
@@ -67,11 +67,13 @@
       if (leaving) return; leaving = true;
       paint(100);
       docEl.classList.add('hv2-leaving');
-      setTimeout(finishIntro, 450);
-      setTimeout(function () { docEl.classList.remove('hv2-loading', 'hv2-leaving'); docEl.style.removeProperty('--hv2-p'); docEl.style.removeProperty('--hv2-n'); }, 1300);
+      setTimeout(finishIntro, 60);
+      setTimeout(function () { docEl.classList.remove('hv2-loading', 'hv2-leaving'); docEl.style.removeProperty('--hv2-p'); docEl.style.removeProperty('--hv2-n'); }, 350);
     };
     (function tick() {
       if (leaving) return;
+      /* the inline head script lifts the curtain at 0.5 s: the engine follows at once (reveals must not wait for slow animation frames) */
+      if (!docEl.classList.contains('hv2-loading')) { leave(); return; }
       var el = performance.now() - t0;
       var done = (el >= MIN && fontsOk && (loadOk || el >= SOFT)) || el >= MAX;
       var stage = 30 + (fontsOk ? 40 : 0) + (loadOk ? 25 : 0);             /* real signals */
@@ -82,7 +84,7 @@
       if (pct >= 99.5) { leave(); return; }
       requestAnimationFrame(tick);
     })();
-    setTimeout(leave, 6000); /* safety: also covers throttled background tabs */
+    setTimeout(leave, MAX + 80); /* hard stop at the 0.5 s budget (also covers throttled tabs / slow frames) */
   })();
 
   /* == SMOOTH SCROLL (Lenis) ============================================= */

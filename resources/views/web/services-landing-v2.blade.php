@@ -16,7 +16,7 @@
 @section('v2lite', '1')
 
 @section('metaAddition')
-	{{-- no intro loader on this page: content and hero animations start immediately (faster first paint / LCP) --}}
+	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},500);})();</script>
 	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.png') }}">
 	{{-- self-hosted fonts: the two key files are preloaded, @font-face is inlined (font-display: swap) --}}
 	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/league-spartan-latin.woff2') }}">

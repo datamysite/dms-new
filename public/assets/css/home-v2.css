@@ -739,7 +739,7 @@ html.hv2-loading::before {
     radial-gradient(620px 420px at 18% 12%, rgba(28, 58, 94, .6), transparent 65%),
     radial-gradient(520px 380px at 86% 92%, rgba(224, 74, 67, .28), transparent 65%),
     #0b3d2e;
-  transition: transform .95s cubic-bezier(.76, 0, .24, 1) .12s;
+  transition: transform .22s cubic-bezier(.76, 0, .24, 1);
 }
 html.hv2-loading::after {
   content: counter(hv2n) "%"; counter-reset: hv2n var(--hv2-n, 0);
