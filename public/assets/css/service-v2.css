@@ -109,7 +109,7 @@
 .sv2 .sv2-legacy .see-all-btn:hover, .sv2 .sv2-legacy .btn-theme:hover, .sv2 .sv2-legacy .bbtn:hover, .sv2 .sv2-legacy .btn-w:hover, .sv2 .sv2-legacy .btn-ow:hover { transform: translateY(-2px); background: var(--coral-h, #f44d46) !important; }
 
 /* soft decorative glow per section (sits behind the content) */
-.sv2-legacy::after { content: ""; position: absolute; z-index: 0; pointer-events: none; width: 520px; height: 520px; border-radius: 50%; filter: blur(10px);
+.sv2-legacy::after { content: ""; position: absolute; z-index: 0; pointer-events: none; width: 520px; height: 520px; border-radius: 50%;
   background: radial-gradient(circle, rgba(224, 74, 67, .07), rgba(224, 74, 67, 0) 65%); right: -180px; top: 10%; }
 .sv2-legacy.sv2-tone-tint::after { left: -180px; right: auto; background: radial-gradient(circle, rgba(28, 58, 94, .08), rgba(28, 58, 94, 0) 65%); }
 .sv2-legacy > * { position: relative; z-index: 1; }
@@ -239,7 +239,7 @@
 .sv2-legacy > .sv2-deco { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
 
 /* -- ambient -- */
-.sv2-amb-glow { position: absolute; top: 30%; width: min(46vw, 640px); aspect-ratio: 1; border-radius: 50%; filter: blur(20px);
+.sv2-amb-glow { position: absolute; top: 30%; width: min(46vw, 640px); aspect-ratio: 1; border-radius: 50%;
   background: radial-gradient(circle, rgba(224, 74, 67, .07), rgba(224, 74, 67, 0) 66%); animation: sv2-amb-drift 22s ease-in-out infinite alternate; }
 .sv2-amb-glow--r { right: -14%; }
 .sv2-amb-glow--l { left: -14%; background: radial-gradient(circle, rgba(28, 58, 94, .08), rgba(28, 58, 94, 0) 66%); }

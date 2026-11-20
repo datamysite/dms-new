@@ -34,11 +34,21 @@ class ViewServiceProvider extends ServiceProvider
             $cleanUrl = strtok($actualLink, '?');
 
             // ✅ Cache meta and snippets per page
-            $cacheKey = 'page_data_' . md5($cleanUrl);
+            $cacheKey = 'page_data_v2_' . md5($cleanUrl);
             $data = Cache::remember($cacheKey, 3600, function () use ($cleanUrl) {
                 $pageData = [];
 
                 $pageData['metaTags'] = MetaTags::where('url', $cleanUrl)->orWhere('url', $cleanUrl.'/')->first();
+
+                // Meta rows are stored with the live URL (https://datamysite.com/<path>). On staging / local the host differs,
+                // so fall back to the live URL of the same path (exact match only; production still matches above).
+                if (!$pageData['metaTags']) {
+                    $path = trim(Request::path(), '/');
+                    $liveUrl = 'https://datamysite.com' . ($path === '' ? '' : '/' . $path);
+                    if ($liveUrl !== $cleanUrl) {
+                        $pageData['metaTags'] = MetaTags::where('url', $liveUrl)->orWhere('url', $liveUrl . '/')->first();
+                    }
+                }
 
                 $pageData['headSnippet'] = SnippetCode::where('position', 'Head')
                     ->where(function ($q) use ($cleanUrl) {
@@ -54,9 +64,10 @@ class ViewServiceProvider extends ServiceProvider
             });
 
             // ✅ Cache global reusable data (services & blog categories)
-            $globalData = Cache::remember('global_view_data', 3600, function () {
+            $globalData = Cache::remember('global_view_data_v2', 3600, function () {
                 return [
-                    'header_services' => Services::where('parent_id', 0)->orderBy('navOrder')->get(),
+                    // eager-load the sub-menu (the header loops $val->subServices for every top service)
+                    'header_services' => Services::where('parent_id', 0)->with('subServices')->orderBy('navOrder')->get(),
                     'blog_categories' => Categories::withCount('blogs')
                         ->having('blogs_count', '>', 0)
                         ->where('status', '1')

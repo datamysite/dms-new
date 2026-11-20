@@ -267,9 +267,9 @@
   </div>
 
   <div class="ov" id="ov">
-    <div class="pop" role="dialog" aria-modal="true">
+    <div class="pop" role="dialog" aria-modal="true" aria-label="Get a free strategy">
 
-      <button class="xbtn" onclick="closeExitPopup()">✕</button>
+      <button class="xbtn" onclick="closeExitPopup()" aria-label="Close">✕</button>
 
       <!-- HEADER -->
       <div class="hd">
@@ -301,7 +301,7 @@
                 <div class="row2 row3">
                   <input type="email" class="exit-email" name="email" placeholder="Your Email" required>
                 </div>
-                <select name="service" required>
+                <select name="service" required aria-label="I need help with">
                   <option value="" disabled selected>I need help with…</option>
                   <option>Billboard Advertising</option>
                   <option>Transit Media (Metro, Bus, Taxi, Airport)</option>

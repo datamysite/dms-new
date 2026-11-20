@@ -29,7 +29,31 @@
 	$sv2All = \App\Models\ServiceSection::where('service_id', $sv2Page->id)->where('is_active', 1)->orderBy('sort_order')->get();
 	$sv2Areas = $sv2All->groupBy('area');
 	$sv2Vars = \Illuminate\Support\Arr::only(get_defined_vars(), ['nav', 'service', 'subservice', 'mainservice', 'subservices', 'blogs', 'publications', 'web_drop', 'noPopup', 'errors']);
-	$sv2Render = function ($sec) use ($sv2Vars) { return \Illuminate\Support\Facades\Blade::render($sec->content, $sv2Vars); };
+	/* Rendering the DB Blade rows is the slowest server step (~20 ms per row). The rendered HTML is cached per row and per request-scoped
+	   memo; the key changes when the row is edited (updated_at) or its data changes (blogs / sub-services / publications / page).
+	   The session CSRF token is stored as a placeholder and put back on every request. Rows that read request/session state
+	   ($errors, old(), session(), request(), auth) are never cached. Any cache problem falls back to a normal render. */
+	$sv2Sig = md5(json_encode([
+		$sv2Page->id, optional($service ?? null)->id,
+		collect($blogs ?? [])->map(fn ($b) => [$b->id, (string) $b->updated_at])->values(),
+		collect($subservices ?? [])->map(fn ($s) => [$s->id, (string) $s->updated_at])->values(),
+		isset($publications) ? [count($publications), (string) collect($publications)->max('updated_at')] : null,
+	]));
+	$sv2Memo = [];
+	$sv2Render = function ($sec) use ($sv2Vars, $sv2Sig, &$sv2Memo) {
+		if (isset($sv2Memo[$sec->id])) return $sv2Memo[$sec->id];
+		$render = fn () => \Illuminate\Support\Facades\Blade::render($sec->content, $sv2Vars);
+		if (preg_match('/\$errors|old\(|session\(|request\(|\bauth\b|@auth|@guest/i', (string) $sec->content)) return $sv2Memo[$sec->id] = $render();
+		$tok = (string) csrf_token();
+		if (strlen($tok) < 20) return $sv2Memo[$sec->id] = $render();
+		try {
+			$html = \Illuminate\Support\Facades\Cache::remember('sv2r_' . $sec->id . '_' . optional($sec->updated_at)->timestamp . '_' . $sv2Sig, 3600,
+				fn () => str_replace($tok, '%%SV2CSRF%%', $render()));
+			return $sv2Memo[$sec->id] = str_replace('%%SV2CSRF%%', $tok, $html);
+		} catch (\Throwable $e) {
+			return $sv2Memo[$sec->id] = $render();
+		}
+	};
 	$sv2Area = function ($area) use ($sv2Areas, $sv2Render) { $h = ''; foreach ($sv2Areas->get($area, collect()) as $s) { $h .= $sv2Render($s) . "\n"; } return $h; };
 
 	/* small DOM helper for reading the legacy markup */
@@ -90,6 +114,13 @@
 			if (is_file(public_path($cand))) { $sv2Photo = URL::to('/public/' . $cand); break; }
 		}
 	}
+	/* the hero photo is the LCP element: serve its WebP sibling (e.g. digital-marketing.png 1.6 MB -> .webp 56 KB) when one exists */
+	if ($sv2Photo && preg_match('#/public/(.+)\.(jpe?g|png)$#i', parse_url($sv2Photo, PHP_URL_PATH) ?? '', $sv2Pm)) {
+		if (is_file(public_path($sv2Pm[1] . '.webp'))) $sv2Photo = URL::to('/public/' . $sv2Pm[1] . '.webp');
+		/* phones get the 960 px version (the photo is a faded backdrop there) */
+		if (is_file(public_path($sv2Pm[1] . '-w960.webp'))) $sv2PhotoSm = URL::to('/public/' . $sv2Pm[1] . '-w960.webp');
+	}
+	$sv2PhotoSm = $sv2PhotoSm ?? null;
 
 	/* ---------- FAQ rows -> question/answer pairs ---------- */
 	$sv2FaqParse = function ($html) use ($sv2Dom, $sv2Text, $sv2Inner) {
@@ -100,6 +131,40 @@
 			if ($q && $a && $sv2Text($q) !== '') $out[] = [$sv2Text($q), $sv2Inner($a)];
 		}
 		return $out;
+	};
+
+	/* Media in the legacy (DB) sections — output only, the database content is not changed:
+	   iframes (YouTube, maps) load lazily; <img> of local JPG/PNG uses the WebP sibling when it exists, gets intrinsic
+	   aspect-ratio when it has no size (no layout shift) and loading="lazy" + decoding="async" (these sections are below the hero). */
+	$sv2Media = function ($html) {
+		$html = preg_replace('#<iframe\b(?![^>]*\bloading=)#i', '<iframe loading="lazy"', (string) $html);
+		/* YouTube facade: the iframe keeps its classes/size but first shows the video thumbnail + play button (srcdoc);
+		   the ~1.2 MB player only loads when the visitor presses play (then autoplays). */
+		$html = preg_replace_callback('#<iframe\b[^>]*\ssrc\s*=\s*["\'](https?://(?:www\.)?youtube(?:-nocookie)?\.com/embed/([A-Za-z0-9_-]{6,}))([^"\']*)["\'][^>]*>#i', function ($m) {
+			if (stripos($m[0], 'srcdoc') !== false) return $m[0];
+			$play = $m[1] . (strpos($m[3], '?') === false ? '?' : $m[3] . '&') . 'autoplay=1';
+			$thumb = 'https://i.ytimg.com/vi/' . $m[2] . '/hqdefault.jpg';
+			$doc = '<style>*{margin:0;padding:0}html,body{height:100%;overflow:hidden;background:#000}a{position:relative;display:block;height:100%}'
+				. 'img{width:100%;height:100%;object-fit:cover}span{position:absolute;left:50%;top:50%;width:68px;height:48px;margin:-24px 0 0 -34px;border-radius:12px;background:#f00;opacity:.9}'
+				. 'span:after{content:"";position:absolute;left:27px;top:14px;border-style:solid;border-width:10px 0 10px 17px;border-color:transparent transparent transparent #fff}a:hover span{opacity:1}</style>'
+				. '<a href="' . e($play) . '"><img src="' . e($thumb) . '" alt="Play video" loading="lazy"><span></span></a>';
+			return preg_replace('#^<iframe\b#i', '<iframe srcdoc="' . htmlspecialchars($doc, ENT_QUOTES) . '"', $m[0]);
+		}, $html);
+		return preg_replace_callback('#<img\b[^>]*>#i', function ($m) {
+			$tag = $m[0];
+			if (preg_match('#\ssrc\s*=\s*["\']([^"\']+)["\']#i', $tag, $s) && preg_match('#/public/([^?"\']+?)\.(jpe?g|png)(\?[^"\']*)?$#i', $s[1], $p)) {
+				$rel = $p[1] . '.' . $p[2];
+				if (is_file(public_path($p[1] . '.webp'))) $tag = str_replace($s[1], str_replace($rel, $p[1] . '.webp', $s[1]), $tag);
+				/* aspect-ratio (not width/height attributes): reserves space without overriding any size the legacy CSS sets */
+				if (!preg_match('#\s(width|height)\s*=#i', $tag) && stripos($tag, 'aspect-ratio') === false && ($d = @getimagesize(public_path($rel))) && $d[0] && $d[1]) {
+					$ar = 'aspect-ratio: ' . (int) $d[0] . ' / ' . (int) $d[1] . ';';
+					$tag = preg_match('#\sstyle\s*=\s*"#i', $tag) ? preg_replace('#(\sstyle\s*=\s*")#i', '$1' . $ar . ' ', $tag, 1) : preg_replace('#^<img\b#i', '<img style="' . $ar . '"', $tag);
+				}
+			}
+			if (!preg_match('#\sloading\s*=#i', $tag)) $tag = preg_replace('#^<img\b#i', '<img loading="lazy"', $tag);
+			if (!preg_match('#\sdecoding\s*=#i', $tag)) $tag = preg_replace('#^<img\b#i', '<img decoding="async"', $tag);
+			return $tag;
+		}, $html);
 	};
 
 	/* One enquiry form per page: the V2 hero form. Any extra in-content enquiry form (e.g. the "Want to know more?
@@ -171,19 +236,34 @@
 	];
 @endphp
 
+{{-- fast loading mode (same as Home V2): third-party/legacy scripts wait for the first interaction,
+     the hero enquiry form keeps the phone-input library, Swiper stays eager for the case-study carousel --}}
+@section('v2lite', '1')
+@section('v2form', '1')
+@section('v2keep', '1')
+
 @section('metaAddition')
-	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},8000);})();</script>
+	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},500);})();</script>
 	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.png') }}">
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400..900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700;6..12,800&display=swap" rel="stylesheet">
+	{{-- hero photo = LCP element: preload the right size per screen --}}
+	@if($sv2Photo && $sv2PhotoSm)
+		<link rel="preload" as="image" href="{{ $sv2PhotoSm }}" media="(max-width: 767px)" fetchpriority="high">
+		<link rel="preload" as="image" href="{{ $sv2Photo }}" media="(min-width: 768px)" fetchpriority="high">
+		<style>@media (max-width: 767px) { .sv2-hero .sv2-hero-photo { background-image: url('{{ $sv2PhotoSm }}') !important; } }</style>
+	@elseif($sv2Photo)
+		<link rel="preload" as="image" href="{{ $sv2Photo }}" fetchpriority="high">
+	@endif
+	{{-- self-hosted fonts: the two key files are preloaded, @font-face is inlined (font-display: swap) --}}
+	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/league-spartan-latin.woff2') }}">
+	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/nunito-sans-latin.woff2') }}">
+	<style>{!! str_replace('../fonts/', URL::to('/public/assets/fonts') . '/', (string) @file_get_contents(public_path('assets/css/v2-fonts.css'))) !!}</style>
 @endsection
 
 @section('addStyle')
 	{{-- the page's own legacy styles first (service.css + any page-specific CSS), then the v2 layers win --}}
 	{!! $sv2Area('head') !!}
-	<link href="{{ URL::to('/public/assets/css/home-v2.css') }}?v={{ @filemtime(public_path('assets/css/home-v2.css')) }}" rel="stylesheet">
-	<link href="{{ URL::to('/public/assets/css/service-v2.css') }}?v={{ @filemtime(public_path('assets/css/service-v2.css')) }}" rel="stylesheet">
+	<link href="{{ v2_asset('assets/css/home-v2.css') }}" rel="stylesheet">
+	<link href="{{ v2_asset('assets/css/service-v2.css') }}" rel="stylesheet">
 @endsection
 
 @section('content')
@@ -209,7 +289,7 @@
 	{{-- ===================================================================
 	     HERO — same design as Home V2; text + form come from this page
 	==================================================================== --}}
-	<section class="hv2-hero hv2-dark sv2-hero{{ $sv2Hero['form'] ? '' : ' sv2-hero--noform' }}" id="hv2-hero">
+	<section class="hv2-hero hv2-hero--fast hv2-dark sv2-hero{{ $sv2Hero['form'] ? '' : ' sv2-hero--noform' }}" id="hv2-hero">
 		<div class="hv2-hero-bg" aria-hidden="true">
 			@if($sv2Photo)<span class="sv2-hero-photo" style="background-image: url('{{ $sv2Photo }}')"></span>@endif
 			<span class="hv2-blob hv2-blob--1"></span>
@@ -373,7 +453,7 @@
 					<a href="{{ URL::to('/public/case-studies/'.$case[0].'.pdf') }}" target="_blank" rel="noopener" class="hv2-case" draggable="false" data-distort>
 						<span class="hv2-case-num hv2-display" data-num="{{ str_pad($k + 1, 2, '0', STR_PAD_LEFT) }}" aria-hidden="true"></span>
 						<div class="hv2-media hv2-case-pic">
-							<img src="{{ URL::to('/public/case-studies/cover/'.$case[1]) }}" alt="Case Studies" loading="lazy" draggable="false">
+							<img {!! v2_img('public/case-studies/cover/' . $case[1], '(max-width: 640px) 78vw, 480px') !!} alt="Case Studies" loading="lazy" draggable="false">
 							<span class="hv2-case-panel" data-label="View case study" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></span>
 						</div>
 						{{-- same card heading text as the live page (the name is already in the cover image, so it is visually hidden) --}}
@@ -409,7 +489,7 @@
 						@foreach($blogs as $val)
 							<a href="{{ route('blogs.detail', [$val->slug]) }}" class="hv2-blog" data-reveal="up" data-delay="{{ $loop->index + 1 }}" data-distort>
 								<div class="hv2-media hv2-media--blog">
-									<img src="{{ URL::to('public/storage/blogs/'.$val->banner) }}" alt="{{ $val->banner_alt ?: $val->heading }}" loading="lazy">
+									<img {!! v2_img('public/storage/blogs/' . $val->banner, '(max-width: 640px) 92vw, 31vw', URL::to('public/storage/blogs/' . $val->banner)) !!} alt="{{ $val->banner_alt ?: $val->heading }}" loading="lazy">
 								</div>
 								{{-- same tags/text as the live card: h6 title, short description, "by Author - Date" --}}
 								<h6 class="sv2-blog-h" title="{{ $val->heading }}">{{ $val->heading }}</h6>
@@ -460,7 +540,7 @@
 			{{-- this page's own content, rendered exactly as before, restyled + animated --}}
 			@php $sv2Tone++; @endphp
 			<div class="sv2-legacy sv2-tone-{{ $sv2Tone % 2 ? 'light' : 'tint' }}" id="sv2-{{ $sec->section_key ?: 'section-' . $sec->id }}" data-sv2-legacy>
-				{!! v2_links($sv2StripForms($sv2Render($sec))) !!}
+				{!! $sv2Media(v2_links($sv2StripForms($sv2Render($sec)))) !!}
 			</div>
 		@endif
 	@endforeach
@@ -474,6 +554,6 @@
 	{!! preg_replace('#<script[^>]+/aside\.js[^>]*>\s*</script>#i', '', $sv2Area('scripts')) !!}
 	<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
 	{{-- service-v2.js must run before home-v2.js: it tags the legacy content for the reveal engine --}}
-	<script src="{{ URL::to('/public/assets/js/service-v2.js') }}?v={{ @filemtime(public_path('assets/js/service-v2.js')) }}" defer></script>
-	<script src="{{ URL::to('/public/assets/js/home-v2.js') }}?v={{ @filemtime(public_path('assets/js/home-v2.js')) }}" defer></script>
+	<script src="{{ v2_asset('assets/js/service-v2.js') }}" defer></script>
+	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 @endsection
