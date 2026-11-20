@@ -90,17 +90,17 @@ class PageSpeedController extends Controller
             return response()->json(['ok' => false, 'error' => 'PAGESPEED_API_KEY is not set in .env. Add it and run: php artisan config:clear'], 500);
         }
 
-        $cacheKey = 'psi_' . sha1($url . '|' . $strategy);
+        $cacheKey = 'psi2_' . sha1($url . '|' . $strategy);
         if (!$request->boolean('refresh') && ($hit = Cache::get($cacheKey))) {
             $hit['cached'] = true;
             return response()->json($hit);
         }
 
         try {
-            $res = Http::timeout(150)->retry(1, 1500, null, false)->get(self::PSI_ENDPOINT, [
-                'url' => $url, 'strategy' => $strategy, 'key' => $key,
-                'category' => ['performance', 'accessibility', 'best-practices', 'seo'],
-            ]);
+            // Google needs repeated "category=" params (not category[0]=...), so build the query by hand.
+            $qs = http_build_query(['url' => $url, 'strategy' => $strategy, 'key' => $key])
+                . '&category=PERFORMANCE&category=ACCESSIBILITY&category=BEST_PRACTICES&category=SEO';
+            $res = Http::timeout(150)->retry(1, 1500, null, false)->get(self::PSI_ENDPOINT . '?' . $qs);
         } catch (\Throwable $e) {
             return response()->json(['ok' => false, 'error' => 'Could not reach Google PageSpeed: ' . Str::limit($e->getMessage(), 160)], 502);
         }

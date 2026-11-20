@@ -98,7 +98,8 @@
   var S = {
     base: store.get('psc.base', C.bases[0].url),
     sel: new Set(), active: null, strategy: store.get('psc.strategy', 'mobile'),
-    res: {}, hist: store.get('psc.hist', {}), busy: {}, err: {}, q: '', filter: 'all'
+    res: {}, hist: store.get('psc.hist', {}), busy: {}, err: {}, q: '', filter: 'all',
+    view: 'page', rSort: 'm.performance', rDir: 1, rFilter: 'all'
   };
   if (!C.bases.some(function (b) { return b.url === S.base; })) S.base = C.bases[0].url;
   var urlOf = function (p) { return S.base.replace(/\/$/, '') + p; };
@@ -131,11 +132,13 @@
   function saveHist(k, d) {
     var h = S.hist[k] || [], m = {};
     Object.keys(d.metrics || {}).forEach(function (n) { m[n] = d.metrics[n].value; });
-    h.push({ t: d.fetchedAt, s: d.scores, m: m }); S.hist[k] = h.slice(-10); store.set('psc.hist', S.hist);
+    // keep a compact list of failed audits so the consolidated report can show common issues without re-running
+    var iss = (d.issues || []).slice(0, 25).map(function (i) { return [i.id, i.title, i.cat, i.savingsMs || 0]; });
+    h.push({ t: d.fetchedAt, s: d.scores, m: m, i: iss }); S.hist[k] = h.slice(-10); store.set('psc.hist', S.hist);
   }
 
   /* ---------- rendering ---------- */
-  function renderAll() { renderRail(); renderMain(); }
+  function renderAll() { renderRail(); renderMain(); var b = $('[data-act=report]'); if (b) b.classList.toggle('is-on', S.view === 'report'); }
 
   function chip(p, st) {
     var k = key(p, st), l = last(p, st), t = st === 'mobile' ? 'M' : 'D';
@@ -208,8 +211,75 @@
     }).join('') + '</ol></div>';
   }
 
+  /* ---------- consolidated report (last saved run of every page, no live run) ---------- */
+  function reportData() {
+    var out = [];
+    Object.keys(C.groups).forEach(function (g) {
+      C.groups[g].forEach(function (r) { out.push({ p: r[0], name: r[1], group: g, mo: last(r[0], 'mobile'), de: last(r[0], 'desktop') }); });
+    });
+    return out;
+  }
+  function sc(v) { return v == null ? '<td class="psc-c">–</td>' : '<td class="psc-c"><span class="psc-chip ' + cls(v) + '">' + v + '</span></td>'; }
+  function mt(k, v) { var m = METRICS.filter(function (x) { return x.k === k; })[0]; return '<td class="psc-c psc-' + rate(m, v) + 't">' + fmtMetric(m, v) + '</td>'; }
+  function renderReport(el) {
+    var all = reportData(), tested = all.filter(function (r) { return r.mo || r.de; });
+    var view = tested.filter(function (r) {
+      if (S.rFilter === 'bad') return (r.mo && r.mo.s.performance < 90) || (r.de && r.de.s.performance < 90);
+      return true;
+    });
+    var sk = S.rSort, get = function (r) {
+      if (sk === 'name') return r.name.toLowerCase();
+      if (sk === 'time') return Math.max(r.mo ? +new Date(r.mo.t) : 0, r.de ? +new Date(r.de.t) : 0);
+      var dev = sk.split('.')[0] === 'm' ? r.mo : r.de, f = sk.split('.')[1];
+      if (!dev) return -1;
+      return f === 'LCP' || f === 'CLS' ? -(dev.m[f] == null ? 1e9 : dev.m[f]) : dev.s[f];
+    };
+    view.sort(function (a, b) { var x = get(a), y = get(b); var c = x < y ? -1 : x > y ? 1 : 0; return S.rDir * c; });
+    var avg = function (dev, f) { var v = tested.map(function (r) { return r[dev] && r[dev].s[f]; }).filter(function (v) { return v != null; }); return v.length ? Math.round(v.reduce(function (a, b) { return a + b; }, 0) / v.length) : null; };
+    var bands = function (dev) { var b = { g: 0, o: 0, r: 0 }; tested.forEach(function (r) { if (r[dev]) b[cls(r[dev].s.performance)]++; }); return b; };
+    var bm = bands('mo'), bd = bands('de');
+    // common issues across pages (current strategy's last run)
+    var dev = S.strategy === 'mobile' ? 'mo' : 'de', agg = {};
+    tested.forEach(function (r) { (r[dev] && r[dev].i || []).forEach(function (x) { var a = agg[x[0]] || (agg[x[0]] = { id: x[0], title: x[1], cat: x[2], pages: [], ms: 0 }); a.pages.push(r.name); a.ms += x[3]; }); });
+    var common = Object.keys(agg).map(function (k) { return agg[k]; }).sort(function (a, b) { return (b.pages.length - a.pages.length) || (b.ms - a.ms); }).slice(0, 12);
+    var th = function (label, k, extra) { var on = S.rSort === k; return '<th class="psc-c psc-sort' + (on ? ' is-on' : '') + '" data-sort="' + k + '"' + (extra || '') + '>' + label + (on ? (S.rDir > 0 ? ' ▲' : ' ▼') : '') + '</th>'; };
+
+    var html = '<div class="psc-card psc-head"><div><h2>Consolidated report</h2><div class="psc-meta">' + esc(S.base) + ' · last saved run of each page (no new tests are run) · ' + tested.length + ' of ' + all.length + ' pages tested</div></div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="psc-btn" data-act="csv">Export CSV</button><button class="psc-btn" data-act="copy">Copy report</button><button class="psc-btn" data-act="print">Print / PDF</button></div></div>';
+    if (!tested.length) return el.innerHTML = html + '<div class="psc-card psc-empty"><h3>No saved results yet</h3><p>Run a few pages first — the report collects the last result of each page from this browser.</p></div>';
+
+    html += '<div class="psc-card"><div class="psc-sum">' +
+      '<div><small>Avg mobile performance</small>' + (avg('mo', 'performance') == null ? '<b>–</b>' : '<b class="psc-' + cls(avg('mo', 'performance')) + 'x">' + avg('mo', 'performance') + '</b>') + '<span class="psc-meta"><i class="g"></i>' + bm.g + ' good · <i class="o"></i>' + bm.o + ' needs work · <i class="r"></i>' + bm.r + ' poor</span></div>' +
+      '<div><small>Avg desktop performance</small>' + (avg('de', 'performance') == null ? '<b>–</b>' : '<b class="psc-' + cls(avg('de', 'performance')) + 'x">' + avg('de', 'performance') + '</b>') + '<span class="psc-meta"><i class="g"></i>' + bd.g + ' good · <i class="o"></i>' + bd.o + ' needs work · <i class="r"></i>' + bd.r + ' poor</span></div>' +
+      '<div><small>Avg accessibility (mobile)</small><b class="psc-' + cls(avg('mo', 'accessibility')) + 'x">' + (avg('mo', 'accessibility') == null ? '–' : avg('mo', 'accessibility')) + '</b></div>' +
+      '<div><small>Avg SEO (mobile)</small><b class="psc-' + cls(avg('mo', 'seo')) + 'x">' + (avg('mo', 'seo') == null ? '–' : avg('mo', 'seo')) + '</b></div>' +
+      '</div></div>';
+
+    html += '<div class="psc-card"><div class="psc-filters" style="padding-bottom:4px"><button class="psc-f' + (S.rFilter === 'all' ? ' is-on' : '') + '" data-rf="all">All tested ' + tested.length + '</button><button class="psc-f' + (S.rFilter === 'bad' ? ' is-on' : '') + '" data-rf="bad">Below 90 only</button><span class="psc-meta" style="margin-left:auto;align-self:center">Click a column to sort · click a page to open its full report</span></div>' +
+      '<div class="psc-tablewrap"><table class="psc-rep"><thead><tr><th rowspan="2" class="psc-sort' + (S.rSort === 'name' ? ' is-on' : '') + '" data-sort="name">Page</th><th colspan="6" class="psc-c psc-grp">📱 Mobile</th><th colspan="4" class="psc-c psc-grp">🖥 Desktop</th>' + th('Tested', 'time', ' rowspan="2"') + '</tr><tr>' +
+      th('Perf', 'm.performance') + th('A11y', 'm.accessibility') + th('BP', 'm.best-practices') + th('SEO', 'm.seo') + th('LCP', 'm.LCP') + th('CLS', 'm.CLS') +
+      th('Perf', 'd.performance') + th('A11y', 'd.accessibility') + th('BP', 'd.best-practices') + th('SEO', 'd.seo') + '</tr></thead><tbody>' +
+      view.map(function (r) {
+        var mo = r.mo || { s: {}, m: {} }, de = r.de || { s: {}, m: {} }, t = r.mo && r.de ? (new Date(r.mo.t) > new Date(r.de.t) ? r.mo.t : r.de.t) : (r.mo || r.de).t;
+        return '<tr data-open="' + esc(r.p) + '"><td><b>' + esc(r.name) + '</b><span class="psc-row-path">' + esc(r.p) + '</span></td>' +
+          sc(mo.s.performance) + sc(mo.s.accessibility) + sc(mo.s['best-practices']) + sc(mo.s.seo) + (r.mo ? mt('LCP', mo.m.LCP) + mt('CLS', mo.m.CLS) : '<td class="psc-c">–</td><td class="psc-c">–</td>') +
+          sc(de.s.performance) + sc(de.s.accessibility) + sc(de.s['best-practices']) + sc(de.s.seo) + '<td class="psc-c psc-meta">' + ago(t) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      (all.length > tested.length ? '<div class="psc-meta" style="padding:10px 16px 14px">Not tested yet: ' + all.filter(function (r) { return !r.mo && !r.de; }).map(function (r) { return esc(r.name); }).join(', ') + '</div>' : '') + '</div>';
+
+    html += '<div class="psc-card"><h3 class="psc-sec-title">Most common issues (' + S.strategy + ', last runs)</h3><div class="psc-meta" style="padding:2px 20px 0">Fixing these once in the shared layout/CSS usually improves many pages at the same time.</div><div class="psc-issues">' +
+      (common.length ? common.map(function (c) {
+        var kb = FIX[c.id];
+        return '<details class="psc-issue"><summary><span class="psc-dot' + (c.pages.length > 1 ? '' : ' o') + '"></span><span class="name">' + esc(c.title) + '</span><span class="psc-tag sav">' + c.pages.length + ' page' + (c.pages.length > 1 ? 's' : '') + '</span><span class="psc-tag">' + CAT[c.cat] + '</span></summary><div class="psc-body"><p class="psc-why"><b>Affected:</b> ' + c.pages.map(esc).join(', ') + '</p>' +
+          (kb ? '<div class="psc-fix"><h4>✔ How to fix</h4><ol>' + kb.steps.map(function (s) { return '<li>' + s + '</li>'; }).join('') + '</ol>' + (kb.tip ? '<div class="tip"><b>In this project:</b> ' + kb.tip + '</div>' : '') + '</div>' : '<div class="psc-fix psc-fix--gen"><h4>How to fix</h4><div style="font-size:13px">Open one of the affected pages for Google’s guidance and the exact elements.</div></div>') +
+          '</div></details>';
+      }).join('') : '<div class="psc-ok">No issue details saved yet — re-run pages once to collect them (older runs saved scores only).</div>') + '</div></div>';
+    el.innerHTML = html;
+  }
+
   function renderMain() {
     var el = $('.psc-main');
+    if (S.view === 'report') return renderReport(el);
     if (!S.active) { el.innerHTML = '<div class="psc-card psc-empty"><h3>Pick a page to test</h3><p>Choose a page on the left and press <b>Run</b>. You can also tick several pages (or press “Run group”) to test them all at once.</p><p><button class="psc-btn psc-btn--accent" data-act="home">Test the home page</button></p></div>'; return; }
     var p = S.active, k = key(p), d = S.res[k], h = S.hist[k] || [];
     var head = '<div class="psc-card psc-head"><div><h2>' + esc(labelOf[p] || p) + '</h2><a href="' + esc(urlOf(p)) + '" target="_blank" rel="noopener">' + esc(urlOf(p)) + ' ↗</a><div class="psc-meta">' + (d ? 'Tested ' + ago(d.fetchedAt) + ' · Lighthouse ' + esc(d.lighthouse) + (d.cached ? ' · cached result' : '') : 'Not tested yet') + '</div></div>' +
@@ -269,6 +339,7 @@
   root.innerHTML = '<aside class="psc-card psc-rail"><div class="psc-rail-top">' +
     '<div class="psc-field"><label for="psc-base">Site to test</label><select id="psc-base">' + C.bases.map(function (b) { return '<option value="' + esc(b.url) + '"' + (b.url === S.base ? ' selected' : '') + '>' + esc(b.label) + ' — ' + esc(b.url) + '</option>'; }).join('') + '</select><div class="psc-url"></div></div>' +
     '<div class="psc-field"><label for="psc-q">Find a page</label><input id="psc-q" type="search" placeholder="Search pages…" autocomplete="off"></div>' +
+    '<button class="psc-btn psc-btn--report" data-act="report">📊 Consolidated report — all pages</button>' +
     '<div class="psc-actions"><button class="psc-btn psc-btn--primary" data-act="runsel" disabled>Run selected</button><button class="psc-btn" data-act="mobsel" title="Check/uncheck all visible">Select all</button><button class="psc-btn" data-act="failed" title="Re-run pages scoring below 90">Re-run &lt; 90</button></div>' +
     '<div class="psc-actions"><button class="psc-btn" data-act="csv">Export CSV</button><button class="psc-btn" data-act="json">JSON</button><button class="psc-btn" data-act="copy">Copy report</button><button class="psc-btn" data-act="clear">Clear history</button></div>' +
     '</div><div class="psc-list"></div></aside><main class="psc-main"></main>';
@@ -278,12 +349,17 @@
     if (t.matches('[data-sel]')) { var p = t.dataset.sel; t.checked ? S.sel.add(p) : S.sel.delete(p); renderRail(); return; }
     var g = t.closest('[data-grun]');
     if (g) { e.preventDefault(); e.stopPropagation(); var rowsG = C.groups[g.dataset.grun] || []; rowsG.forEach(function (r) { enqueue(r[0], S.strategy); }); toast('Started ' + rowsG.length + ' ' + S.strategy + ' tests'); return; }
-    if (row) { S.active = row.dataset.p; S.filter = 'all'; renderAll(); return; }
+    if (row) { S.active = row.dataset.p; S.filter = 'all'; S.view = 'page'; renderAll(); return; }
+    var op = t.closest('[data-open]'); if (op) { S.active = op.dataset.open; S.filter = 'all'; S.view = 'page'; renderAll(); window.scrollTo(0, 0); return; }
+    var so = t.closest('[data-sort]'); if (so) { var nk = so.dataset.sort; if (S.rSort === nk) S.rDir = -S.rDir; else { S.rSort = nk; S.rDir = nk === 'name' ? 1 : nk === 'time' ? -1 : 1; } renderMain(); return; }
+    var rf = t.closest('[data-rf]'); if (rf) { S.rFilter = rf.dataset.rf; renderMain(); return; }
     var st = t.closest('[data-st]'); if (st) { S.strategy = st.dataset.st; store.set('psc.strategy', S.strategy); renderAll(); return; }
     var f = t.closest('[data-f]'); if (f) { S.filter = f.dataset.f; renderMain(); return; }
     if (!a) return;
     var act = a.dataset.act;
-    if (act === 'home') { S.active = '/'; S.sel.add('/'); enqueue('/', S.strategy); }
+    if (act === 'report') { S.view = 'report'; S.active = null; renderAll(); window.scrollTo(0, 0); }
+    else if (act === 'print') window.print();
+    else if (act === 'home') { S.active = '/'; S.sel.add('/'); enqueue('/', S.strategy); }
     else if (act === 'run') enqueue(S.active, S.strategy, true);
     else if (act === 'both') { enqueue(S.active, 'mobile', true); enqueue(S.active, 'desktop', true); }
     else if (act === 'runsel') { S.sel.forEach(function (p) { enqueue(p, S.strategy); }); toast('Started ' + S.sel.size + ' ' + S.strategy + ' tests'); }
