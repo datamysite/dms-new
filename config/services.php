@@ -24,6 +24,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
     
+    'pagespeed' => [
+        'key' => env('PAGESPEED_API_KEY'),
+        'default_base' => env('PAGESPEED_BASE_URL', 'https://staging.datamysite.com'),
+    ],
+
     'anthropic' => [
         'key' => env('ANTHROPIC_API_KEY'),
     ],

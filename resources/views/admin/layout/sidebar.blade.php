@@ -73,7 +73,7 @@
             </ul>
           </li>
 
-          <li class="nav-item {{$menu == 'seo.meta' || $menu == 'seo.snippet' ? 'menu-open' : ''}}">
+          <li class="nav-item {{$menu == 'seo.meta' || $menu == 'seo.snippet' || $menu == 'seo.pagespeed' ? 'menu-open' : ''}}">
             <a href="javascript:void(0)" class="nav-link">
               <i class="nav-icon fas fa-bullhorn"></i>
               <p>
@@ -88,6 +88,12 @@
                     <p>Meta Tags</p>
                   </a>
                 </li>
+              <li class="nav-item">
+                <a href="{{route('admin.pagespeed')}}" class="nav-link {{$menu == 'seo.pagespeed' ? 'active' : ''}}">
+                  <i class="fas fa-angle-right nav-icon"></i>
+                  <p>PageSpeed Checker</p>
+                </a>
+              </li>
               <li class="nav-item">
                 <a href="{{route('admin.seo.snippet')}}" class="nav-link {{$menu == 'seo.snippet' ? 'active' : ''}}">
                   <i class="fas fa-angle-right nav-icon"></i>

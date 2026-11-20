@@ -385,6 +385,9 @@ Route::prefix('admin/panel')->namespace('App\Http\Controllers\admin')->group(fun
 
         //SEO Tools
         Route::prefix('seo')->group(function () {
+            // PageSpeed Checker (Google PSI): page picker + report, key stays server-side
+            Route::get('/pagespeed', 'PageSpeedController@index')->name('admin.pagespeed');
+            Route::post('/pagespeed/run', 'PageSpeedController@run')->middleware('throttle:40,1')->name('admin.pagespeed.run');
             Route::prefix('meta')->group(function () {
                 Route::get('/', 'SeoController@meta')->name('admin.seo.meta');
                 Route::post('/check', 'SeoController@meta_check')->name('admin.seo.meta.check');
