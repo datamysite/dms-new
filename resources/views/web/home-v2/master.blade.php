@@ -24,7 +24,9 @@
     return preg_replace_callback('#<script\b([^>]*)>(.*?)</script>#is', function ($m) use ($v2Form, $v2Keep) {
       if ($v2Keep && preg_match('#src\s*=\s*["\'][^"\']*swiper#i', $m[1])) return $m[0];
       if (preg_match('#type\s*=\s*["\']?(application/(ld\+)?json|text/template|text/x-template)#i', $m[1])) return $m[0];
-      if ($v2Form && preg_match('#src\s*=\s*["\'][^"\']*(intlTelInput|/assets/js/input\.js)#i', $m[1])) return $m[0];
+      /* the hero form only needs the phone LIBRARY at load (it is initialised by the page script);
+         input.js only wires the hidden popup forms, so it waits for the first interaction like the other legacy scripts */
+      if ($v2Form && preg_match('#src\s*=\s*["\'][^"\']*intlTelInput#i', $m[1])) return $m[0];
       return '<script type="text/v2-delayed"' . preg_replace('#\stype\s*=\s*("[^"]*"|\'[^\']*\'|\S+)#i', '', $m[1]) . '>' . $m[2] . '</script>';
     }, (string) $html);
   };
@@ -93,15 +95,15 @@
 
   <link rel="alternate" type="text/markdown" href="{{URL::to('/')}}/llms.txt" title="AI-optimized site summary">
 
-  @if($v2Lite)
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2') }}?dd67030699838ea613ee6dbda90effa6">
-  @endif
+  {{-- bootstrap-icons.woff2 (128 KB) is intentionally NOT preloaded: it was the largest early download and competed with the
+       CSS and text fonts for bandwidth on slow mobile networks. It still loads as soon as the icon CSS needs it. --}}
   @if($v2Crit)
   <style id="v2-critical">{!! file_get_contents($v2CritFile) !!}</style>
   @endif
   {{-- shared vendor + site CSS (the OLD header.css is intentionally not loaded) --}}
   <link rel="icon" href="{{URL::to('/public')}}/favicon.png">
-  {!! $v2Keep ? '<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css">' : ($v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css')) !!}
+  {{-- Swiper CSS: non-blocking in lite mode (the carousels sit far below the first screen); v2keep only keeps Swiper JS eager --}}
+  {!! ($v2Keep || !$v2Lite) ? $v2Css(URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css') : '' !!}
   {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/bootstrap/css/bootstrap.min.css">') !!}
   {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/bootstrap-icons/bootstrap-icons.css">') !!}
   {!! $v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/glightbox/css/glightbox.min.css') !!}
@@ -349,7 +351,10 @@
   @endforeach
   
   @if($v2Lite)
-  {!! $v2Delay(view('web.includes.scripts')->render()) !!}
+  {{-- V2 pages use the minified phone library when it exists (same code, 23 KB smaller); old pages keep the original file --}}
+  {!! $v2Delay(is_file(public_path('assets/input-master/js/intlTelInputWithUtils.min.js'))
+        ? str_replace('/intlTelInputWithUtils.js"', '/intlTelInputWithUtils.min.js?v=' . filemtime(public_path('assets/input-master/js/intlTelInputWithUtils.min.js')) . '"', view('web.includes.scripts')->render())
+        : view('web.includes.scripts')->render()) !!}
   @else
   @include('web.includes.scripts')
   @endif

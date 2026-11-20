@@ -213,7 +213,8 @@
 				<h1 class="hv2-display hv2-hero-title" data-split data-kinetic>
 					Advertising &amp; <span class="hv2-outline">Marketing</span> Agency in <span class="hv2-hot">Dubai</span>
 				</h1>
-				<div class="hv2-more hv2-hero-lead" data-readmore data-reveal="up" data-delay="3">
+				{{-- LCP element: no data-reveal, so it is visible on the first paint (never hidden while scripts load) --}}
+				<div class="hv2-more hv2-hero-lead" data-readmore>
 					<p>A Dubai campaign can start from AED 3,000 a month on lift screens or run past AED 30,000 for a Sheikh Zayed Road billboard takeover, and we plan both.<span class="hv2-more-rest"> DataMysite is a full-service advertising and marketing agency: outdoor, transit, radio, OTT, SEO, social, PR and lead generation, run by a team that buys this media every week and knows what each format actually returns. Pick a service below, or tell us the budget and we'll tell you what it buys.</span></p>
 					<button type="button" class="hv2-more-btn" aria-expanded="false"><span>Read more</span><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
 				</div>

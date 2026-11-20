@@ -630,16 +630,24 @@
 
   /* == MARQUEE LOGOS: load them all before the section is reached ==========
      The logos are lazy (no cost on first paint), but lazy images inside a moving marquee only start loading as each tile
-     slides in, so tiles showed up blank for a moment. When a marquee comes within ~1.5 screens, every logo in it loads at once. */
+     slides in, so tiles showed up blank for a moment. When a marquee comes within ~1.5 screens, every logo in it loads at once.
+     This only starts after the visitor's first scroll / touch / click / key — never during the initial page load
+     (on home the clients section is near the top, and loading all logos at load slowed FCP/LCP). */
   (function () {
     var wraps = $$('.hv2-marquee-wrap');
     if (!wraps.length) return;
     var eager = function (wrap) { $$('img[loading="lazy"]', wrap).forEach(function (img) { img.loading = 'eager'; }); };
-    if (!('IntersectionObserver' in window)) { wraps.forEach(eager); return; }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) { if (e.isIntersecting) { eager(e.target); io.unobserve(e.target); } });
-    }, { rootMargin: '150% 0px 150% 0px' });
-    wraps.forEach(function (w) { io.observe(w); });
+    var evs = ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown'], started = false;
+    var start = function (e) {
+      if (started || (e && e.type === 'scroll' && window.scrollY < 40)) return; started = true;
+      evs.forEach(function (e) { window.removeEventListener(e, start, true); });
+      if (!('IntersectionObserver' in window)) { wraps.forEach(eager); return; }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { if (e.isIntersecting) { eager(e.target); io.unobserve(e.target); } });
+      }, { rootMargin: '150% 0px 150% 0px' });
+      wraps.forEach(function (w) { io.observe(w); });
+    };
+    evs.forEach(function (e) { window.addEventListener(e, start, { capture: true, passive: true }); });
   })();
 
   /* == CTA ZOOM · PARALLAX (live-position driven) ========================= */
