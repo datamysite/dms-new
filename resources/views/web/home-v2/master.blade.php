@@ -28,6 +28,26 @@
       return '<script type="text/v2-delayed"' . preg_replace('#\stype\s*=\s*("[^"]*"|\'[^\']*\'|\S+)#i', '', $m[1]) . '>' . $m[2] . '</script>';
     }, (string) $html);
   };
+  /* CRITICAL CSS — a page opts in with @section('v2crit', 'assets/css/<name>.critical.css'):
+     the first-screen CSS (generated from ALL stylesheets, see scratchpad/qa/critical.js) is inlined and every stylesheet
+     loads non-blocking. Only used while the critical file is newer than every stylesheet it was built from (else normal blocking links). */
+  $v2Crit = false;
+  if ($v2Lite && $__env->hasSection('v2crit')) {
+    $v2CritRel = trim($__env->yieldContent('v2crit'));
+    $v2CritFile = public_path($v2CritRel);
+    if (is_file($v2CritFile)) {
+      $v2Newest = 0;
+      foreach (['assets/vendor/bootstrap/css/bootstrap.min.css', 'assets/vendor/bootstrap-icons/bootstrap-icons.css', 'assets/css/main.css', 'assets/css/custom.css', 'assets/css/responsive.css', 'assets/css/home-v2-shell.css', 'assets/css/home-v2.css', 'assets/vendor/swiper/swiper-bundle.min.css'] as $v2Src) { $v2Newest = max($v2Newest, (int) @filemtime(public_path($v2Src))); }
+      $v2Crit = (int) @filemtime($v2CritFile) >= $v2Newest;
+    }
+  }
+  $v2Async = function ($html) use ($v2Crit) {
+    if (!$v2Crit) return $html;
+    return preg_replace_callback('#<link\b[^>]*rel="stylesheet"[^>]*>#i', function ($m) {
+      if (stripos($m[0], 'media="print"') !== false) return $m[0];
+      return str_replace('rel="stylesheet"', 'rel="stylesheet" media="print" onload="this.media=\'all\'"', $m[0]) . '<noscript>' . $m[0] . '</noscript>';
+    }, (string) $html);
+  };
   $v2Css = function ($href) use ($v2Lite, $v2Form) {
     return ($v2Lite && !($v2Form && strpos($href, 'intlTelInput') !== false))
       ? '<link rel="stylesheet" href="' . $href . '" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="' . $href . '"></noscript>'
@@ -73,19 +93,25 @@
 
   <link rel="alternate" type="text/markdown" href="{{URL::to('/')}}/llms.txt" title="AI-optimized site summary">
 
+  @if($v2Lite)
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/vendor/bootstrap-icons/fonts/bootstrap-icons.woff2') }}?dd67030699838ea613ee6dbda90effa6">
+  @endif
+  @if($v2Crit)
+  <style id="v2-critical">{!! file_get_contents($v2CritFile) !!}</style>
+  @endif
   {{-- shared vendor + site CSS (the OLD header.css is intentionally not loaded) --}}
   <link rel="icon" href="{{URL::to('/public')}}/favicon.png">
   {!! $v2Keep ? '<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css">' : ($v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css')) !!}
-  <link rel="stylesheet" href="{{URL::to('/public')}}/assets/vendor/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="{{URL::to('/public')}}/assets/vendor/bootstrap-icons/bootstrap-icons.css">
+  {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/bootstrap/css/bootstrap.min.css">') !!}
+  {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/bootstrap-icons/bootstrap-icons.css">') !!}
   {!! $v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/glightbox/css/glightbox.min.css') !!}
-  <link href="{{URL::to('/public')}}/assets/css/main.css" rel="stylesheet">
-  <link href="{{URL::to('/public')}}/assets/css/custom.css" rel="stylesheet">
-  <link href="{{URL::to('/public')}}/assets/css/responsive.css" rel="stylesheet">
+  {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/main.css">') !!}
+  {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/custom.css">') !!}
+  {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/responsive.css">') !!}
   {!! $v2Css(URL::to('/public') . '/assets/input-master/css/intlTelInput.css') !!}
   {{-- new standalone header + footer --}}
-  <link href="{{ v2_asset('assets/css/home-v2-shell.css', $v2Lite) }}" rel="stylesheet">
-  @yield('addStyle')
+  {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/home-v2-shell.css', $v2Lite) . '">') !!}
+  {!! $v2Async($__env->yieldContent('addStyle')) !!}
   
   @foreach($headSnippet as $val)
     @if($val->position == 'Head')

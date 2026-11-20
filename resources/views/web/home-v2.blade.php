@@ -185,7 +185,7 @@
 	{{-- ===================================================================
 	     01 · HERO
 	==================================================================== --}}
-	<section class="hv2-hero hv2-dark" id="hv2-hero">
+	<section class="hv2-hero hv2-hero--fast hv2-dark" id="hv2-hero">
 		<div class="hv2-hero-bg" aria-hidden="true">
 			<span class="hv2-blob hv2-blob--1"></span>
 			<span class="hv2-blob hv2-blob--2"></span>
@@ -368,7 +368,7 @@
 					['public-relations-pr-coverage', '3.png', 'Media', 'PR Coverage', "Elevate your brand's presence with TOP PR Media houses internationally that secure high-impact media placements and amplify your message.", 'hv2-tile--wide'],
 				] as $k => $f)
 					<a href="{{ URL::to('/'.$f[0]) }}" class="hv2-tile hv2-tile--feature {{ $f[5] }}" data-reveal="{{ $k === 0 ? 'fly-left' : 'fly-right' }}" data-delay="{{ [0, 2, 4][$k] }}" data-distort>
-						<div class="hv2-media"><img src="{{ $hv2Img }}/service/{{ $f[1] }}" alt="{{ $f[3] }} dubai uae" loading="lazy"></div>
+						<div class="hv2-media"><img {!! v2_img('public/assets/img/service/' . $f[1], '(max-width: 991px) 92vw, 46vw') !!} alt="{{ $f[3] }} dubai uae" loading="lazy"></div>
 						<div class="hv2-tile-body">
 							<span class="hv2-tag">{{ $f[2] }}</span>
 							<h3>{{ $f[3] }}</h3>
@@ -420,7 +420,7 @@
 					<a href="{{ URL::to('/public/case-studies/'.$case[0].'.pdf') }}" target="_blank" rel="noopener" class="hv2-case" draggable="false" data-distort>
 						<span class="hv2-case-num hv2-display">{{ str_pad($k + 1, 2, '0', STR_PAD_LEFT) }}</span>
 						<div class="hv2-media hv2-case-pic">
-							<img src="{{ URL::to('/public/case-studies/cover/'.$case[1]) }}" alt="{{ $case[2] }} × DMS case study cover" loading="lazy" draggable="false">
+							<img {!! v2_img('public/case-studies/cover/' . $case[1], '(max-width: 640px) 78vw, 480px') !!} alt="{{ $case[2] }} × DMS case study cover" loading="lazy" draggable="false">
 							<span class="hv2-case-panel"><span>View case study</span><i class="bi bi-arrow-up-right"></i></span>
 						</div>
 					</a>
@@ -581,7 +581,7 @@
 							<p>{{ $val->description }}</p>
 						</span>
 						@if(is_file(public_path('assets/img/service-new/'.trim($val->slug, '/').'.jpg')))
-							<span class="hv2-sc-img hv2-media"><img src="{{ $hv2Img }}/service-new/{{ trim($val->slug, '/') }}.jpg" alt="{{ $val->name }}" loading="lazy"></span>
+							<span class="hv2-sc-img hv2-media"><img {!! v2_img('public/assets/img/service-new/' . trim($val->slug, '/') . '.jpg', '(max-width: 991px) 92vw, 46vw') !!} alt="{{ $val->name }}" loading="lazy"></span>
 						@else
 							<span class="hv2-sc-img hv2-sc-img--icon" aria-hidden="true"><i class="{{ $val->icon }}"></i></span>
 						@endif

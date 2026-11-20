@@ -1199,3 +1199,13 @@ html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
    so the mobile hero jumped up ~80px after load (PageSpeed: layout shift on .hv2-hero-inner). */
 :root { --hv2-header: 76px; }
 @media (max-width: 575px) { :root { --hv2-header: 68px; } }
+
+
+/* == SPEED INDEX · home hero is complete at first paint ==
+   The staggered blur/translate reveals (1.15 s per word, 60 ms stagger, form scale-in) made the first screen finish painting
+   2–3 s after first paint. On the home hero they are now short opacity fades with no stagger; the rest of the page keeps its animations. */
+.hv2-hero--fast [data-reveal] { transition-duration: .28s !important; transition-delay: 0s !important; }
+.hv2-js .hv2 .hv2-hero--fast [data-reveal]:not(.is-in) { filter: none; translate: 0 10px; scale: 1; }
+.hv2-hero--fast [data-split] .hv2-w > span { transition-duration: .32s, .32s, .5s; transition-delay: calc(var(--i, 0) * 12ms), calc(var(--i, 0) * 12ms), 0s; }
+.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { transform: translateY(35%); filter: none; opacity: 0; }
+.hv2-hero--fast [data-split].is-in .hv2-w > span { opacity: 1; }
