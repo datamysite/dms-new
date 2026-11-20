@@ -628,6 +628,20 @@
     });
   }
 
+  /* == MARQUEE LOGOS: load them all before the section is reached ==========
+     The logos are lazy (no cost on first paint), but lazy images inside a moving marquee only start loading as each tile
+     slides in, so tiles showed up blank for a moment. When a marquee comes within ~1.5 screens, every logo in it loads at once. */
+  (function () {
+    var wraps = $$('.hv2-marquee-wrap');
+    if (!wraps.length) return;
+    var eager = function (wrap) { $$('img[loading="lazy"]', wrap).forEach(function (img) { img.loading = 'eager'; }); };
+    if (!('IntersectionObserver' in window)) { wraps.forEach(eager); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) { if (e.isIntersecting) { eager(e.target); io.unobserve(e.target); } });
+    }, { rootMargin: '150% 0px 150% 0px' });
+    wraps.forEach(function (w) { io.observe(w); });
+  })();
+
   /* == CTA ZOOM · PARALLAX (live-position driven) ========================= */
   if (!reduceMotion) {
     var cta = document.getElementById('hv2-cta');

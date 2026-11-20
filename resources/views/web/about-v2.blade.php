@@ -208,7 +208,7 @@
 							@foreach($row as $i => $brand)
 								<div class="hv2-brand hv2-brand--lg" style="--n: {{ $loop->index }}" @if($dup) aria-hidden="true" @endif>
 									<div class="hv2-brand-logo hv2-media hv2-media--logo">
-										<img src="{{ $hv2Img }}/clients-final/{{ $i }}.png" alt="{{ $dup ? '' : $brand.' logo' }}" loading="lazy" width="300" height="300">
+										<img src="{{ $hv2Img }}/clients-final/{{ $i }}.webp" alt="{{ $dup ? '' : $brand.' logo' }}" loading="lazy" width="300" height="300">
 									</div>
 								</div>
 							@endforeach
