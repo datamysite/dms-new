@@ -375,3 +375,8 @@ body.hs-rv-open { overflow: hidden; }
 /* loader gifs in the V2 modals keep their real aspect ratio (CSS sets only the width) */
 .hs-body .help-loading, .hs-body .help-loading2, .hs-body .newsletter-loader { height: auto; }
 .hs-body .whatsapp-icon-position img { height: auto; }
+
+/* Exit popup (#ov): while closed it is also visibility:hidden (not only opacity 0), so the invisible box never counts as a
+   layout shift when late CSS/fonts move it. Visibility switches after the 0.3 s fade, so open/close still fade. */
+.hs-body #ov:not(.show) { visibility: hidden; transition: opacity .3s, visibility 0s linear .3s; }
+.hs-body #ov.show { visibility: visible; transition: opacity .3s, visibility 0s; }

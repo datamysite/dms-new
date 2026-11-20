@@ -468,6 +468,9 @@
     var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
     var setPos = function (i) { curEl.textContent = pad2(i + 1); barEl.style.transform = 'scaleX(' + ((i + 1) / slidesN).toFixed(3) + ')'; };
     if (window.Swiper) {
+      /* Swiper is built only when the carousel comes within ~1 screen (it sits far below the first screen):
+         its setup (≈250 ms of layout work on mobile) no longer runs during the page load. */
+      var csInit = function () {
       cs.classList.add('is-swiper');
       var csSwiper = new window.Swiper(vp, {
         wrapperClass: 'hv2-cs-track', slideClass: 'hv2-case',
@@ -505,6 +508,11 @@
       document.addEventListener('visibilitychange', csSync);
       if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { csInView = en[0].isIntersecting; csSync(); }, { threshold: 0.15 }).observe(vp);
       csPaintToggle();
+      };
+      if ('IntersectionObserver' in window) {
+        var csLazy = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { csLazy.disconnect(); csInit(); } }, { rootMargin: '100% 0px 100% 0px' });
+        csLazy.observe(cs);
+      } else csInit();
     } else {
       /* fallback: plain scrolling row with working arrows */
       togBtn.hidden = true;

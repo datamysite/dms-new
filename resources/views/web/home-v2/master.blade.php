@@ -19,6 +19,13 @@
   $v2Form = $__env->hasSection('v2form');
   /* @section('v2keep', '1'): Swiper (JS + CSS) keeps its normal load — for pages that build a carousel at start (home) */
   $v2Keep = $__env->hasSection('v2keep');
+  /* @section('v2icons', '1'): use the bootstrap-icons SUBSET (vendor/bootstrap-icons/bi-v2.css + fonts/bi-v2.woff2, 8 KB instead of 128 KB),
+     inlined in <head> with its small font preloaded, instead of the full render-blocking icon stylesheet.
+     Only for pages whose icons were checked against the subset (rebuild with scratchpad/qa/bi-subset.js when icons are added). */
+  $v2Icons = $__env->hasSection('v2icons') && is_file(public_path('assets/vendor/bootstrap-icons/bi-v2.css'));
+  /* @section('v2cssasync', '1'): custom.css + responsive.css load without blocking the first paint
+     (verified per page: they do not change anything in the first screen) */
+  $v2CssAsync = $v2Lite && $__env->hasSection('v2cssasync');
   $v2Delay = function ($html) use ($v2Lite, $v2Form, $v2Keep) {
     if (!$v2Lite) return $html;
     return preg_replace_callback('#<script\b([^>]*)>(.*?)</script>#is', function ($m) use ($v2Form, $v2Keep) {
@@ -105,11 +112,21 @@
   {{-- Swiper CSS: non-blocking in lite mode (the carousels sit far below the first screen); v2keep only keeps Swiper JS eager --}}
   {!! ($v2Keep || !$v2Lite) ? $v2Css(URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css') : '' !!}
   {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/bootstrap/css/bootstrap.min.css">') !!}
+  @if($v2Icons)
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/vendor/bootstrap-icons/fonts/bi-v2.woff2') }}?v={{ @filemtime(public_path('assets/vendor/bootstrap-icons/fonts/bi-v2.woff2')) }}">
+  <style id="v2-icons">{!! str_replace('url("fonts/bi-v2.woff2")', 'url("' . URL::to('/public/assets/vendor/bootstrap-icons/fonts/bi-v2.woff2') . '?v=' . @filemtime(public_path('assets/vendor/bootstrap-icons/fonts/bi-v2.woff2')) . '")', (string) @file_get_contents(public_path('assets/vendor/bootstrap-icons/bi-v2.css'))) !!}</style>
+  @else
   {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/bootstrap-icons/bootstrap-icons.css">') !!}
+  @endif
   {!! $v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/glightbox/css/glightbox.min.css') !!}
   {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/main.css">') !!}
+  @if($v2CssAsync)
+  {!! $v2Css(URL::to('/public') . '/assets/css/custom.css') !!}
+  {!! $v2Css(URL::to('/public') . '/assets/css/responsive.css') !!}
+  @else
   {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/custom.css">') !!}
   {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/responsive.css">') !!}
+  @endif
   {!! $v2Css(URL::to('/public') . '/assets/input-master/css/intlTelInput.css') !!}
   {{-- new standalone header + footer --}}
   {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/home-v2-shell.css', $v2Lite) . '">') !!}

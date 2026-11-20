@@ -14,6 +14,9 @@
 @section('v2lite', '1')
 @section('v2form', '1')
 @section('v2keep', '1')
+{{-- icon subset inlined (8 KB font instead of 128 KB) + custom/responsive CSS non-blocking — both verified for this page --}}
+@section('v2icons', '1')
+@section('v2cssasync', '1')
 
 @section('metaAddition')
 	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},500);})();</script>
@@ -292,7 +295,7 @@
 		$hv2Rows = [[], []];
 		foreach (array_keys($hv2Clients) as $pos => $logoNo) { $hv2Rows[$pos % 2][$logoNo] = $hv2Clients[$logoNo]; }
 	@endphp
-	<section class="hv2-section hv2-dark hv2-clients" id="hv2-clients">
+	<section class="hv2-section hv2-dark hv2-clients hv2-cv" id="hv2-clients">
 		<span class="hv2-watermark" data-parallax="0.12" aria-hidden="true">Clients</span>
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split">
@@ -332,7 +335,7 @@
 	{{-- ===================================================================
 	     04 · STATS
 	==================================================================== --}}
-	<section class="hv2-section hv2-tint hv2-stats" id="hv2-stats">
+	<section class="hv2-section hv2-tint hv2-stats hv2-cv" id="hv2-stats">
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split">
 				<div>
@@ -355,7 +358,7 @@
 	{{-- ===================================================================
 	     05 · BEST SOLUTIONS — three featured formats (full service list lives in "Our Services")
 	==================================================================== --}}
-	<section class="hv2-section hv2-light hv2-best-sec" id="hv2-best-solutions">
+	<section class="hv2-section hv2-light hv2-best-sec hv2-cv" id="hv2-best-solutions">
 		<div class="hv2-container">
 			<div class="hv2-head">
 				<span class="hv2-eyebrow" data-reveal="up">Best Solutions</span>
@@ -394,7 +397,7 @@
 	     06 · CASE STUDIES — looping auto-slide carousel (Swiper). Interval = data-autoplay (ms).
 	          Pauses on hover/focus/drag or with the pause button; arrows, drag, swipe, keyboard.
 	==================================================================== --}}
-	<section class="hv2-section hv2-dark hv2-cases" id="hv2-cases">
+	<section class="hv2-section hv2-dark hv2-cases hv2-cv" id="hv2-cases">
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split hv2-head--tight">
 				<div>
@@ -440,7 +443,7 @@
 	{{-- ===================================================================
 	     07 · EXPERTISE + WHY CLIENTS PICK US
 	==================================================================== --}}
-	<section class="hv2-section hv2-tint hv2-why" id="hv2-why">
+	<section class="hv2-section hv2-tint hv2-why hv2-cv" id="hv2-why">
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split">
 				<div>
@@ -524,7 +527,7 @@
 	{{-- ===================================================================
 	     09 · TESTIMONIALS — looping auto-slide with controls. Interval = data-autoplay (ms).
 	==================================================================== --}}
-	<section class="hv2-section hv2-dark hv2-testi" id="hv2-testimonials">
+	<section class="hv2-section hv2-dark hv2-testi hv2-cv" id="hv2-testimonials">
 		<div class="hv2-container hv2-testi-grid">
 			<div class="hv2-testi-side">
 				<span class="hv2-eyebrow" data-reveal="up">Client Testimonials</span>
@@ -604,7 +607,7 @@
 	{{-- ===================================================================
 	     11 · WHO WE ARE
 	==================================================================== --}}
-	<section class="hv2-section hv2-tint hv2-about" id="hv2-who-we-are">
+	<section class="hv2-section hv2-tint hv2-about hv2-cv" id="hv2-who-we-are">
 		<div class="hv2-container hv2-about-grid">
 			<div class="hv2-about-copy">
 				<span class="hv2-eyebrow" data-reveal="up">Who We Are</span>
@@ -647,7 +650,7 @@
 	{{-- ===================================================================
 	     12 · BLOGS
 	==================================================================== --}}
-	<section class="hv2-section hv2-light hv2-blogs" id="hv2-blogs">
+	<section class="hv2-section hv2-light hv2-blogs hv2-cv" id="hv2-blogs">
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split">
 				<div>
@@ -678,7 +681,7 @@
 	@php
 		$hv2FaqIcons = ['all' => 'bi-collection', 'general' => 'bi-grid-1x2', 'outdoor' => 'bi-signpost-split', 'digital' => 'bi-display', 'transit' => 'bi-bus-front', 'influencer' => 'bi-stars', 'pr' => 'bi-megaphone', 'seo' => 'bi-search'];
 	@endphp
-	<section class="hv2-section hv2-tint hv2-faq" id="hv2-faq">
+	<section class="hv2-section hv2-tint hv2-faq hv2-cv" id="hv2-faq">
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split">
 				<div>

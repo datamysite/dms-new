@@ -754,6 +754,11 @@ html.hv2-loading.hv2-leaving::before { transform: translateY(-100%); }
 html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
 @keyframes hv2-load-breathe { 0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: .92; } 50% { transform: translate(-50%, -50%) scale(1.035); opacity: 1; } }
 
+/* Render-on-approach: sections far below the first screen (.hv2-cv, only ones whose content never overflows the section box
+   and has no sticky parts) are skipped by the browser's style/layout/paint until they come near the viewport.
+   This removes the large render tasks right after the first paint (TBT). `auto` remembers each section's real height once seen. */
+.hv2-cv { content-visibility: auto; contain-intrinsic-size: auto 1000px; }
+
 /* == L6 · RESPONSIVE ====================================================== */
 @media (max-width: 1199px) {
   .hv2-hero-inner { grid-template-columns: 1.1fr .9fr; }
