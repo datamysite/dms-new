@@ -153,7 +153,6 @@
 .sv2 .sv2-legacy .uni-strip-see-more, .sv2 .sv2-legacy .pub-see-more { display: inline-flex; align-items: center; gap: 8px; padding: 12px 22px !important; border: 0 !important; border-radius: 999px !important;
   background: var(--green) !important; color: #fff !important; font: 800 12.5px/1 var(--font-body) !important; letter-spacing: .08em; text-transform: uppercase; cursor: pointer;
   box-shadow: 0 14px 28px -14px rgba(8, 46, 35, .8); transition: transform .3s var(--ease), background .25s; }
-.sv2 .sv2-legacy .uni-strip-see-more:hover, .sv2 .sv2-legacy .pub-see-more:hover { transform: translateY(-2px); background: var(--coral) !important; }
 
 /* blocks with a dark background (detected in service-v2.js): keep text light */
 .sv2 .sv2-legacy .sv2-on-dark h1, .sv2 .sv2-legacy .sv2-on-dark h2, .sv2 .sv2-legacy .sv2-on-dark h3, .sv2 .sv2-legacy .sv2-on-dark h4,
