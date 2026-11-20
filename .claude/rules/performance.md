@@ -17,7 +17,7 @@ paths:
 - **Speed Index (SI):** Must be **≤ 3.4 s** (ideal: **≤ 2.5 s**).
 
 ## Laravel & Frontend Implementation Rules
-- **Fix FCP (≤ 1.8 s):** Eliminate render-blocking CSS/JS in `<head>`. Always load Vite assets via `@vite([...])` (module/deferred) or add `defer` to external scripts. Preload primary WOFF2 fonts with `<link rel="preload" as="font" type="font/woff2" crossorigin>` and `font-display: swap`.
+- **Fix FCP (≤ 1.8 s):** Eliminate render-blocking CSS/JS in `<head>`. Add `defer` to external scripts (this project does not use Vite, so ignore any `@vite` guidance). Preload primary WOFF2 fonts with `<link rel="preload" as="font" type="font/woff2" crossorigin>` and `font-display: swap`.
 - **Fix LCP (≤ 2.5 s):** Never use `loading="lazy"` on above-the-fold hero images. Add `fetchpriority="high"` and `decoding="sync"` to the LCP image, preload it in `<head>` when critical, and serve compressed WebP/AVIF formats with responsive `srcset`/`sizes`.
 - **Preserve CLS (0):** Always declare explicit `width` and `height` attributes (or CSS `aspect-ratio`) on every `<img>`, `<video>`, `<iframe>`, and `<svg>`. Reserve container heights for dynamic banners or components.
 - **Preserve TBT (< 100 ms):** Avoid heavy third-party JS libraries; use lightweight Alpine.js or native CSS transitions, and code-split non-critical scripts.
