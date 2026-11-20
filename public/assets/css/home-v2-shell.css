@@ -371,3 +371,7 @@ body.hs-rv-open { overflow: hidden; }
 
 /* lite pages (opt-in via @section('v2lite')): no backdrop blur on the fixed header bar — a near-opaque bar looks the same and does not re-blur while scrolling */
 .hs-body.v2-lite .hs-bar, .hs-body.v2-lite .hs-header.is-scrolled .hs-bar { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(8, 46, 35, .96); }
+
+/* loader gifs in the V2 modals keep their real aspect ratio (CSS sets only the width) */
+.hs-body .help-loading, .hs-body .help-loading2, .hs-body .newsletter-loader { height: auto; }
+.hs-body .whatsapp-icon-position img { height: auto; }

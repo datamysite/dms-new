@@ -1193,3 +1193,9 @@ html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
    streak is 34% wide and travelled left -40% → 130% = +170% of the hero = translateX(500%) of its own width */
 .hv2-streaks i { will-change: transform, opacity; }
 @keyframes hv2-streak { 0% { transform: translateX(0) rotate(-12deg); opacity: 0; } 15% { opacity: .8; } 100% { transform: translateX(500%) rotate(-12deg); opacity: 0; } }
+
+/* == CLS · header height known before JS runs ==
+   --header-h fell back to 148px until home-v2.js measured the real header (76px / 68px on phones),
+   so the mobile hero jumped up ~80px after load (PageSpeed: layout shift on .hv2-hero-inner). */
+:root { --hv2-header: 76px; }
+@media (max-width: 575px) { :root { --hv2-header: 68px; } }

@@ -151,11 +151,26 @@
       } else if (child.nodeType === 1) { splitNode(child); }
     });
   };
-  $$('[data-split]').forEach(function (el) {
+  /* headings in the first screen are split now (their animation is visible at once); the rest are split when the
+     browser is idle, before they scroll into view — keeps the start-up main thread short */
+  var splitOne = function (el) {
+    if (el.__split) return; el.__split = true;
     wordIndex = 0;
     el.setAttribute('aria-label', el.textContent.replace(/\s+/g, ' ').trim());
     splitNode(el);
+  };
+  var splitLater = [];
+  $$('[data-split]').forEach(function (el) {
+    if (el.getBoundingClientRect().top < window.innerHeight * 1.2) splitOne(el); else splitLater.push(el);
   });
+  if (splitLater.length) {
+    var idle = window.requestIdleCallback || function (fn) { return setTimeout(function () { fn({ timeRemaining: function () { return 8; } }); }, 200); };
+    var splitChunk = function (dl) {
+      while (splitLater.length && dl.timeRemaining() > 2) splitOne(splitLater.shift());
+      if (splitLater.length) idle(splitChunk, { timeout: 1500 });
+    };
+    idle(splitChunk, { timeout: 1500 });
+  }
 
   /* == REVEAL (GSAP ScrollTrigger.batch, IO fallback) ==================== */
   var revealEls = $$('[data-reveal], [data-split]');
@@ -262,8 +277,14 @@
     var dot = cursor.querySelector('.hv2-cursor-dot'), ring = cursor.querySelector('.hv2-cursor-ring');
     var mx = -100, my = -100, rx = -100, ry = -100;
     docEl.classList.add('hv2-has-cursor');
-    window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)'; }, { passive: true });
-    (function loop() { rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18; ring.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)'; requestAnimationFrame(loop); })();
+    /* the ring follows the pointer only while it is catching up (the loop idles when the cursor rests) */
+    var cRaf = 0;
+    var loop = function () {
+      rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+      ring.style.transform = 'translate3d(' + rx + 'px,' + ry + 'px,0)';
+      cRaf = (Math.abs(mx - rx) > 0.3 || Math.abs(my - ry) > 0.3) ? requestAnimationFrame(loop) : 0;
+    };
+    window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; dot.style.transform = 'translate3d(' + mx + 'px,' + my + 'px,0)'; if (!cRaf) cRaf = requestAnimationFrame(loop); }, { passive: true });
     var hoverSel = 'a, button, [data-tilt], summary, input, textarea';
     root.addEventListener('mouseover', function (e) { if (e.target.closest(hoverSel)) cursor.classList.add('is-hover'); });
     root.addEventListener('mouseout', function (e) { if (e.target.closest(hoverSel)) cursor.classList.remove('is-hover'); });
@@ -504,9 +525,11 @@
   };
   var paintStack = function () {
     if (reduceMotion || !stackVis.length) return;
-    var from = window.innerHeight * 0.92;
-    for (var i = 0; i < stackVis.length - 1; i++) {
-      var p = clamp((from - stackVis[i + 1].getBoundingClientRect().top) / Math.max(1, from - stackTops[i + 1]), 0, 1);
+    var from = window.innerHeight * 0.92, i, tops = [];
+    /* read all positions first, then write (no forced reflow inside the loop) */
+    for (i = 1; i < stackVis.length; i++) tops[i] = stackVis[i].getBoundingClientRect().top;
+    for (i = 0; i < stackVis.length - 1; i++) {
+      var p = clamp((from - tops[i + 1]) / Math.max(1, from - stackTops[i + 1]), 0, 1);
       stackVis[i].style.setProperty('--dim', (p * 0.38).toFixed(3));
       stackVis[i].style.transform = p > 0 ? 'scale(' + (1 - p * 0.06).toFixed(4) + ')' : '';
     }
@@ -607,10 +630,12 @@
   if (!reduceMotion) {
     var cta = document.getElementById('hv2-cta');
     var travel = function (el) { var r = el.getBoundingClientRect(), vh = window.innerHeight; return clamp((vh - r.top) / (vh + r.height), 0, 1); };
-    if (cta) addFx(function () { cta.style.setProperty('--z', (1.22 - travel(cta) * 0.22).toFixed(3)); });
-    $$('[data-parallax]').forEach(function (el) {
-      var sp = parseFloat(el.getAttribute('data-parallax')) || 0, host = el.parentNode;
-      addFx(function () { el.style.transform = 'translate3d(0,' + (-sp * 400 + travel(host) * 2 * sp * 400).toFixed(1) + 'px,0)'; });
+    /* one pass: read every position first, then write every style (avoids a forced reflow per element) */
+    var plx = $$('[data-parallax]').map(function (el) { return { el: el, sp: parseFloat(el.getAttribute('data-parallax')) || 0, host: el.parentNode }; });
+    if (cta || plx.length) addFx(function () {
+      var tc = cta ? travel(cta) : 0, tv = plx.map(function (o) { return travel(o.host); });
+      if (cta) cta.style.setProperty('--z', (1.22 - tc * 0.22).toFixed(3));
+      plx.forEach(function (o, k) { o.el.style.transform = 'translate3d(0,' + (-o.sp * 400 + tv[k] * 2 * o.sp * 400).toFixed(1) + 'px,0)'; });
     });
   }
 

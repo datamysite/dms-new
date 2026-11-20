@@ -17,9 +17,12 @@
   $v2Lite = $__env->hasSection('v2lite');
   /* pages with the enquiry form add @section('v2form', '1'): the phone-number library (intl-tel-input + input.js) stays on its normal deferred load */
   $v2Form = $__env->hasSection('v2form');
-  $v2Delay = function ($html) use ($v2Lite, $v2Form) {
+  /* @section('v2keep', '1'): Swiper (JS + CSS) keeps its normal load — for pages that build a carousel at start (home) */
+  $v2Keep = $__env->hasSection('v2keep');
+  $v2Delay = function ($html) use ($v2Lite, $v2Form, $v2Keep) {
     if (!$v2Lite) return $html;
-    return preg_replace_callback('#<script\b([^>]*)>(.*?)</script>#is', function ($m) use ($v2Form) {
+    return preg_replace_callback('#<script\b([^>]*)>(.*?)</script>#is', function ($m) use ($v2Form, $v2Keep) {
+      if ($v2Keep && preg_match('#src\s*=\s*["\'][^"\']*swiper#i', $m[1])) return $m[0];
       if (preg_match('#type\s*=\s*["\']?(application/(ld\+)?json|text/template|text/x-template)#i', $m[1])) return $m[0];
       if ($v2Form && preg_match('#src\s*=\s*["\'][^"\']*(intlTelInput|/assets/js/input\.js)#i', $m[1])) return $m[0];
       return '<script type="text/v2-delayed"' . preg_replace('#\stype\s*=\s*("[^"]*"|\'[^\']*\'|\S+)#i', '', $m[1]) . '>' . $m[2] . '</script>';
@@ -72,7 +75,7 @@
 
   {{-- shared vendor + site CSS (the OLD header.css is intentionally not loaded) --}}
   <link rel="icon" href="{{URL::to('/public')}}/favicon.png">
-  {!! $v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css') !!}
+  {!! $v2Keep ? '<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css">' : ($v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/swiper/swiper-bundle.min.css')) !!}
   <link rel="stylesheet" href="{{URL::to('/public')}}/assets/vendor/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="{{URL::to('/public')}}/assets/vendor/bootstrap-icons/bootstrap-icons.css">
   {!! $v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/glightbox/css/glightbox.min.css') !!}
@@ -104,7 +107,7 @@
 
   <a href="https://api.whatsapp.com/send/?phone=971525287259" aria-label="Whatsapp Chat" id="whatsapp-chat" class="whatsapp-chat" target="_blank">
     <div class="whatsapp-icon-position">
-      <img src="{{URL::to('/public/whatsapp-icon2.png')}}" alt="Whatsapp Chat">
+      <img src="{{URL::to('/public/whatsapp-icon2.png')}}" alt="Whatsapp Chat" width="100" height="100" decoding="async">
     </div>
   </a>
 
@@ -148,7 +151,7 @@
                         <button type="reset" class="btn btn-sm btn-default cancel">&nbsp;&nbsp;Cancel&nbsp;&nbsp;</button>&nbsp;&nbsp;
                         <input type="submit" class="btn btn-sm btn-theme" value="Proceed">
                       </div>
-                      <img src="{{URL::to('/public/loader-gif-m.gif')}}"  alt="Loader gif" class="help-loading">
+                      <img src="{{URL::to('/public/loader-gif-m.gif')}}" alt="Loader gif" width="150" height="31" class="help-loading" loading="lazy">
                     </form>
                   </div>
               </div>
@@ -200,7 +203,7 @@
                         <button type="reset" class="btn btn-sm btn-default cancel">&nbsp;&nbsp;Cancel&nbsp;&nbsp;</button>&nbsp;&nbsp;
                         <input type="submit" class="btn btn-sm btn-theme" value="Proceed">
                       </div>
-                      <img src="{{URL::to('/public/loader-gif-m.gif')}}"  alt="Loader gif" class="help-loading2">
+                      <img src="{{URL::to('/public/loader-gif-m.gif')}}" alt="Loader gif" width="150" height="31" class="help-loading2" loading="lazy">
                     </form>
                   </div>
               </div>
@@ -229,7 +232,7 @@
                                                 
                         <button class="btn btn-theme">Submit</button>
                         <button type="button" class="btn btn-default close">Close</button>
-                        <img src="{{URL::to('/public/loader-gif.gif')}}" alt="loader image" width="80px" class="help-loading2 seo-loading">
+                        <img src="{{URL::to('/public/loader-gif.gif')}}" alt="loader image" width="80" height="17" class="help-loading2 seo-loading" loading="lazy">
                     </form>
                   </div>
               </div>
@@ -299,7 +302,7 @@
                 <p class="prv">🔒 No spam · 100% free · ⭐ 5.0 Google rated</p>
                 <div class="skip"><button onclick="closeExitPopup()">No thanks, I'll figure it out myself</button></div>
 
-                <div class="loading exit-loading"><img src="{{URL::to('/public/loader-gif.gif')}}" width="80px" class="newsletter-loader"></div>
+                <div class="loading exit-loading"><img src="{{URL::to('/public/loader-gif.gif')}}" width="80" height="17" alt="" class="newsletter-loader" loading="lazy"></div>
               </div>
             </div>
           </form>
@@ -333,7 +336,7 @@
   <script>
   /* releases the delayed third-party scripts + chat widget on first interaction (or 10 s after load), in their original order */
   (function () {
-    var started = false, evs = ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel', 'mousemove'];
+    var started = false, evs = ['pointerdown', 'keydown', 'touchstart', 'wheel', 'mousemove']; /* no 'scroll': programmatic scrolls (Lenis, scroll restore) must not release the scripts */
     function runList(list, done) {
       (function next(i) {
         if (i >= list.length) { if (done) done(); return; }
