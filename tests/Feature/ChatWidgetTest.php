@@ -88,6 +88,20 @@ class ChatWidgetTest extends TestCase
         $this->assertStringContainsString('animation-delay:calc(.22s + var(--i,0) * 40ms)', $this->css(), '40 ms stagger per card');
     }
 
+    public function test_topic_cards_can_be_scrolled_with_a_mouse_by_click_and_drag(): void
+    {
+        $js = $this->script();
+        $css = $this->css();
+        $this->assertStringContainsString('function makeDraggable(el)', $js);
+        $this->assertStringContainsString('makeDraggable(row);', $js, 'every topic row is draggable');
+        $this->assertStringContainsString("e.pointerType==='touch'", $js, 'touch screens keep their native swipe');
+        $this->assertStringContainsString('el.scrollLeft=startLeft-dx;', $js, 'dragging moves the slider');
+        $this->assertStringContainsString("el.addEventListener('click',e=>{ if(moved){ e.preventDefault(); e.stopPropagation(); } },true);", $js, 'a drag never counts as a click on a card');
+        $this->assertStringContainsString('cursor:grab;', $css);
+        $this->assertStringContainsString('.dms-topics.is-drag{cursor:grabbing;scroll-snap-type:none;', $css, 'no snapping while dragging');
+        $this->assertStringContainsString('.dms-card:last-child{scroll-snap-align:end;}', $css, 'the last card can be scrolled fully into view');
+    }
+
     public function test_copy_labels_and_zones_of_the_new_design(): void
     {
         $w = $this->widget();

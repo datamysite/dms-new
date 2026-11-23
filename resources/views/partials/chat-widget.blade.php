@@ -145,6 +145,12 @@
   #dms-panel .dms-topics{display:flex;gap:11px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scroll-padding:0 18px;padding:12px 18px 14px;
     scrollbar-width:none;-webkit-overflow-scrolling:touch;perspective:900px;overscroll-behavior-x:contain;}
   #dms-panel .dms-topics::-webkit-scrollbar{display:none;}
+  /* click-and-drag scrolling for mouse users (touch swipes natively): grab cursor; while dragging, snapping and card hover are off */
+  #dms-panel .dms-topics{cursor:grab;}
+  #dms-panel .dms-topics.is-drag{cursor:grabbing;scroll-snap-type:none;user-select:none;-webkit-user-select:none;}
+  #dms-panel .dms-topics.is-drag .dms-card{pointer-events:none;}
+  #dms-panel .dms-card{-webkit-user-drag:none;user-select:none;-webkit-user-select:none;}
+  #dms-panel .dms-card:last-child{scroll-snap-align:end;}   /* the last card can be scrolled fully into view */
   #dms-panel .dms-card{position:relative;flex:0 0 130px;height:128px;scroll-snap-align:start;padding:15px 14px 14px;border-radius:22px;cursor:pointer;
     display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;text-align:left;color:var(--dms-navy);
     background:linear-gradient(165deg,rgba(255,255,255,.96),rgba(255,255,255,.52));
@@ -595,6 +601,21 @@ function addUser(text){
   const el=document.createElement("div"); el.className="dms-msg user";
   el.innerHTML='<div class="bubble">'+mdLite(text)+'</div>'; scroll.appendChild(el); toBottom();
 }
+/* mouse users: click and drag the cards sideways (touch screens swipe natively). A drag never counts as a click on a card. */
+function makeDraggable(el){
+  let down=false, moved=false, startX=0, startLeft=0;
+  el.addEventListener('pointerdown',e=>{ if(e.pointerType==='touch'||e.button!==0) return; down=true; moved=false; startX=e.clientX; startLeft=el.scrollLeft; });
+  el.addEventListener('pointermove',e=>{
+    if(!down) return;
+    const dx=e.clientX-startX;
+    if(!moved && Math.abs(dx)>5){ moved=true; el.classList.add('is-drag'); try{ el.setPointerCapture(e.pointerId); }catch(_){} }
+    if(moved){ el.scrollLeft=startLeft-dx; e.preventDefault(); }
+  });
+  const end=()=>{ if(!down) return; down=false; if(moved){ el.classList.remove('is-drag'); setTimeout(()=>{ moved=false; },0); } };
+  el.addEventListener('pointerup',end); el.addEventListener('pointercancel',end);
+  el.addEventListener('click',e=>{ if(moved){ e.preventDefault(); e.stopPropagation(); } },true);
+}
+
 /* TOPICS: the quick replies as swipeable glass bento cards. Clicking one does exactly what the old chips did:
    send(<the original label>) (or the WhatsApp card). Only the DISPLAYED label drops the leading emoji. */
 function addChips(list){
@@ -614,6 +635,7 @@ function addChips(list){
     row.appendChild(c);
   });
   wrap.appendChild(row); scroll.appendChild(wrap); toBottom();
+  makeDraggable(row);
 }
 function showTyping(){
   const t=document.createElement("div"); t.className="dms-typing"; t.id="dms-typing";
