@@ -27,7 +27,7 @@
 		@endforeach
 	</ol>
 </nav>
-@if($crumbSchema ?? true)
+@if(($crumbSchema ?? true) && config('seo.template_schema', true) && !v2_snippet_has('BreadcrumbList', $headSnippet ?? null, $bodySnippet ?? null))
 <script type="application/ld+json">{!! json_encode([
 	'@context' => 'https://schema.org',
 	'@type' => 'BreadcrumbList',

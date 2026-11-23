@@ -4,6 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  @if(\App\Http\Middleware\StagingNoindex::isStaging())<meta name="robots" content="noindex, nofollow, noarchive">@endif
   <title>{{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}</title>
   <meta name="description" content="{{@$metaTags->description}}{{@$ametaTags['description']}}">
   <meta name="keywords" content="{{@$metaTags->keywords}}{{@$ametaTags['keywords']}}">
@@ -11,27 +12,27 @@
   <!-- Basic OG Tags -->
   <meta property="og:title" content="{{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}" />
   <meta property="og:description" content="{{@$metaTags->description}}{{@$ametaTags['description']}}" />
-  <meta property="og:url" content="{{@URL::current()}}" />
+  <meta property="og:url" content="{{ seo_canonical() }}" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="DataMySite" />
 
   <!-- Image OG Tag -->
-  <meta property="og:image" content="{{empty($og_img) ? URL::to('/public/og-logo.jpeg') : $og_img}}" />
+  <meta property="og:image" content="{{empty($og_img) ? URL::to('/public/og-image-1200x630.jpg') : $og_img}}" />
   <meta property="og:image:alt" content="Image - {{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}" />
-  <meta property="og:image:type" content="image/*" />
-  <meta property="og:image:width" content="620" />
-  <meta property="og:image:height" content="340" />
+  @if(empty($og_img))<meta property="og:image:type" content="image/jpeg" />@endif
+  @if(empty($og_img))<meta property="og:image:width" content="1200" />@endif
+  @if(empty($og_img))<meta property="og:image:height" content="630" />@endif
 
   <!-- Additional Tags for Social Platforms -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}" />
   <meta name="twitter:description" content="{{@$metaTags->description}}{{@$ametaTags['description']}}" />
-  <meta name="twitter:image" content="{{empty($og_img) ? URL::to('/public/og-logo.jpeg') : $og_img}}" />
+  <meta name="twitter:image" content="{{empty($og_img) ? URL::to('/public/og-image-1200x630.jpg') : $og_img}}" />
   <meta name="twitter:site" content="@DataMySite" />
 
-  <meta property="fb:app_id" content="1234567890" />
   
-  <link rel="canonical" href="{{ (int) request('page') > 1 ? URL::current().'?page='.(int) request('page') : URL::current() }}" />
+  @php require_once resource_path('views/web/home-v2/helpers.php'); @endphp
+  <link rel="canonical" href="{{ seo_canonical() }}" />
 
   <meta name="home_url" content="{{@URL::to('/')}}">
 

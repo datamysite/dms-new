@@ -27,6 +27,8 @@
      (verified per page: they do not change anything in the first screen) */
   $v2CssAsync = $v2Lite && $__env->hasSection('v2cssasync');
   $v2Delay = function ($html) use ($v2Lite, $v2Form, $v2Keep) {
+    /* third-party snippets from the database (e.g. the Facebook Pixel <noscript> 1x1 tracker) can carry <img> without alt: it is not content, so mark it decorative */
+    $html = preg_replace('#<img\b(?![^>]*\balt\s*=)#i', '<img alt=""', (string) $html);
     if (!$v2Lite) return $html;
     return preg_replace_callback('#<script\b([^>]*)>(.*?)</script>#is', function ($m) use ($v2Form, $v2Keep) {
       if ($v2Keep && preg_match('#src\s*=\s*["\'][^"\']*swiper#i', $m[1])) return $m[0];
@@ -69,6 +71,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  @if(\App\Http\Middleware\StagingNoindex::isStaging())<meta name="robots" content="noindex, nofollow, noarchive">@endif
   <title>{{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}</title>
   <meta name="description" content="{{@$metaTags->description}}{{@$ametaTags['description']}}">
   <meta name="keywords" content="{{@$metaTags->keywords}}{{@$ametaTags['keywords']}}">
@@ -76,27 +79,27 @@
   <!-- Basic OG Tags -->
   <meta property="og:title" content="{{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}" />
   <meta property="og:description" content="{{@$metaTags->description}}{{@$ametaTags['description']}}" />
-  <meta property="og:url" content="{{@URL::current()}}" />
+  <meta property="og:url" content="{{ seo_canonical() }}" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="DataMySite" />
 
   <!-- Image OG Tag -->
-  <meta property="og:image" content="{{empty($og_img) ? URL::to('/public/og-logo.jpeg') : $og_img}}" />
+  <meta property="og:image" content="{{empty($og_img) ? URL::to('/public/og-image-1200x630.jpg') : $og_img}}" />
   <meta property="og:image:alt" content="Image - {{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}" />
-  <meta property="og:image:type" content="image/*" />
-  <meta property="og:image:width" content="620" />
-  <meta property="og:image:height" content="340" />
+  @if(empty($og_img))<meta property="og:image:type" content="image/jpeg" />@endif
+  @if(empty($og_img))<meta property="og:image:width" content="1200" />@endif
+  @if(empty($og_img))<meta property="og:image:height" content="630" />@endif
 
   <!-- Additional Tags for Social Platforms -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="{{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}" />
   <meta name="twitter:description" content="{{@$metaTags->description}}{{@$ametaTags['description']}}" />
-  <meta name="twitter:image" content="{{empty($og_img) ? URL::to('/public/og-logo.jpeg') : $og_img}}" />
+  <meta name="twitter:image" content="{{empty($og_img) ? URL::to('/public/og-image-1200x630.jpg') : $og_img}}" />
   <meta name="twitter:site" content="@DataMySite" />
 
-  <meta property="fb:app_id" content="1234567890" />
   
-  <link rel="canonical" href="{{ (int) request('page') > 1 ? URL::current().'?page='.(int) request('page') : URL::current() }}" />
+  <link rel="canonical" href="{{ seo_canonical() }}" />
+  @include('web.home-v2.schema')
 
   <meta name="home_url" content="{{@URL::to('/')}}">
 
@@ -150,7 +153,7 @@
   @include('web.home-v2.footer')
 
 
-  <a href="https://api.whatsapp.com/send/?phone=971525287259" aria-label="Whatsapp Chat" id="whatsapp-chat" class="whatsapp-chat" target="_blank">
+  <a href="{{ v2_wa_url() }}" aria-label="Whatsapp Chat" id="whatsapp-chat" class="whatsapp-chat" target="_blank">
     <div class="whatsapp-icon-position">
       <img src="{{URL::to('/public/whatsapp-icon2.png')}}" alt="Whatsapp Chat" width="100" height="100" decoding="async">
     </div>
@@ -158,202 +161,7 @@
 
 
   
-  <div class="modal fade" id="newsletter-modal-u" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header"> 
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
-                  <span aria-hidden="true">&times;</span> 
-                </button> 
-              </div>
-              <div class="modal-body p-0 row">
-                  <div class="col-12 col-lg-5 ad p-0"> 
-                    <img src="{{URL::to('/public/popup-min.png')}}" class="popup-des" alt="Need a Help?"  loading="lazy" /> 
-                    <img src="{{URL::to('/public/popup-m.jpg')}}" class="popup-mob" width="100%" alt="Need a Help?" loading="lazy" /> 
-                  </div>
-                  <div class="details col-12 col-lg-7">
-                    <form action="{{route('enquiry.help.submit')}}" id="enquiry-help-form">
-                      @csrf
-                      <h2>Need a Help?</h2>
-                      <p>
-                        <small class="para">
-                          Looking for a Custom <strong>Marketing Plan</strong>? 
-                        <br>
-                          Get expert guidance tailored to your brand’s success!</small>
-                      </p>
-                      <div class="form-group">
-                        <input type="text" class="form-control" name="name" placeholder="Name" required>
-                      </div>
-                      <div class="form-group">
-                        <input type="tel" name="mailphone" id="phone-field3" class="form-control" required>
-                        <input type="hidden" name="phone" id="fullphone-field3" required="">
-                      </div>
-                      <div class="form-group">
-                        <input type="email" class="form-control help-email" name="email" placeholder="Email" required>
-                      </div>
-                      <br>
-                      <div class="form-group">
-                        <button type="reset" class="btn btn-sm btn-default cancel">&nbsp;&nbsp;Cancel&nbsp;&nbsp;</button>&nbsp;&nbsp;
-                        <input type="submit" class="btn btn-sm btn-theme" value="Proceed">
-                      </div>
-                      <img src="{{URL::to('/public/loader-gif-m.gif')}}" alt="Loader gif" width="150" height="31" class="help-loading" loading="lazy">
-                    </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-
-
-  <div class="modal fade" id="seo-cta-modal-u" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-header"> 
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
-                  <span aria-hidden="true">&times;</span> 
-                </button> 
-              </div>
-              <div class="modal-body p-0 row">
-                  <div class="col-12 col-lg-5 ad p-0"> 
-                    <img src="{{URL::to('/public/popup-min.png')}}" class="popup-des" alt="Need a Help?"  loading="lazy" /> 
-                    <img src="{{URL::to('/public/popup-m.jpg')}}" class="popup-mob" width="100%" alt="Need a Help?" loading="lazy" /> 
-                  </div>
-                  <div class="details col-12 col-lg-7">
-                    <form action="{{route('enquiry.help.submit')}}" id="seo-help-form">
-                      @csrf
-                      <h2>Need a Help?</h2>
-                      <p>
-                        <small class="para">
-                          We’re here to rank your <strong>website higher</strong>! 
-                          </small>
-                      </p>
-                      <p class="seo-prompt-para">
-                        Get a FREE SEO Audit Report for your website. Just fill out the form and our experts will send you a detailed audit and help you fix the issues that stop you from ranking on your desired keywords.
-                      </p>
-                      <div class="form-group">
-                        <input type="text" class="form-control" name="name" placeholder="Name" required>
-                      </div>
-                      <div class="form-group">
-                        <input type="tel" name="mailphone" id="phone-field4" class="form-control" required>
-                        <input type="hidden" name="phone" id="fullphone-field4" required="">
-                      </div>
-                      <div class="form-group">
-                        <input type="email" class="form-control help-email2" name="email" placeholder="Email" required>
-                      </div>
-                      <div class="form-group">
-                        <input type="text" class="form-control" name="website_link" placeholder="Website" required>
-                      </div>
-
-                      <div class="form-group">
-                        <button type="reset" class="btn btn-sm btn-default cancel">&nbsp;&nbsp;Cancel&nbsp;&nbsp;</button>&nbsp;&nbsp;
-                        <input type="submit" class="btn btn-sm btn-theme" value="Proceed">
-                      </div>
-                      <img src="{{URL::to('/public/loader-gif-m.gif')}}" alt="Loader gif" width="150" height="31" class="help-loading2" loading="lazy">
-                    </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-
-  <div class="modal fade" id="seo-ads-cta-modal-u" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-          <div class="modal-content">
-              <div class="modal-body p-0 row">
-                  <div class="aside-form">
-                  <h3>Zero-Cost SEO Audit</h3>
-                  <h4><small><small>Know Your Rank. Improve.</small></small></h4>
-                    <form action="{{route('enquiry.help.submit')}}" id="seo-ads-form" >
-                        @csrf
-                        <input type="text" name="name" placeholder="Name" class="form-control" required>
-                        
-                        <input type="tel" name="mailphone" id="phone-fieldseo" class="form-control" required>
-                        <input type="hidden" name="phone" id="fullphone-fieldseo" required="">
-                        <input type="email" name="email" placeholder="Email" class="form-control seo-ads-email" required>
-                      
-                        <input type="text" class="form-control" name="website_link" placeholder="Website" required>
-                        
-                        <input type="hidden" name="service" value="SEO Services">
-                                                
-                        <button class="btn btn-theme">Submit</button>
-                        <button type="button" class="btn btn-default close">Close</button>
-                        <img src="{{URL::to('/public/loader-gif.gif')}}" alt="loader image" width="80" height="17" class="help-loading2 seo-loading" loading="lazy">
-                    </form>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-
-  <div class="ov" id="ov">
-    <div class="pop" role="dialog" aria-modal="true" aria-label="Get a free strategy">
-
-      <button class="xbtn" onclick="closeExitPopup()" aria-label="Close">✕</button>
-
-      <!-- HEADER -->
-      <div class="hd">
-        <div class="pill"><span class="dot"></span> Before You Leave</div>
-        <h2>Get a <em>Free Strategy</em><br>From Dubai's Top Ad Agency</h2>
-        <p>Our experts respond in 60 min — no commitment, no cost.</p>
-      </div>
-
-      <!-- FORM BODY -->
-      <div class="bd">
-
-        <form action="{{route('enquiry.lite.submit')}}" id="enquiry-form-exit">
-            @csrf
-            <div class="urg">
-              <span class="ui">⚡</span>
-              <span class="ut"><strong>Free slots</strong> available today</span>
-              <span class="ucd" id="cd">29:59</span>
-            </div>
-
-            <div class="fw" id="fw">
-              <div style="display:flex;flex-direction:column;gap:8px">
-                <div class="row2">
-                  <input type="text" name="name" placeholder="Your Name" required>
-                  <div>
-                      <input type="tel" name="mainphone" id="phone-field7" required="">
-                      <input type="hidden" name="phone" id="fullphone-field7" required="">
-                  </div>
-                </div>
-                <div class="row2 row3">
-                  <input type="email" class="exit-email" name="email" placeholder="Your Email" required>
-                </div>
-                <select name="service" required aria-label="I need help with">
-                  <option value="" disabled selected>I need help with…</option>
-                  <option>Billboard Advertising</option>
-                  <option>Transit Media (Metro, Bus, Taxi, Airport)</option>
-                  <option>PR Coverage (Gulf News, Forbes, Khaleej Times)</option>
-                  <option>Influencer Marketing</option>
-                  <option>Digital Marketing</option>
-                  <option>SEO &amp; Website</option>
-                  <option>Experiential Marketing</option>
-                  <option>Lead Generation</option>
-                  <option>Radio Advertising</option>
-                  <option>CGI / Creative Ads</option>
-                  <option>Celebrity Marketing</option>
-                  <option>Event Marketing &amp; Sponsorships</option>
-                  <option>Global Marketing (Saudi, India, London)</option>
-                  <option>Full 360° Strategy</option>
-                </select>
-                <button class="cta" type="submit">Claim My Free Strategy Call <span class="ar">→</span></button>
-              </div>
-
-              <div style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
-                <a href="https://api.whatsapp.com/send/?phone=971525287259" class="wa" target="_blank" rel="noopener">
-                  <span class="wad"></span> WhatsApp: +971 52 528 7259
-                </a>
-                <p class="prv">🔒 No spam · 100% free · ⭐ 5.0 Google rated</p>
-                <div class="skip"><button onclick="closeExitPopup()">No thanks, I'll figure it out myself</button></div>
-
-                <div class="loading exit-loading"><img src="{{URL::to('/public/loader-gif.gif')}}" width="80" height="17" alt="" class="newsletter-loader" loading="lazy"></div>
-              </div>
-            </div>
-          </form>
-      </div>
-    </div>
-  </div>
+  @include('web.home-v2.popups')
 
   @foreach($bodySnippet as $val)
     @if($val->position == 'Body')
@@ -380,36 +188,62 @@
   
   
   @if($v2Lite)
+  <script>
+  /* "Book Now" / "Book a Free Strategy Call" open the enquiry popup straight away. main.js does the same, but on fast-loading pages it only
+     arrives after the first interaction, so the first click used to do nothing. Both do the same idempotent show/hide, so they never clash. */
+  document.addEventListener('click', function (e) {
+    var t = e.target; if (!t || !t.closest) return;
+    var m = document.getElementById('newsletter-modal-u'); if (!m) return;
+    if (t.closest('.open-newsletter')) { e.preventDefault(); /* link to /contact-us for crawlers and no-JS visitors; with JS it opens the popup instead */ m.classList.add('show'); m.style.display = 'block'; }
+    else if (t.closest('#newsletter-modal-u .close, #newsletter-modal-u .cancel')) { m.classList.remove('show'); m.style.display = 'none'; }
+  });
+  </script>
   <template id="v2-chat-tpl">{!! $v2Delay(view('partials.chat-widget')->render()) !!}</template>
   <script>
-  /* releases the delayed third-party scripts + chat widget on first interaction (or 10 s after load), in their original order */
+  /* Releases the delayed third-party scripts + chat widget, in their original order:
+     - on the first click / tap / key press (pointerdown also covers touch), or when the browser is idle ~3 s after load;
+     - never on wheel / scroll / mousemove: running them during the visitor's first scroll made the page freeze and jump;
+     - every script (and the chat widget) waits until the visitor has stopped scrolling for 0.4 s, and they run one per task
+       (a yield in between), so no single long task blocks the page. */
   (function () {
-    var started = false, evs = ['pointerdown', 'keydown', 'touchstart', 'wheel', 'mousemove']; /* no 'scroll': programmatic scrolls (Lenis, scroll restore) must not release the scripts */
+    var started = false, evs = ['pointerdown', 'keydown'], lastScroll = 0;
+    addEventListener('scroll', function () { lastScroll = performance.now(); }, { passive: true });
+    /* run fn when the visitor is not scrolling: idle=true waits for an idle moment (used to start), otherwise a plain yield */
+    function whenCalm(fn, idle) {
+      (function wait() {
+        if (performance.now() - lastScroll < 400) { setTimeout(wait, 400); return; }
+        if (idle && window.requestIdleCallback) requestIdleCallback(fn, { timeout: 1500 }); else setTimeout(fn, 0);
+      })();
+    }
     function runList(list, done) {
       (function next(i) {
         if (i >= list.length) { if (done) done(); return; }
         var o = list[i], s = document.createElement('script');
         [].slice.call(o.attributes).forEach(function (a) { if (a.name !== 'type') s.setAttribute(a.name, a.value); });
         s.removeAttribute('defer'); s.async = false;
-        if (o.getAttribute('src')) { s.onload = s.onerror = function () { next(i + 1); }; o.parentNode.replaceChild(s, o); }
-        else { s.text = o.text; o.parentNode.replaceChild(s, o); next(i + 1); }
+        var go = function () { whenCalm(function () { next(i + 1); }); };
+        if (o.getAttribute('src')) { s.onload = s.onerror = go; o.parentNode.replaceChild(s, o); }
+        else { s.text = o.text; o.parentNode.replaceChild(s, o); go(); }
       })(0);
     }
     function start() {
       if (started) return; started = true;
       evs.forEach(function (e) { removeEventListener(e, start, true); });
       var list = [].slice.call(document.querySelectorAll('script[type="text/v2-delayed"]'));
-      runList(list, function () {
-        var tpl = document.getElementById('v2-chat-tpl');
-        if (!tpl) return;
-        var before = document.body.lastChild;
-        document.body.appendChild(tpl.content.cloneNode(true));
-        var more = [].slice.call(document.body.querySelectorAll('script[type="text/v2-delayed"]'));
-        runList(more);
+      whenCalm(function () {
+        runList(list, function () {
+          whenCalm(function () {
+            var tpl = document.getElementById('v2-chat-tpl');
+            if (!tpl) return;
+            document.body.appendChild(tpl.content.cloneNode(true));
+            var more = [].slice.call(document.body.querySelectorAll('script[type="text/v2-delayed"]'));
+            runList(more);
+          });
+        });
       });
     }
     evs.forEach(function (e) { addEventListener(e, start, { capture: true, passive: true, once: false }); });
-    addEventListener('load', function () { setTimeout(function () { if (window.requestIdleCallback) requestIdleCallback(start, { timeout: 500 }); else start(); }, 10000); });
+    addEventListener('load', function () { setTimeout(function () { whenCalm(start, true); }, 3000); });
   })();
   </script>
   @else

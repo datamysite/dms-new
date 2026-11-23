@@ -142,7 +142,7 @@ body.hs-menu-open { overflow: hidden; }
 .hs-social { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
 .hs-social a { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 12px; background: rgba(255, 255, 255, .08); color: #fff; font-size: 17px; transition: background .3s, transform .3s var(--hs-ease); }
 .hs-social a:hover { background: var(--hs-coral); transform: translateY(-3px); color: #fff; }
-.hs-foot-col h4 { margin: 0 0 18px; font: 800 13px/1 var(--hs-font-b); letter-spacing: .22em; text-transform: uppercase; color: var(--hs-coral-s); }
+.hs-foot-col h4, .hs-foot-col .hs-foot-h { margin: 0 0 18px; font: 800 13px/1 var(--hs-font-b); letter-spacing: .22em; text-transform: uppercase; color: var(--hs-coral-s); }
 .hs-foot-col li + li { margin-top: 9px; }
 .hs-foot-col li a { position: relative; display: inline-block; color: rgba(255, 255, 255, .78); transition: color .25s, transform .3s var(--hs-ease); }
 .hs-foot-col li a:hover { color: #fff; transform: translateX(4px); }
@@ -202,7 +202,7 @@ body.hs-menu-open { overflow: hidden; }
 #newsletter-modal-u .ad .popup-des { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; }
 #newsletter-modal-u .ad .popup-mob { display: none; }
 #newsletter-modal-u .modal-body > .details { flex: none; width: auto; max-width: none; padding: clamp(28px, 4vw, 44px) clamp(22px, 3.4vw, 40px) clamp(24px, 3vw, 36px) !important; }
-#newsletter-modal-u h2 { margin: 0 0 8px !important; font: 800 clamp(28px, 3vw, 36px)/1.05 'League Spartan', system-ui, sans-serif !important; letter-spacing: -.02em; color: var(--m-head) !important; }
+#newsletter-modal-u h2, #newsletter-modal-u .modal-ttl { margin: 0 0 8px !important; font: 800 clamp(28px, 3vw, 36px)/1.05 'League Spartan', system-ui, sans-serif !important; letter-spacing: -.02em; color: var(--m-head) !important; }
 #newsletter-modal-u .details p { margin: 0 0 20px; }
 #newsletter-modal-u small.para { display: block; font: 600 15px/1.5 'Nunito Sans', system-ui, sans-serif !important; color: rgba(27, 47, 69, .78); }
 #newsletter-modal-u small.para strong { color: var(--m-green); }
@@ -253,9 +253,9 @@ body.hs-menu-open { overflow: hidden; }
 #newsletter-modal-u .modal-body > .ad::after { content: ""; position: absolute; z-index: 3; inset: 0; pointer-events: none;
   background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .22) 50%, transparent 62%); transform: translateX(-130%) skewX(-18deg); animation: hs-m-sheen 1.5s .5s ease-out 1 both; }
 /* content: staggered rise */
-#newsletter-modal-u .details h2, #newsletter-modal-u .details p, #newsletter-modal-u .details .form-group { animation: hs-m-up .6s cubic-bezier(.22, 1, .36, 1) both; }
-#newsletter-modal-u .details h2 { animation-delay: .25s; position: relative; padding-bottom: 12px; }
-#newsletter-modal-u .details h2::after { content: ""; position: absolute; left: 0; bottom: 0; width: 56px; height: 4px; border-radius: 4px; background: linear-gradient(90deg, #e04a43, #e8776a); transform-origin: left; animation: hs-m-line .7s .6s cubic-bezier(.22, 1, .36, 1) both; }
+#newsletter-modal-u .details h2, #newsletter-modal-u .details .modal-ttl, #newsletter-modal-u .details p, #newsletter-modal-u .details .form-group { animation: hs-m-up .6s cubic-bezier(.22, 1, .36, 1) both; }
+#newsletter-modal-u .details h2, #newsletter-modal-u .details .modal-ttl { animation-delay: .25s; position: relative; padding-bottom: 12px; }
+#newsletter-modal-u .details h2::after, #newsletter-modal-u .details .modal-ttl::after { content: ""; position: absolute; left: 0; bottom: 0; width: 56px; height: 4px; border-radius: 4px; background: linear-gradient(90deg, #e04a43, #e8776a); transform-origin: left; animation: hs-m-line .7s .6s cubic-bezier(.22, 1, .36, 1) both; }
 #newsletter-modal-u .details p { animation-delay: .34s; }
 #newsletter-modal-u .details .form-group:nth-of-type(1) { animation-delay: .44s; }
 #newsletter-modal-u .details .form-group:nth-of-type(2) { animation-delay: .52s; }
@@ -379,4 +379,6 @@ body.hs-rv-open { overflow: hidden; }
 /* Exit popup (#ov): while closed it is also visibility:hidden (not only opacity 0), so the invisible box never counts as a
    layout shift when late CSS/fonts move it. Visibility switches after the 0.3 s fade, so open/close still fade. */
 .hs-body #ov:not(.show) { visibility: hidden; transition: opacity .3s, visibility 0s linear .3s; }
+/* closed popup: its pulsing dot (a box-shadow animation) kept the main thread busy every frame although it is invisible */
+.hs-body #ov:not(.show) * { animation-play-state: paused; }
 .hs-body #ov.show { visibility: visible; transition: opacity .3s, visibility 0s; }

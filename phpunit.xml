@@ -12,6 +12,12 @@
             <directory>tests/Feature</directory>
         </testsuite>
     </testsuites>
+    <groups>
+        <exclude>
+            <!-- calls Google PageSpeed (slow, needs the API key): run it with the option "group pagespeed" -->
+            <group>pagespeed</group>
+        </exclude>
+    </groups>
     <source>
         <include>
             <directory>app</directory>

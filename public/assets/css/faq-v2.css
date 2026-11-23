@@ -45,7 +45,7 @@
 .fqv-nav-btn.active .fqv-nav-count { background: rgba(255, 255, 255, .18); }
 .fqv-nav-sep { height: 1px; margin: 10px 0; background: rgba(11, 61, 46, .1); }
 .fqv-sidebar-cta { margin-top: 18px; padding: 20px; border-radius: 18px; background: linear-gradient(150deg, var(--green, #0b3d2e), #0f5741); color: #fff; }
-.fqv-sidebar-cta h4 { margin: 0 0 8px; font: 800 19px/1.2 var(--font-heading); color: #fff; }
+.fqv-sidebar-cta h4, .fqv-sidebar-cta h2 { margin: 0 0 8px; font: 800 19px/1.2 var(--font-heading); color: #fff; }
 .fqv-sidebar-cta p { margin: 0 0 14px; font: 400 14px/1.55 var(--font-body); color: rgba(255, 255, 255, .85); }
 .fqv-sidebar-cta a { display: inline-block; padding: 10px 16px; border-radius: 100px; background: var(--coral); color: #fff; text-decoration: none; font: 800 12.5px/1 var(--font-body); letter-spacing: .04em; box-shadow: 0 12px 22px -10px rgba(244, 77, 70, .7); transition: transform .3s; }
 .fqv-sidebar-cta a:hover { transform: translateY(-2px); color: #fff; }
@@ -57,7 +57,7 @@
 .fqv-s-clear.on { opacity: 1; transform: translateY(-50%) scale(1); pointer-events: auto; }
 .fqv-faq-empty { display: none; padding: 40px 20px; text-align: center; border-radius: 22px; background: #fff; color: #52625d; }
 .fqv-faq-empty.show { display: block; }
-.fqv-faq-empty svg { color: var(--coral); margin-bottom: 8px; } .fqv-faq-empty h4 { margin: 0 0 6px; font: 800 22px/1.2 var(--font-heading); color: var(--heading-c, #0b3d2e); } .fqv-faq-empty p { margin: 0; }
+.fqv-faq-empty svg { color: var(--coral); margin-bottom: 8px; } .fqv-faq-empty h4, .fqv-faq-empty .fqv-empty-title { margin: 0 0 6px; font: 800 22px/1.2 var(--font-heading); color: var(--heading-c, #0b3d2e); } .fqv-faq-empty p { margin: 0; }
 .fqv-faq-group { margin-bottom: clamp(26px, 3vw, 40px); }
 .fqv-group-label { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 14px; font: 800 13px/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase; color: var(--green, #0b3d2e); }
 .fqv-group-label::before { content: ""; width: 36px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--coral), var(--coral-s)); }

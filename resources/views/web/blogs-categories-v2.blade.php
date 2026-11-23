@@ -160,7 +160,6 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/blogs-categories-v2.js') }}" defer></script>
 @endsection

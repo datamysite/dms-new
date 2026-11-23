@@ -206,10 +206,11 @@ html::-webkit-scrollbar-track { background: rgba(11, 61, 46, .08); }
 html::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #0b3d2e, #082e23); border: 2px solid transparent; background-clip: padding-box; border-radius: 10px; }
 html::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #e04a43, #0b3d2e); }
 .hv2 ::selection { background: rgba(224, 74, 67, .22); color: #1b2f45; }
-html.lenis, html.lenis body { height: auto; }
-.lenis.lenis-smooth { scroll-behavior: auto !important; }
-.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-.lenis.lenis-stopped { overflow: hidden; }
+/* Native scrolling (no JS scroll library). The legacy main.css / Bootstrap set :root { scroll-behavior: smooth }, which made every
+   programmatic jump animate; the in-page links animate through home-v2.js instead. The scrollbar space is always reserved, so the
+   page does not reflow narrower when the loading lock or a popup toggles overflow. */
+html { scroll-behavior: auto !important; scrollbar-gutter: stable; }
+[data-lenis-prevent] { overscroll-behavior: contain; }
 
 /* == L4 · MOTION ========================================================== */
 @keyframes hv2-shimmer { to { background-position: -150% 0; } }
@@ -307,7 +308,7 @@ html.lenis, html.lenis body { height: auto; }
 .hv2-form-card::after { content: ""; position: absolute; left: 24px; right: 24px; bottom: 0; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--green), var(--coral)); }
 .hv2-form-kicker { display: inline-flex; align-items: center; gap: var(--space-2); font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--coral-s); margin-bottom: var(--space-3); }
 .hv2-live-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--coral); animation: hv2-dot-pulse 1.6s ease-out infinite; display: inline-block; }
-.hv2-form-title { font: 800 clamp(28px, 2.6vw, 38px)/1 var(--font-heading); color: #fff !important; letter-spacing: -.03em; }
+.hv2-form-title { margin: 0 0 .5rem; font: 800 clamp(28px, 2.6vw, 38px)/1 var(--font-heading); color: #fff !important; letter-spacing: -.03em; }  /* a div, not a heading: the page keeps one clean h1 > h2 outline */
 .hv2-form-sub { color: rgba(255, 255, 255, .75); font-size: 15px; margin: var(--space-2) 0 var(--space-5) !important; }
 .hv2-field { position: relative; display: block; margin-bottom: var(--space-3); }
 .hv2-field input, .hv2-field textarea {
@@ -479,7 +480,7 @@ a.hv2-brand { cursor: pointer; }
 .hv2-ring-bar { fill: none; stroke: var(--green); stroke-width: 10; stroke-linecap: round; stroke-dasharray: 326.73; stroke-dashoffset: 326.73; transition: stroke-dashoffset 2s var(--ease) .2s; }
 .hv2-ring-val { position: absolute; inset: 0; display: grid; place-items: center; font-size: clamp(26px, 2.4vw, 36px); color: var(--heading-c); }
 .hv2-ring-val sup { font-size: .5em; color: var(--coral); top: -.6em; }
-.hv2-ring h4 { font-size: var(--fs-h3); font-weight: 800; line-height: 1.2; }
+.hv2-ring h4, .hv2-ring h3 { font-size: var(--fs-h3); font-weight: 800; line-height: 1.2; }
 .hv2-why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-5); align-items: start; }
 .hv2-why-card { padding: clamp(24px, 2.6vw, 36px); }
 .hv2-why-num { display: block; font-size: 52px; color: transparent; -webkit-text-stroke: 1.5px var(--green); margin-bottom: var(--space-3); }
@@ -652,7 +653,7 @@ a.hv2-contact:hover { color: var(--coral); border-color: rgba(224, 74, 67, .4); 
 .hv2-faq-empty { display: none; text-align: center; padding: 40px 20px; color: var(--muted); }
 .hv2-faq-empty.is-on { display: block; }
 .hv2-faq-empty i { font-size: 32px; }
-.hv2-faq-empty h4 { margin: 10px 0 4px !important; font-size: 18px; }
+.hv2-faq-empty h4, .hv2-faq-empty .hv2-faq-empty-t { margin: 10px 0 4px !important; font-size: 18px; }
 .hv2-faq-list { display: grid; gap: var(--space-3); }
 .hv2-faq-item {
   position: relative; overflow: hidden; border-radius: 20px; background: #fff; border: 1px solid var(--hair);
@@ -1211,3 +1212,90 @@ html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
 .hv2-hero--fast [data-split] .hv2-w > span { transition-duration: .32s, .32s, .5s; transition-delay: calc(var(--i, 0) * 12ms), calc(var(--i, 0) * 12ms), 0s; }
 .hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { transform: translateY(35%); filter: none; opacity: 0; }
 .hv2-hero--fast [data-split].is-in .hv2-w > span { opacity: 1; }
+
+
+/* == SCROLL PERFORMANCE LAYER ==============================================
+   Same design, cheaper to draw while scrolling. Everything below overrides earlier rules (kept together so it is easy to
+   review / revert):
+   - no blur filters on large or moving layers (the browser redraws a blur every frame while it is on screen);
+   - no frosted glass (backdrop-filter) on cards that sit on flat colour: a solid tint looks the same;
+   - endless animations only move/fade (transform, translate, opacity), never left/top/background-position/box-shadow,
+     which repaint every frame. */
+
+/* hero: soft gradient blobs instead of 90px blurred ones */
+.hv2-blob { filter: none; }
+.hv2-blob--1 { background: radial-gradient(circle, rgba(11, 61, 46, .9), rgba(11, 61, 46, .35) 40%, transparent 70%); }
+.hv2-blob--2 { background: radial-gradient(circle, rgba(28, 58, 94, .62), rgba(28, 58, 94, .22) 40%, transparent 70%); }
+.hv2-blob--3 { background: radial-gradient(circle, rgba(224, 74, 67, .34), rgba(224, 74, 67, .12) 40%, transparent 70%); }
+.hv2-prism i, .hv2-brand--more { -webkit-backdrop-filter: none; backdrop-filter: none; }
+
+/* glass cards: solid tint instead of a live blur of what is behind them */
+.hv2-glass { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.hv2-glass--light { --glass-bg: rgba(255, 255, 255, .86); }
+.hv2-hero .hv2-form-card { --glass-bg: linear-gradient(rgba(255, 255, 255, .08), rgba(255, 255, 255, .08)), rgba(8, 46, 35, .66); }
+.hv2-step { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(255, 255, 255, .07); }
+.hv2-step-badge { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.hv2-case-panel { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(8, 46, 35, .88); }
+
+/* reveals: fade + slide / scale only (blurring 5-15 elements at once as a section entered caused the hitch) */
+.hv2-js .hv2 [data-reveal]:not(.is-in) { filter: none; }
+.hv2-js .hv2 [data-split]:not(.is-in) .hv2-w > span { filter: none; }
+.hv2-media img { filter: none; }
+.hv2-q { filter: none; }
+
+/* stat cards / rings: two bounces when they appear, then rest (they bounced forever) */
+.hv2-stat.is-in, .hv2-rings.is-in .hv2-ring { animation-iteration-count: 2; }
+
+/* endless animations rewritten as moves / fades */
+.hv2-scroll-cue::after { top: -50%; }                                                  /* drip: was animating "top" */
+@keyframes hv2-drip { from { translate: 0 0; } to { translate: 0 320%; } }
+.hv2-btn--3d::after { left: -40%; }                                                     /* keycap shine: was animating "left" */
+@keyframes hv2-keycap-shine { 0%, 55% { translate: 0 0; } 85%, 100% { translate: 567% 0; } }
+.hv2-step-link::after {                                                                /* process glint: was animating "left" */
+  left: 0; width: 100%;
+  background: linear-gradient(90deg, transparent calc(50% - 28px), rgba(255, 255, 255, .95) 50%, transparent calc(50% + 28px));
+}
+@keyframes hv2-travel { from { translate: -60% 0; } to { translate: 60% 0; } }
+.hv2-media::before { inset: 0 auto 0 0; width: 250%; background-size: 100% 100%; }
+.hv2-media--logo::before { inset: 22%; width: auto; background-size: 250% 100%; animation: none; }   /* logo tiles: small static placeholder (logos are preloaded) */       /* image placeholder shimmer: was "background-position" */
+@keyframes hv2-shimmer { from { translate: 0 0; } to { translate: -60% 0; } }
+.hv2-live-dot { position: relative; animation: none; }                                  /* live dot: ring scales + fades (was "box-shadow") */
+.hv2-live-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: rgba(224, 74, 67, .6); animation: hv2-dot-ring 1.6s ease-out infinite; }
+@keyframes hv2-dot-ring { from { transform: scale(1); opacity: .9; } to { transform: scale(3.2); opacity: 0; } }
+
+/* logo slider: only the first tiles of each row flip in (all 88 used to flip at once as the section appeared) */
+.hv2-marquee-wrap.is-in .hv2-brand:nth-child(n+11) { animation: none; }
+
+/* back-to-top ring / progress bar: updated every scroll frame, so no transition and their own layer */
+.hv2-top-ring .bar { transition: none; }
+.hv2-progress span { will-change: transform; }
+
+/* full-screen grain overlay: desktop only (an extra full-screen layer is costly on phones) */
+@media (hover: none), (max-width: 991px) { .hv2-grain { display: none; } }
+
+@media (prefers-reduced-motion: reduce) { .hv2-live-dot::after { animation: none; opacity: 0; } }
+
+/* sections that render as they approach (content-visibility): placeholder heights measured on the real page per screen width,
+   so the page no longer jumps when each one renders for the first time (they all used to reserve 1000px). The sections above
+   them (clients, stats, solutions, case studies) render normally, so anchor jumps land in the right place. */
+.hv2-cv#hv2-why { contain-intrinsic-size: auto 1198px; }
+.hv2-cv#hv2-testimonials { contain-intrinsic-size: auto 833px; }
+.hv2-cv#hv2-who-we-are { contain-intrinsic-size: auto 897px; }
+.hv2-cv#hv2-blogs { contain-intrinsic-size: auto 1021px; }
+.hv2-cv#hv2-faq { contain-intrinsic-size: auto 1437px; }
+@media (max-width: 1199px) {
+  .hv2-cv#hv2-why { contain-intrinsic-size: auto 1037px; } .hv2-cv#hv2-testimonials { contain-intrinsic-size: auto 649px; }
+  .hv2-cv#hv2-who-we-are { contain-intrinsic-size: auto 831px; } .hv2-cv#hv2-blogs { contain-intrinsic-size: auto 928px; } .hv2-cv#hv2-faq { contain-intrinsic-size: auto 1291px; }
+}
+@media (max-width: 991px) {
+  .hv2-cv#hv2-why { contain-intrinsic-size: auto 1421px; } .hv2-cv#hv2-testimonials { contain-intrinsic-size: auto 858px; }
+  .hv2-cv#hv2-who-we-are { contain-intrinsic-size: auto 1131px; } .hv2-cv#hv2-blogs { contain-intrinsic-size: auto 860px; } .hv2-cv#hv2-faq { contain-intrinsic-size: auto 1402px; }
+}
+@media (max-width: 767px) {
+  .hv2-cv#hv2-why { contain-intrinsic-size: auto 1541px; } .hv2-cv#hv2-testimonials { contain-intrinsic-size: auto 844px; }
+  .hv2-cv#hv2-who-we-are { contain-intrinsic-size: auto 1086px; } .hv2-cv#hv2-blogs { contain-intrinsic-size: auto 2111px; } .hv2-cv#hv2-faq { contain-intrinsic-size: auto 1361px; }
+}
+@media (max-width: 560px) {
+  .hv2-cv#hv2-why { contain-intrinsic-size: auto 1736px; } .hv2-cv#hv2-testimonials { contain-intrinsic-size: auto 985px; }
+  .hv2-cv#hv2-who-we-are { contain-intrinsic-size: auto 1501px; } .hv2-cv#hv2-blogs { contain-intrinsic-size: auto 1762px; } .hv2-cv#hv2-faq { contain-intrinsic-size: auto 1450px; }
+}

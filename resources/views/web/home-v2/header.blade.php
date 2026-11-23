@@ -78,7 +78,7 @@
 			</nav>
 
 			<div class="hs-actions">
-				<a href="tel:+971525287259" class="hs-phone" aria-label="Call +971 52 528 7259"><i class="bi bi-telephone" aria-hidden="true"></i><span>+971 52 528 7259</span></a>
+				<a href="tel:{{ v2_biz('phone') }}" class="hs-phone" aria-label="Call {{ v2_biz('phone_display') }}"><i class="bi bi-telephone" aria-hidden="true"></i><span>{{ v2_biz('phone_display') }}</span></a>
 				<button type="button" class="open-newsletter hs-cta">Book Now <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
 				<button type="button" class="hs-burger" aria-label="Open menu" aria-expanded="false" aria-controls="hs-drawer"><span></span><span></span><span></span></button>
 			</div>
@@ -121,7 +121,7 @@
 		</nav>
 		<div class="hs-drawer-foot">
 			<button type="button" class="open-newsletter hs-cta hs-cta--block">Book a Free Strategy Call <i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
-			<a href="tel:+971525287259" class="hs-d-phone"><i class="bi bi-telephone" aria-hidden="true"></i> +971 52 528 7259</a>
+			<a href="tel:{{ v2_biz('phone') }}" class="hs-d-phone"><i class="bi bi-telephone" aria-hidden="true"></i> {{ v2_biz('phone_display') }}</a>
 		</div>
 	</aside>
 </header>

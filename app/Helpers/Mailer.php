@@ -10,41 +10,18 @@ class Mailer
 {
     public static function sendMail($subject, $receiver_email, $receiver_name, $template, $data)
     {
-        /*$htmlContent = View::make($template, $data)->render();
-
-        $mail = new PHPMailer();
-        $mail->Encoding = "base64";
-        $mail->SMTPAuth = true;
-        $mail->Host = "smtp.zeptomail.com";
-        $mail->Port = 587;
-        $mail->Username = "emailapikey";
-        $mail->Password = 'wSsVR61yqxChBq8omWH8dew6mw9cUViiFRgr3FKo4yOvTfuW8sc/wkyYU1WlGfkcFjFpEDJDobsqmRZW0TJdiNx8z1BRWiiF9mqRe1U4J3x17qnvhDzPXm9VkhOBLIsJzg1vkmdoEclu';
-        $mail->SMTPSecure = 'TLS';
-        $mail->isSMTP();
-        $mail->IsHTML(true);
-        $mail->CharSet = "UTF-8";
-        $mail->setFrom("noreply@mailer.datamysite.com", "DataMySite Marketing");
-        foreach ($receiver_email as $key => $value) {
-            $mail->addAddress($value);
+        /* A mail problem (SMTP down, bad address) must never break the visitor's submit: the enquiry is already saved,
+           so log the failure and report false instead of throwing a 500 page that makes people submit twice. */
+        try {
+            Mail::send($template, $data, function($message) use ($receiver_email, $receiver_name, $subject) {
+                 $message->to($receiver_email, $receiver_name)->subject
+                    ($subject);
+                 $message->from(env('MAIL_FROM_ADDRESS'),'DataMySite Marketing');
+              });
+        } catch (\Throwable $e) {
+            \Log::error('Mailer: could not send "' . $subject . '": ' . $e->getMessage());
+            return false;
         }
-        $mail->Body=$htmlContent;
-        $mail->Subject= $subject;
-        $mail->SMTPDebug = 0;
-        if(!$mail->Send()) {
-            
-        } else {
-            return true;
-        }*/
-
-
-
-
-
-        Mail::send($template, $data, function($message) use ($receiver_email, $receiver_name, $subject) {
-             $message->to($receiver_email, $receiver_name)->subject
-                ($subject);
-             $message->from(env('MAIL_FROM_ADDRESS'),'DataMySite Marketing');
-          });
 
         return true;
     }

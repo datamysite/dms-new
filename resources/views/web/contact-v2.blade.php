@@ -100,25 +100,10 @@
 		<div class="hv2-container ctv-grid">
 			<div class="ctv-info">
 				<span class="hv2-eyebrow" data-reveal="up">CONTACT US</span>
-				<h3 class="hv2-display hv2-h2 text-bold" data-split>Let's Get <span class="hv2-outline">In Touch</span></h3>
+				<h2 class="hv2-display hv2-h2 text-bold" data-split>Let's Get <span class="hv2-outline">In Touch</span></h2>
 				<p class="ctv-lead" data-reveal="up" data-delay="1">We’d love to hear from you! Whether you have a question, need a quote, or want to discuss how we can help your business, feel free to reach out. Contact us today and let’s start a conversation.</p>
 				<div class="ctv-cards">
-					<div class="ctv-card" data-tilt data-tilt-max="4" data-reveal="up" data-delay="1">
-						<i class="bi bi-pin-map" aria-hidden="true"></i>
-						<div><p class="working-title">Location</p><p>Office 205, Al Bayan Building, Dubai Investment Park 1, Dubai - UAE</p></div>
-					</div>
-					<div class="ctv-card" data-tilt data-tilt-max="4" data-reveal="up" data-delay="2">
-						<i class="bi bi-envelope-at" aria-hidden="true"></i>
-						<div><p class="working-title">Email</p><p><strong class="email-slot">contact@datamysite.com</strong> <button type="button" class="copy-email" data-copy="contact@datamysite.com"><span class="bi bi-copy"></span>&nbsp;&nbsp;Copy</button></p></div>
-					</div>
-					<div class="ctv-card" data-tilt data-tilt-max="4" data-reveal="up" data-delay="3">
-						<i class="bi bi-telephone" aria-hidden="true"></i>
-						<div><p class="working-title">Phone</p><p class="mb-0">TEL: <a href="tel:042957001" class="webCellPhone">042 957 001</a></p><p class="mb-0">Cell: <a href="tel:0525287259" class="webCellPhone">+971 52 528 7259</a></p></div>
-					</div>
-					<div class="ctv-card" data-tilt data-tilt-max="4" data-reveal="up" data-delay="4">
-						<i class="bi bi-clock" aria-hidden="true"></i>
-						<div><p class="working-title">Work Hours</p><p><strong>Mon - Fri | 9:30 am - 7:30 pm</strong> <br>Saturday & Sunday | Closed</p></div>
-					</div>
+					@include('web.home-v2.contact-cards', ['cardClass' => 'ctv-card'])
 				</div>
 			</div>
 			<div class="ctv-form hv2-form-card hv2-glass" data-tilt data-tilt-max="3" data-reveal="scale" data-delay="2">
@@ -174,9 +159,9 @@
 		</div>
 		<div class="hv2-container">
 			<div class="ctv-profile-copy">
-				<h3 class="hv2-display hv2-h2 text-theme" data-split>COMPANY <span class="hv2-outline">PROFILE</span></h3>
+				<h2 class="hv2-display hv2-h2 text-theme" data-split>COMPANY <span class="hv2-outline">PROFILE</span></h2>
 				<p class="ctv-profile-p" data-reveal="up" data-delay="1">A full overview of the services we provide, tailored for partners and clients.</p>
-				<a class="hv2-btn hv2-btn--primary cta-btn" href="https://datamysite.com/profile/" data-magnetic data-reveal="up" data-delay="2"><span>View Profile → </span></a>
+				<a class="hv2-btn hv2-btn--primary cta-btn" href="{{ url('/profile') }}/" data-magnetic data-reveal="up" data-delay="2"><span>View Profile → </span></a>
 			</div>
 		</div>
 	</section>
@@ -184,7 +169,6 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/contact-v2.js') }}" defer></script>
 @endsection

@@ -283,7 +283,9 @@ const CONFIG = {
   // For your LIVE datamysite site, set apiBase to your backend's base
   // URL — e.g. "https://datamysite.com/api". The widget then calls YOUR
   // server, which keeps the API key secret and emails each lead to you.
-  apiBase: "https://datamysite.com/api",
+  /* this file is @verbatim, so Blade cannot fill in the address: use the site address every layout prints in <meta name="home_url">
+     (staging posts to staging, production to production, a sub-folder install keeps its folder) */
+  apiBase: (function(){ var m=document.querySelector('meta[name="home_url"]'); return ((m&&m.content)?m.content:location.origin).replace(/\/+$/,"")+"/api"; })(),
   leadWebhookUrl: ""   // optional: ALSO post leads to a Zapier/other hook
 };
 
@@ -524,8 +526,12 @@ function showLeadForm(){
 function deliverLead(lead){
   leads.push(lead);
   renderLeadList();
+  /* conversion event for Google Tag Manager (separate name so it can be mapped on its own) */
+  try{ window.dataLayer=window.dataLayer||[]; window.dataLayer.push({event:"chatLeadEvent"}); }catch(e){}
   if(CONFIG.apiBase){
-    fetch(CONFIG.apiBase.replace(/\/+$/,"")+"/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lead)}).catch(()=>{});
+    fetch(CONFIG.apiBase.replace(/\/+$/,"")+"/lead",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lead)})
+      .then(function(r){ if(!r.ok && window.console) console.warn("DMS chat: lead was not delivered (HTTP "+r.status+")"); })
+      .catch(function(){ if(window.console) console.warn("DMS chat: lead request failed"); });
   }
   if(CONFIG.leadWebhookUrl){
     fetch(CONFIG.leadWebhookUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(lead)}).catch(()=>{});

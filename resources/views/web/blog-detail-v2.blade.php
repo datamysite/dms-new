@@ -31,7 +31,7 @@
 @endsection
 
 @php
-	$bdvBanner = empty($data->banner) ? 'https://datamysite.com/public/og-logo.jpeg' : URL::to('public/storage/blogs/' . $data->banner);
+	$bdvBanner = empty($data->banner) ? URL::to('/public/og-logo.jpeg') : URL::to('public/storage/blogs/' . $data->banner);
 	$bdvPieces = [
 		'r' => '<div class="bdv-book"><span class="bdv-page p1"></span><span class="bdv-page p2"></span><span class="bdv-bkc"><b>DMS</b></span></div>',
 		'l' => '<div class="bdv-bubbles"><span class="bdv-bubble b1"><i></i><i></i><i></i></span><span class="bdv-bubble b2"><i></i><i></i></span></div>',
@@ -104,7 +104,7 @@
 						@csrf
 						<input type="hidden" name="service" value="Blogs">
 						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
-						<h2 class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></h2>
+						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
 						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
 						<label class="hv2-field"><input type="text" name="name" placeholder=" " required autocomplete="name"><span>Your Full Name</span></label>
 						<div class="hv2-field hv2-field--tel">
@@ -191,7 +191,7 @@
 							<span class="bdv-card-go"><i class="bi bi-arrow-up-right"></i></span>
 						</a>
 						<div class="bdv-card-body">
-							<h2 class="related-blog-heading">{{ $val->heading }}</h2>
+							<h3 class="related-blog-heading">{{ $val->heading }}</h3>
 							<p class="date">Published On - {{ date('F d, Y', strtotime($val->created_at)) }}</p>
 							<div class="post-content"><p>{{ $val->short_description }}</p></div>
 							<div class="post-footer">
@@ -209,7 +209,7 @@
     <!-- Article Schema -->
 
     @php
-    $siteUrl = 'https://datamysite.com';
+    $siteUrl = rtrim(url('/'), '/');
     $pageUrl = $actual_link;
     $category = $data->category ?? null;
     $categoryName = $category->name ?? null;
@@ -250,7 +250,7 @@
         'image' => [
             '@type' => 'ImageObject',
             'url' => empty($data->banner)
-                ? $siteUrl . '/public/og-logo.jpeg'
+                ? $siteUrl . '/public/og-image-1200x630.jpg'
                 : URL::to('public/storage/blogs/' . $data->banner),
             'width' => 1200,
             'height' => 630,
@@ -340,7 +340,6 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/blog-detail-v2.js') }}" defer></script>
 @endsection

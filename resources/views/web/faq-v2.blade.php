@@ -107,9 +107,9 @@
                             <span class="fqv-nav-count">4</span>
                           </button>
                           <div class="fqv-sidebar-cta">
-                            <h4>Still have a question?</h4>
+                            <h2>Still have a question?</h2>
                             <p>Talk to our Dubai advertising experts — free, no commitment.</p>
-                            <a href="https://api.whatsapp.com/send/?phone=971525287259" target="_blank">WhatsApp Us Now →</a>
+                            <a href="{{ v2_wa_url() }}" target="_blank">WhatsApp Us Now →</a>
                           </div>
                         </nav>
 
@@ -128,10 +128,11 @@
 
                           <div class="fqv-faq-empty" id="faqEmpty">
                             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-                            <h4>No results found</h4>
+                            <div class="fqv-empty-title">No results found</div>
                             <p>Try a different keyword or pick a category on the left.</p>
                           </div>
 
+                          @php ob_start(); @endphp
                           <div id="faqContainer">
 
                             <!-- ── GENERAL ── -->
@@ -292,6 +293,21 @@
                               </div>
                             </div>
                           </div><!-- /faqContainer -->
+                          @php
+                            /* FAQPage structured data read from the visible list above, so markup and schema can never differ */
+                            $fqvHtml = ob_get_clean();
+                            echo $fqvHtml;
+                            $fqvPairs = [];
+                            $fqvDom = new \DOMDocument();
+                            @$fqvDom->loadHTML('<?xml encoding="utf-8" ?>' . $fqvHtml);
+                            $fqvX = new \DOMXPath($fqvDom);
+                            foreach ($fqvX->query('//*[contains(@class,"fqv-faq-item")]') as $fqvItem) {
+                              $fqvQ = $fqvX->query('.//*[contains(@class,"fqv-q-text")]', $fqvItem)->item(0);
+                              $fqvA = $fqvX->query('.//*[contains(@class,"fqv-faq-ans-inner")]', $fqvItem)->item(0);
+                              if ($fqvQ && $fqvA) $fqvPairs[] = [$fqvQ->textContent, $fqvA->textContent];
+                            }
+                            if (!v2_snippet_has('FAQPage', $headSnippet ?? null, $bodySnippet ?? null)) echo v2_faq_schema($fqvPairs);
+                          @endphp
 
                         </div><!-- /faq-content -->
                       </div>
@@ -301,7 +317,6 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/faq-v2.js') }}" defer></script>
 @endsection

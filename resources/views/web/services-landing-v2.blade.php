@@ -35,16 +35,6 @@
 	$svlPhoto = is_file(public_path('assets/img/title/services.webp')) ? $hv2Img . '/title/services.webp' : (is_file(public_path('assets/img/title/services.jpg')) ? $hv2Img . '/title/services.jpg' : null);
 
 	/* ---------- Client logos (same as Home V2 marquee) ---------- */
-	$hv2Clients = [
-		38 => 'Nike', 12 => 'Intel', 35 => 'Whole Foods', 31 => 'e&', 1 => 'Dubai Duty Free', 4 => 'DAMAC', 17 => 'MakeMyTrip',
-		6 => 'Lenskart', 16 => 'Cerruti', 3 => 'Danube Properties', 2 => 'Jetour', 39 => 'Géant', 36 => "Haldiram's", 37 => 'GMG',
-		25 => 'Al Rawabi', 28 => 'Al Ain Farms', 20 => 'SIVVI', 40 => 'Aswaaq', 7 => 'Logicom Group', 5 => 'ILG', 24 => 'MARQ Dubai',
-		26 => 'Hayata', 27 => 'Cavo', 13 => 'Elite Group Holding', 14 => 'BNW Developments', 8 => 'Arabian Hills', 19 => 'Tranquil Developers', 21 => 'Prime Estate',
-		18 => 'Oscar Luxury Auto', 15 => 'AYS Developers', 32 => 'USI Consultancy', 34 => 'First Super Car Rental', 33 => 'Royalty Tourism', 29 => 'Darcey Flowers', 30 => 'Peace Homes Development',
-		9 => "D's Damat", 10 => 'Metamind Inspire', 11 => 'Ask Kubeir', 22 => 'Lasa Ona', 23 => 'Just Love UAE', 41 => 'Royal',
-	];
-	$hv2Rows = [[], []];
-	foreach (array_keys($hv2Clients) as $pos => $logoNo) { $hv2Rows[$pos % 2][$logoNo] = $hv2Clients[$logoNo]; }
 @endphp
 
 @section('content')
@@ -163,29 +153,12 @@
 				<p class="hv2-lead" data-reveal="up" data-delay="2">At DataMySite, we are proud to partner with a diverse range of clients across various industries, from startups to established global brands.</p>
 			</div>
 		</div>
-<div class="hv2-marquee-wrap" role="group" aria-label="Our clients — {{ count($hv2Clients) }} brands" data-reveal="up" data-spotlight>
-			@foreach($hv2Rows as $r => $row)
-				<div class="hv2-marquee {{ $r === 1 ? 'hv2-marquee--reverse' : '' }}">
-					<div class="hv2-marquee-track">
-						@for($dup = 0; $dup < 2; $dup++)
-							@foreach($row as $i => $brand)
-								<div class="hv2-brand hv2-brand--lg" style="--n: {{ $loop->index }}" @if($dup) aria-hidden="true" @endif>
-									<div class="hv2-brand-logo hv2-media hv2-media--logo">
-										<img src="{{ $hv2Img }}/clients-final/{{ $i }}.webp" alt="{{ $dup ? '' : $brand.' logo' }}" loading="lazy" width="300" height="300">
-									</div>
-								</div>
-							@endforeach
-						@endfor
-					</div>
-				</div>
-			@endforeach
-		</div>
+		@include('web.home-v2.clients-marquee')
 	</section>
 </main>
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/services-landing-v2.js') }}" defer></script>
 @endsection

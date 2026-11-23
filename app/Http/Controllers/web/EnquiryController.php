@@ -79,6 +79,7 @@ class EnquiryController extends Controller
         $n->name = $data['name'];
         $n->email = $data['email'];
         $n->phone = $data['phone'];
+        $n->service = empty($data['service']) ? '' : $data['service'];
         $n->website_link = empty($data['website_link']) ? '' : $data['website_link'];
         $n->save();
 
@@ -92,7 +93,7 @@ class EnquiryController extends Controller
 
 
         $response['success'] = 'success';
-        $response['message'] = 'Success! You successfully subscribe our newsletter.';
+        $response['message'] = 'Thank you - we’ve received your request and our team will contact you shortly.';
 
 
 

@@ -27,11 +27,11 @@
 					if ($t === '') continue;
 					$hsRevs[] = ['name' => $r['author'] ?? 'Google user', 'time' => $r['time'] ?? '', 'rating' => max(1, min(5, (int) ($r['rating'] ?? 5))), 'text' => $t];
 				}
-				$hsScore = !empty($googleReviews['rating']) ? (float) $googleReviews['rating'] : 5.0;
-				$hsTotal = !empty($googleReviews['total']) ? (int) $googleReviews['total'] : 46;
+				$hsScore = !empty($googleReviews['rating']) ? (float) $googleReviews['rating'] : (float) config('business.reviews.fallback_score');
+				$hsTotal = !empty($googleReviews['total']) ? (int) $googleReviews['total'] : (int) config('business.reviews.fallback_total');
 				$hsColors = ['#4285f4', '#ea4335', '#34a853', '#ff7043', '#7c4dff', '#00897b', '#d81b60', '#0288d1', '#f57c00'];
 				$hsStar = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
-				$hsSeeAll = 'https://www.google.com/maps/place/DMS+-+DataMySite+Marketing/@24.9978253,55.1727716,936m/data=!3m1!1e3!4m8!3m7!1s0x3e5f7347c3a1a1d1:0xad7a49fd99d3061!8m2!3d24.9978253!4d55.1727716!9m1!1b1!16s%2Fg%2F11ybf42kl_?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D';   /* Maps place page opened on its Reviews tab (same link as the old home page) */
+				$hsSeeAll = config('business.reviews.url');   /* Maps place page opened on its Reviews tab (same link as the old home page) */
 				$hsWrite = $googleWriteUrl ?? null;
 			@endphp
 			@if(count($hsRevs))
@@ -49,16 +49,14 @@
 				</a>
 			@endif
 			<div class="hs-social">
-				<a href="https://www.linkedin.com/company/datamysite/" aria-label="LinkedIn" target="_blank" rel="noopener"><i class="bi bi-linkedin"></i></a>
-				<a href="https://www.instagram.com/datamysite/" aria-label="Instagram" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>
-				<a href="https://www.pinterest.com/DataMySiteDubai/_profile/" aria-label="Pinterest" target="_blank" rel="noopener"><i class="bi bi-pinterest"></i></a>
-				<a href="https://x.com/DataMySite" aria-label="X" target="_blank" rel="noopener"><i class="bi bi-twitter-x"></i></a>
-				<a href="https://www.youtube.com/@DataMySiteMarketing" aria-label="YouTube" target="_blank" rel="noopener"><i class="bi bi-youtube"></i></a>
+				@foreach(v2_biz('social', []) as $hsSoc)
+				<a href="{{ $hsSoc['url'] }}" aria-label="{{ $hsSoc['label'] }}" target="_blank" rel="noopener"><i class="bi {{ $hsSoc['icon'] }}"></i></a>
+				@endforeach
 			</div>
 		</div>
 
 		<nav class="hs-foot-col hs-foot-services" aria-label="Services">
-			<h4>Services</h4>
+			<div class="hs-foot-h">Services</div>
 			<ul>
 				{{-- only these services are listed in the footer (slug => label), in this order --}}
 				@php
@@ -74,7 +72,7 @@
 		</nav>
 
 		<nav class="hs-foot-col" aria-label="Company">
-			<h4>Company</h4>
+			<div class="hs-foot-h">Company</div>
 			<ul>
 				<li><a href="{{ v2_url(route('about')) }}">About Us</a></li>
 				<li><a href="{{ v2_url(route('services')) }}">Services</a></li>
@@ -88,7 +86,7 @@
 		</nav>
 
 		<div class="hs-foot-col hs-foot-touch">
-			<h4>Stay in the loop</h4>
+			<div class="hs-foot-h">Stay in the loop</div>
 			<p class="hs-foot-note">Sign up now and get the edge — marketing insights, straight to your inbox.</p>
 			<form id="newsletterForm" class="hs-news" action="{{ route('newsletter.subscribe') }}">
 				@csrf
@@ -96,16 +94,16 @@
 				<button class="subscribe-btn" type="submit">Subscribe</button>
 			</form>
 			<ul class="hs-contact">
-				<li><i class="bi bi-telephone" aria-hidden="true"></i><a href="tel:+971525287259">+971 52 528 7259</a></li>
+				<li><i class="bi bi-telephone" aria-hidden="true"></i><a href="tel:{{ v2_biz('phone') }}">{{ v2_biz('phone_display') }}</a></li>
 				<li class="hs-mail">
 					<i class="bi bi-envelope-at" aria-hidden="true"></i>
-					<a href="mailto:contact@datamysite.com" class="hs-mail-addr">contact@datamysite.com</a>
-					<button type="button" class="hs-copy" data-hs-copy="contact@datamysite.com" aria-label="Copy email address">
+					<a href="mailto:{{ v2_biz('email') }}" class="hs-mail-addr">{{ v2_biz('email') }}</a>
+					<button type="button" class="hs-copy" data-hs-copy="{{ v2_biz('email') }}" aria-label="Copy email address">
 						<i class="bi bi-copy" aria-hidden="true"></i><span>Copy</span>
 					</button>
 					<span class="hs-copy-live" role="status" aria-live="polite"></span>
 				</li>
-				<li><i class="bi bi-pin-map" aria-hidden="true"></i><span>Office 205, Al Bayan Building, Dubai Investment Park 1, Dubai - UAE</span></li>
+				<li><i class="bi bi-pin-map" aria-hidden="true"></i><span>{{ v2_biz('address_line') }}</span></li>
 			</ul>
 		</div>
 	</div>

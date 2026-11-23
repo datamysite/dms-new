@@ -317,6 +317,13 @@
       void root.offsetHeight;
       root.classList.remove('sv2-measure-end');
       addMarks();
+      /* cache each host's page position once per build, so the scroll loop never reads layout */
+      var sy = window.pageYOffset;
+      anchors.concat(marks).forEach(function (a) {
+        var r = a.host.getBoundingClientRect();
+        a.top = r.top + sy; a.h = r.height;
+        a.lean = a.el.querySelector ? a.el.querySelector('.sv2-d-lean') : null;
+      });
       blocks.forEach(function (b) { if (b._live) b.classList.add('is-live'); });
       tick();
     };
@@ -332,36 +339,53 @@
     /* scroll parallax (own rAF loop, transforms only) */
     var clampN = function (v, a, b) { return Math.min(Math.max(v, a), b); };
     var ticking = false;
+    /* positions come from the cache filled by build() (page position of each host), so a frame only WRITES; blocks that
+       are off-screen are skipped (the image marks used to be measured every frame even off-screen) */
+    var setT = function (el, t) { if (el.__t !== t) { el.__t = t; el.style.transform = t; } };
     var tick = function () {
       ticking = false; if (reduce) return;
-      var vh = window.innerHeight;
+      var vh = window.innerHeight, sy = window.pageYOffset;
       anchors.forEach(function (a) {
-        if (!a.host._live) return;
-        var r = a.host.getBoundingClientRect(), p = clampN((vh - r.top) / (vh + r.height), 0, 1);
-        a.el.style.transform = 'translate3d(0,' + ((p * 2 - 1) * -40 * a.el._dir).toFixed(1) + 'px,0)';
+        if (!a.host._live || a.top === undefined) return;
+        var p = clampN((vh - (a.top - sy)) / (vh + a.h), 0, 1);
+        setT(a.el, 'translate3d(0,' + ((p * 2 - 1) * -40 * a.el._dir).toFixed(1) + 'px,0)');
       });
       marks.forEach(function (m) {
-        var r = m.host.getBoundingClientRect(), p = clampN((vh - r.top) / (vh + r.height), 0, 1);
-        m.el.style.transform = 'translate3d(' + ((p - 0.5) * -120).toFixed(1) + 'px,' + ((p * 2 - 1) * -60).toFixed(1) + 'px,0)';
+        if (!m.host._live || m.top === undefined) return;
+        var p = clampN((vh - (m.top - sy)) / (vh + m.h), 0, 1);
+        setT(m.el, 'translate3d(' + ((p - 0.5) * -120).toFixed(1) + 'px,' + ((p * 2 - 1) * -60).toFixed(1) + 'px,0)');
       });
     };
-    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(tick); } }, { passive: true });
+    var lastScrollT = 0;
+    window.addEventListener('scroll', function () { lastScrollT = performance.now(); if (!ticking) { ticking = true; requestAnimationFrame(tick); } }, { passive: true });
 
-    /* cursor lean (desktop): one CSS variable pair on <main> */
+    /* cursor lean (desktop): the variable pair is set only on the visible decorations' lean layer (setting it on <main>
+       made the whole page recalculate its styles on every mouse frame) */
     if (fine && !reduce) {
       var lf = null;
       window.addEventListener('mousemove', function (e) {
         if (lf) return;
         lf = requestAnimationFrame(function () {
           lf = null;
-          root.style.setProperty('--sv2-lx', ((e.clientX / window.innerWidth) - 0.5).toFixed(3));
-          root.style.setProperty('--sv2-ly', ((e.clientY / window.innerHeight) - 0.5).toFixed(3));
+          var lx = ((e.clientX / window.innerWidth) - 0.5).toFixed(2), ly = ((e.clientY / window.innerHeight) - 0.5).toFixed(2);
+          anchors.forEach(function (a) {
+            if (!a.lean || !a.host._live || (a.lean.__lx === lx && a.lean.__ly === ly)) return;
+            a.lean.__lx = lx; a.lean.__ly = ly;
+            a.lean.style.setProperty('--sv2-lx', lx); a.lean.style.setProperty('--sv2-ly', ly);
+          });
         });
       }, { passive: true });
     }
 
-    /* build once layout is final (fonts + images), rebuild on resize / content size changes */
-    var rb = null, rebuild = function () { clearTimeout(rb); rb = setTimeout(build, 220); };
+    /* build once layout is final (fonts + images), rebuild on resize / content size changes. A rebuild measures the whole
+       page (a long task), so it waits until the visitor has stopped scrolling and the browser is idle. */
+    var rb = null, rebuild = function () {
+      clearTimeout(rb);
+      rb = setTimeout(function run() {
+        if (performance.now() - lastScrollT < 300) { rb = setTimeout(run, 300); return; }
+        if (window.requestIdleCallback) requestIdleCallback(build, { timeout: 1500 }); else build();
+      }, 220);
+    };
     /* don't wait for window.load (YouTube / chat embeds can delay it a lot): build when fonts are ready,
        then refresh once everything has loaded (images may have changed the layout) */
     var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();

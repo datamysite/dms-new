@@ -76,13 +76,13 @@
 			<article class="tmv-article" id="tmv-article" data-reveal="up">
                     <p><strong>DMS(DataMySite)</strong>, owns and operates this website and related subdomains. Terms of Use Agreement states the terms and conditions under which you may access and use this website. You agree to be bound by these terms and conditions by accessing and using this website.</p>
 
-                    <h4>NOTE: WE OFTEN EARN COMMISSIONS FROM REVIEWS, BANNERS, LINKS POSTS AND ARTICLES ON THIS OR ANY OF OUR OTHER OWNED WEBSITES WE LINK TO.</h4>
+                    <h2>NOTE: WE OFTEN EARN COMMISSIONS FROM REVIEWS, BANNERS, LINKS POSTS AND ARTICLES ON THIS OR ANY OF OUR OTHER OWNED WEBSITES WE LINK TO.</h2>
 
                     <p>If you do not accept the terms and conditions of the <strong>DMS(DataMySite)</strong> website, you must discontinue using it.</p>
                     
                     <p><strong>DMS(DataMySite)</strong> may revise this Agreement at any time by updating this website. Use of the website after such changes are posted will indicate your agreement to these revised terms. You should visit this page periodically to review this Agreement.</p>
 
-                    <h4>Ownership of Material, Software Licences & Intellectual Property Rights</h4>
+                    <h2>Ownership of Material, Software Licences & Intellectual Property Rights</h2>
 
                     <p>All materials displayed or otherwise accessible through this website, including, without limitation, articles, text, photographs, images, illustrations, computer software and code and the website itself, are protected under International copyright or other laws and are owned by <strong>DMS(DataMySite)</strong>.</p>
                     
@@ -115,7 +115,7 @@
                             <li>that the Software shall process date-related and time-related data without causing processing interruptions, abnormal termination or process or manipulation of any time-related data.</li>
                         </ol>
                     <br>
-                    <h4>Disclaimer</h4>
+                    <h2>Disclaimer</h2>
                     <p>This website and all content are provided on an ‘as is’ basis. By accessing and using this website, you acknowledge and agree that the use of this website and the content is entirely at your own risk.<p>
                         
                     <p><strong>DMS(DataMySite)</strong> makes no representations nor warranties regarding this website and the content, including, without limitation, no representation or warranty:</p>
@@ -135,7 +135,7 @@
                     
                     <p><strong>DMS(DataMySite)</strong> gives no warranties, nor does <strong>DMS(DataMySite)</strong> make any representation in respect of the contents of this website. <strong>DMS(DataMySite)</strong> advises users of this website to seek their own appropriate independent professional advice on matters raised on this website.</p>
                     <br>
-                    <h4>Limitation of Liability</h4>
+                    <h2>Limitation of Liability</h2>
                     
                     <p><strong>(A)</strong> To the extent permitted by law, <strong>DMS(DataMySite)</strong> aggregate liability to you, whether for breach of these terms or in negligence or any other tort or for any other common law or statutory cause of action arising about these terms, the site or the content is limited to the following, the choice of which is at <strong>DMS(DataMySite)</strong> sole discretion:</p>
                     
@@ -164,7 +164,7 @@
                     
                     <p>You hereby release<strong>DMS(DataMySite)</strong> and its officers, directors, employees, agents, and their respective successors and assigns from any damages that you incur and agree not to assert any claims against them arising from your purchase or use of any products or services made available through this website or by third parties through this website.</p>
                     <br>
-                    <h4>Links, Downloads, Features, and Advertisements</h4>
+                    <h2>Links, Downloads, Features, and Advertisements</h2>
                     
                     <p>This website contains links to third-party websites. These links are provided solely as a convenience to you and not as an endorsement by <strong>DMS(DataMySite)</strong> of the contents of such third-party websites.</p>
                     
@@ -189,7 +189,7 @@
                             <li>contains, posts, or transmits any information, software, or other material that violates or infringes upon the rights of others, including material that is an invasion of privacy or protected by copyright, trademark, or other proprietary rights. <strong>DMS(DataMySite)</strong> reserves the right to prohibit or refuse to accept any link to this website, including, without limitation, any link which contains or makes available any content or information of the aforementioned nature, at any time. You agree to remove any link you may have to this website upon the request of <strong>DMS(DataMySite)</strong>. </li>
                         </ol>
                         <br>
-                    <h4>Indemnity</h4>
+                    <h2>Indemnity</h2>
                     
                     <p>You agree to indemnify, defend and hold harmless <strong>DMS(DataMySite)</strong> and its officers, directors, employees, agents, licensors, and their respective successors and assigns, from and against any and all claims, demands, liabilities, costs, or expenses whatsoever, including, without limitation, legal fees and disbursements resulting directly or indirectly from:</p>
                     
@@ -200,7 +200,7 @@
                         <li>your violation of any law or regulation.</li>
                     </ol>
                     <br>
-                    <h4>Registration and Use of Passwords</h4>
+                    <h2>Registration and Use of Passwords</h2>
                     
                     <p>To access particular pages and features of this website, you may be asked to register with <strong>DMS(DataMySite)</strong>. You agree:</p>
                     
@@ -214,10 +214,10 @@
 
                     <p>To access particular pages of this website, you may need to use a username and password, which you will receive through our website registration process. It is your responsibility to maintain the confidentiality of the password and account, and you are responsible for all activities that occur using your password or account. You agree to notify <strong>DMS(DataMySite)</strong> immediately of any unauthorized use of your password or account or any other security breach and to ensure that you exit your account at the end of each session. <strong>DMS(DataMySite)</strong> cannot and will not be liable for any loss or damage arising from your failure or <strong>DMS(DataMySite)</strong> failure to protect your password or account information.</p>
                     <br>
-                    <h4>Security of Information on the Internet</h4>
+                    <h2>Security of Information on the Internet</h2>
                     <p>You should note that information sent or received online is generally unsecured. <strong>DMS(DataMySite)</strong> cannot and does not make any representation or warranty concerning the security of any communication to or from this website or any representation or warranty regarding the interception by third parties of personal or other information.</p>
                     <br>
-                    <h4>Governing Law and Jurisdiction</h4>
+                    <h2>Governing Law and Jurisdiction</h2>
                     <p>This website (excluding linked Web sites) is controlled by <strong>DMS(DataMySite)</strong>  based in Dubai, United Arab Emirates. By accessing or using this website, you agree that all matters relating to your access to, or use of, this website shall be governed by the laws of the state of Dubai and the laws of the United Arab Emirates. You agree and hereby submit to the non-exclusive jurisdiction of the Federal Court of United Arab Emirates and/or the courts of the state of Dubai concerning such matters.</p>
 
 
@@ -228,7 +228,6 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/terms-v2.js') }}" defer></script>
 @endsection

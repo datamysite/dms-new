@@ -34,7 +34,7 @@
 @php
 	$hv2Img = URL::to('/public/assets/img');
 	$blvPhoto = is_file(public_path('assets/img/title/' . $titleImg)) ? $hv2Img . '/title/' . $titleImg : null;
-	$blvImg = function ($val) { return empty($val->banner) ? 'https://datamysite.com/public/og-logo.jpeg' : URL::to('public/storage/blogs/' . $val->banner); };
+	$blvImg = function ($val) { return empty($val->banner) ? URL::to('/public/og-logo.jpeg') : URL::to('public/storage/blogs/' . $val->banner); };
 	$blvMin = function ($val) { return max(1, (int) ceil(str_word_count(strip_tags($val->description ?? '')) / 200)); };
 	$blvInitial = function ($val) { return strtoupper(substr($val->author->name ?? '', 0, 1)); };
 	$blvPieces = [
@@ -95,7 +95,7 @@
 						@csrf
 						<input type="hidden" name="service" value="Blogs">
 						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
-						<h2 class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></h2>
+						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
 						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
 						<label class="hv2-field"><input type="text" name="name" placeholder=" " required autocomplete="name"><span>Your Full Name</span></label>
 						<div class="hv2-field hv2-field--tel">
@@ -133,7 +133,7 @@
 		<div class="hv2-container">
 			<article class="blv-feature" data-tilt data-tilt-max="3" data-reveal="up">
 				<a class="blv-feature-media hv2-media" href="{{ v2_blog_url($blvFirst->slug) }}" target="_blank">
-					<img {!! v2_img('public/storage/blogs/' . $blvFirst->banner, '(max-width: 991px) 92vw, 46vw') !!} alt="{{ $blvFirst->banner_alt }}" fetchpriority="high">
+					<img {!! v2_img('public/storage/blogs/' . $blvFirst->banner, '(max-width: 991px) 92vw, 46vw') !!} alt="{{ $blvFirst->banner_alt ?: $blvFirst->heading }}" fetchpriority="high">
 					<span class="blv-feature-tag">Latest</span>
 				</a>
 				<div class="blv-feature-body">
@@ -180,7 +180,7 @@
 								<span class="blv-dot">&middot;</span>
 								<span>{{ $blvMin($val) }} min read</span>
 							</div>
-							<a href="{{ v2_blog_url($val->slug) }}" target="_blank"><h4>{{ $val->heading }}</h4></a>
+							<a href="{{ v2_blog_url($val->slug) }}" target="_blank"><h3>{{ $val->heading }}</h3></a>
 							<p class="blv-card-excerpt">{{ $val->short_description }}</p>
 							<div class="blv-card-footer">
 								<span class="blv-avatar blv-avatar--sm">{{ $blvInitial($val) }}</span>
@@ -210,7 +210,7 @@
 		</div>
 		<div class="hv2-container blv-explore-grid">
 			<div class="blv-links" data-reveal="up">
-				<h4>Our Services</h4>
+				<h2>Our Services</h2>
 				<div class="blv-chips">
 					@foreach($header_services as $val)
 						@if(!empty($val->intro_html))
@@ -223,7 +223,7 @@
 			</div>
 			@if(count($blog_categories) > 0)
 			<div class="blv-links" data-reveal="up" data-delay="1">
-				<h4><span>Blog Categories</span> <a href="{{ v2_url(route('blogs.categories')) }}">View all →</a></h4>
+				<h2><span>Blog Categories</span> <a href="{{ v2_url(route('blogs.categories')) }}">View all →</a></h2>
 				<div class="blv-chips">
 					@foreach($blog_categories as $val)
 						<a href="{{ v2_url('/blogs/' . $val->slug) }}">{{ $val->name }} <small>({{ count($val->blogs) }})</small></a>
@@ -237,7 +237,6 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/blogs-v2.js') }}" defer></script>
 @endsection

@@ -28,9 +28,13 @@ $(document).on("submit", "#newsletterForm", function (event) {
                     title: data.message,
                 });
 
+                /* conversion event for Google Tag Manager, sent before the reload */
+                window.dataLayer = window.dataLayer || [];
+                window.dataLayer.push({ event: 'newsletterSubscribeEvent' });
+
                 setTimeout(function () {
                     location.reload();
-                }, 1000);
+                }, 1500);
             } else {
                 Toast.fire({
                     icon: "warning",
@@ -41,9 +45,13 @@ $(document).on("submit", "#newsletterForm", function (event) {
         })
         .fail(function (e) {
             $(".subscribe-btn").html('SUBSCRIBE');
+            /* `data` does not exist here (that was a ReferenceError that hid the real message): read it from the failed response */
+            var res = e && e.responseJSON ? e.responseJSON : {};
+            var msg = res.message || 'Something went wrong! Try again later.';
+            if (res.errors) { var k = Object.keys(res.errors)[0]; if (k) msg = res.errors[k][0]; }
             Toast.fire({
                 icon: "warning",
-                title: data.message,
+                title: msg,
             });
         });
 

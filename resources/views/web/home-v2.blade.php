@@ -33,41 +33,10 @@
 
 @php
 	/* ---------- Client logos (image number => brand), biggest brands first ---------- */
-	$hv2Clients = [
-		38 => 'Nike', 12 => 'Intel', 35 => 'Whole Foods', 31 => 'e&', 1 => 'Dubai Duty Free', 4 => 'DAMAC', 17 => 'MakeMyTrip',
-		6 => 'Lenskart', 16 => 'Cerruti', 3 => 'Danube Properties', 2 => 'Jetour', 39 => 'Géant', 36 => "Haldiram's", 37 => 'GMG',
-		25 => 'Al Rawabi', 28 => 'Al Ain Farms', 20 => 'SIVVI', 40 => 'Aswaaq', 7 => 'Logicom Group', 5 => 'ILG', 24 => 'MARQ Dubai',
-		26 => 'Hayata', 27 => 'Cavo', 13 => 'Elite Group Holding', 14 => 'BNW Developments', 8 => 'Arabian Hills', 19 => 'Tranquil Developers', 21 => 'Prime Estate',
-		18 => 'Oscar Luxury Auto', 15 => 'AYS Developers', 32 => 'USI Consultancy', 34 => 'First Super Car Rental', 33 => 'Royalty Tourism', 29 => 'Darcey Flowers', 30 => 'Peace Homes Development',
-		9 => "D's Damat", 10 => 'Metamind Inspire', 11 => 'Ask Kubeir', 22 => 'Lasa Ona', 23 => 'Just Love UAE', 41 => 'Royal',
-	];
-	$hv2ClientRows = array_chunk($hv2Clients, (int) ceil(count($hv2Clients) / 2), true);
 
 	/* ---------- Case studies ---------- */
-	$hv2Cases = [
-		['bnw', 'bnw.jpg', 'BNW Developers'],
-		['ays', 'ays.jpg', 'AYS Developers'],
-		['jetour', 'jetour.jpg', 'Jetour'],
-		['tranquil', 'tranquil.jpg', 'Tranquil Developers'],
-		['ilg', 'ilg.jpg', 'ILG Luxury Group'],
-		['dubai-duty-free', 'dubai-duty-free.jpg', 'Dubai Duty Free'],
-		['danube', 'danube.jpg', 'Danube'],
-		['ksa', 'lenskart-p.png', 'KSA Influencers'],
-	];
+	$hv2Cases = v2_case_studies();   /* config/case_studies.php */
 
-	/* ---------- What we do (service hubs) ---------- */
-	$hv2Hubs = [
-		['outdoor-advertising', 'Outdoor Advertising', "Billboards, unipoles and bridge banners on Dubai's busiest roads.", 'bi-signpost-split'],
-		['transit-media', 'Transit Media', 'Taxis, buses and the metro, seen across the city every day.', 'bi-bus-front'],
-		['radio-advertising', 'Radio Advertising', 'English, Arabic and Asian stations, planned by audience and drive time.', 'bi-broadcast'],
-		['digital-advertising/dooh-advertising', 'Digital Screens (DOOH)', 'Lift, mall and roadside screens you can switch on within a week.', 'bi-display'],
-		['digital-advertising/ott-advertising', 'OTT Advertising', 'Ads on streaming TV, targeted to UAE households.', 'bi-tv'],
-		['seo-services', 'SEO Services', 'Rankings and enquiries from Google, priced per month in AED.', 'bi-graph-up-arrow'],
-		['digital-marketing/social-media-marketing', 'Social Media Marketing', 'Content, community and paid social run by one team.', 'bi-chat-heart'],
-		['event-marketing', 'Event Marketing', 'Launches, activations and brand experiences, planned end to end.', 'bi-stars'],
-		['lead-generation', 'Lead Generation', 'Qualified enquiries delivered to your sales team, tracked by source.', 'bi-funnel'],
-		['website-development', 'Website Development', 'Fast sites, stores and landing pages built to rank and convert.', 'bi-code-slash'],
-	];
 
 	/* ---------- Testimonials: slider content = the client reviews from the old home page (name, time, avatar colour, text) ---------- */
 	$hv2Reviews = [
@@ -83,8 +52,8 @@
 	];
 	/* Score + count shown in the badge: live from Google when available, otherwise 5.0 / 46 */
 	$hv2Rating = !empty($googleReviews['rating']) ? (float) $googleReviews['rating'] : 5.0;
-	$hv2Total = !empty($googleReviews['total']) ? (int) $googleReviews['total'] : 46;
-	$hv2GoogleUrl = 'https://www.google.com/maps/place/DMS+-+DataMySite+Marketing/@24.9978253,55.1727716,936m/data=!3m1!1e3!4m8!3m7!1s0x3e5f7347c3a1a1d1:0xad7a49fd99d3061!8m2!3d24.9978253!4d55.1727716!9m1!1b1!16s%2Fg%2F11ybf42kl_?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoASAFQAw%3D%3D';
+	$hv2Total = !empty($googleReviews['total']) ? (int) $googleReviews['total'] : (int) config('business.reviews.fallback_total');
+	$hv2GoogleUrl = config('business.reviews.url');
 
 	/* ---------- Team ---------- */
 	$hv2Team = [
@@ -138,6 +107,8 @@
 		['seo', 'cost per lead CPL advertising suitable UAE performance marketing', 'What is cost-per-lead advertising and is it suitable for businesses in the UAE?', 'Cost-per-lead (CPL) is a performance marketing model where you pay only for verified, qualified leads — not impressions, clicks, or views. It offers predictable, measurable ROI and is ideal for high-ticket sectors. DataMySite runs CPL campaigns for real estate developers, educational institutions, financial services, healthcare businesses, and e-commerce brands across the UAE — delivering qualified enquiries with full tracking and reporting transparency. <a href="https://datamysite.com/lead-generation/cost-per-lead" target="_blank">Explore CPL campaigns →</a>'],
 		['seo', 'most creative memorable advertising formats Dubai CGI anamorphic experiential', 'What are the most creative and memorable advertising formats available in Dubai?', "Dubai's appetite for the spectacular makes it one of the best markets for high-impact creative advertising. The most memorable formats include anamorphic 3D billboard CGI content, Tesla and luxury vehicle wraps as moving billboards, hot air balloon advertising over the skyline, interactive mall activations, and TopGolf brand sponsorships. DataMySite specialises in all of these experiential and CGI formats — creating content designed to go viral on social media and generate organic earned impressions far beyond the original placement. <a href=\"https://datamysite.com/experiential-marketing\" target=\"_blank\">View experiential options →</a>"],
 	];
+	/* the answers link to other pages with the production address: follow the current host instead (production keeps https://datamysite.com) */
+	$hv2Faqs = array_map(function ($f) { $f[3] = str_replace('https://datamysite.com', rtrim(url('/'), '/'), $f[3]); return $f; }, $hv2Faqs);
 	$hv2FaqCounts = array_count_values(array_column($hv2Faqs, 0));
 	$hv2Star = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
 @endphp
@@ -240,7 +211,7 @@
 					<form action="{{ route('enquiry.submit') }}" id="hv2-enquiry-form">
 						@csrf
 						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
-						<h2 class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></h2>
+						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
 						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
 
 						<label class="hv2-field">
@@ -290,12 +261,7 @@
 	     03 · CLIENTS — every brand, compact identical tiles, two endless rows moving in opposite directions
 	          (row 1 slides right→left, row 2 left→right; pauses on hover).
 	==================================================================== --}}
-	@php
-		// split the size-ordered list into two rows (alternating) so both rows mix big and small brands
-		$hv2Rows = [[], []];
-		foreach (array_keys($hv2Clients) as $pos => $logoNo) { $hv2Rows[$pos % 2][$logoNo] = $hv2Clients[$logoNo]; }
-	@endphp
-	<section class="hv2-section hv2-dark hv2-clients hv2-cv" id="hv2-clients">
+	<section class="hv2-section hv2-dark hv2-clients" id="hv2-clients">
 		<span class="hv2-watermark" data-parallax="0.12" aria-hidden="true">Clients</span>
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split">
@@ -313,29 +279,13 @@
 			</div>
 		</div>
 
-		<div class="hv2-marquee-wrap" role="group" aria-label="Our clients — {{ count($hv2Clients) }} brands" data-reveal="up" data-spotlight>
-			@foreach($hv2Rows as $r => $row)
-				<div class="hv2-marquee {{ $r === 1 ? 'hv2-marquee--reverse' : '' }}">
-					<div class="hv2-marquee-track">
-						@for($dup = 0; $dup < 2; $dup++)
-							@foreach($row as $i => $brand)
-								<div class="hv2-brand hv2-brand--lg" style="--n: {{ $loop->index }}" @if($dup) aria-hidden="true" @endif>
-									<div class="hv2-brand-logo hv2-media hv2-media--logo">
-										<img src="{{ $hv2Img }}/clients-final/{{ $i }}.webp" alt="{{ $dup ? '' : $brand.' logo' }}" loading="lazy" width="300" height="300">
-									</div>
-								</div>
-							@endforeach
-						@endfor
-					</div>
-				</div>
-			@endforeach
-		</div>
+		@include('web.home-v2.clients-marquee')
 	</section>
 
 	{{-- ===================================================================
 	     04 · STATS
 	==================================================================== --}}
-	<section class="hv2-section hv2-tint hv2-stats hv2-cv" id="hv2-stats">
+	<section class="hv2-section hv2-tint hv2-stats" id="hv2-stats">
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split">
 				<div>
@@ -358,7 +308,7 @@
 	{{-- ===================================================================
 	     05 · BEST SOLUTIONS — three featured formats (full service list lives in "Our Services")
 	==================================================================== --}}
-	<section class="hv2-section hv2-light hv2-best-sec hv2-cv" id="hv2-best-solutions">
+	<section class="hv2-section hv2-light hv2-best-sec" id="hv2-best-solutions">
 		<div class="hv2-container">
 			<div class="hv2-head">
 				<span class="hv2-eyebrow" data-reveal="up">Best Solutions</span>
@@ -397,7 +347,7 @@
 	     06 · CASE STUDIES — looping auto-slide carousel (Swiper). Interval = data-autoplay (ms).
 	          Pauses on hover/focus/drag or with the pause button; arrows, drag, swipe, keyboard.
 	==================================================================== --}}
-	<section class="hv2-section hv2-dark hv2-cases hv2-cv" id="hv2-cases">
+	<section class="hv2-section hv2-dark hv2-cases" id="hv2-cases">
 		<div class="hv2-container">
 			<div class="hv2-head hv2-head--split hv2-head--tight">
 				<div>
@@ -421,10 +371,10 @@
 		<div class="hv2-cs-viewport" data-autoplay="1500" role="region" aria-roledescription="carousel" aria-label="Case studies">
 			<div class="hv2-cs-track">
 				@foreach($hv2Cases as $k => $case)
-					<a href="{{ URL::to('/public/case-studies/'.$case[0].'.pdf') }}" target="_blank" rel="noopener" class="hv2-case" draggable="false" data-distort>
+					<a href="{{ $case['pdf_url'] }}" target="_blank" rel="noopener" class="hv2-case" draggable="false" data-distort>
 						<span class="hv2-case-num hv2-display">{{ str_pad($k + 1, 2, '0', STR_PAD_LEFT) }}</span>
 						<div class="hv2-media hv2-case-pic">
-							<img {!! v2_img('public/case-studies/cover/' . $case[1], '(max-width: 640px) 78vw, 480px') !!} alt="{{ $case[2] }} × DMS case study cover" loading="lazy" draggable="false">
+							<img {!! v2_img($case['cover'], '(max-width: 640px) 78vw, 480px') !!} alt="{{ $case['alt'] }}" loading="lazy" draggable="false">
 							<span class="hv2-case-panel"><span>View case study</span><i class="bi bi-arrow-up-right"></i></span>
 						</div>
 					</a>
@@ -464,7 +414,7 @@
 								</svg>
 								<div class="hv2-ring-val hv2-display"><span data-count="{{ $ring[0] }}" data-suffix="%">{{ $ring[0] }}<sup>%</sup></span></div>
 							</div>
-							<h4>{{ $ring[1] }}</h4>
+							<h3>{{ $ring[1] }}</h3>
 						</div>
 					@endforeach
 				</div>
@@ -474,7 +424,7 @@
 						<span class="hv2-why-num hv2-display">01</span>
 						<h3>We book the media directly</h3>
 						<div class="hv2-more" data-readmore>
-							<p>We deal with the media owners ourselves, so there is no middle agency adding a margin.<span class="hv2-more-rest"> That covers billboards, unipoles and <a href="https://datamysite.com/outdoor-advertising/bridge-banners">bridge banners</a>, taxis, <a href="https://datamysite.com/transit-media/bus-advertising">buses</a> and the metro, lift and mall screens, <a href="https://datamysite.com/radio-advertising/english-stations">English</a> and <a href="https://datamysite.com/radio-advertising/arabic-stations">Arabic radio</a>, and <a href="https://datamysite.com/sponsorships/entertainment">entertainment sponsorships</a>. We also hold our own hoarding on Al Khail Road. The team has spent more than 20 years buying media in Dubai, so we can tell you which sites and stations earn their rate and which ones only look good on a map.</span></p>
+							<p>We deal with the media owners ourselves, so there is no middle agency adding a margin.<span class="hv2-more-rest"> That covers billboards, unipoles and <a href="{{ url('/') }}/outdoor-advertising/bridge-banners">bridge banners</a>, taxis, <a href="{{ url('/') }}/transit-media/bus-advertising">buses</a> and the metro, lift and mall screens, <a href="{{ url('/') }}/radio-advertising/english-stations">English</a> and <a href="{{ url('/') }}/radio-advertising/arabic-stations">Arabic radio</a>, and <a href="{{ url('/') }}/sponsorships/entertainment">entertainment sponsorships</a>. We also hold our own hoarding on Al Khail Road. The team has spent more than 20 years buying media in Dubai, so we can tell you which sites and stations earn their rate and which ones only look good on a map.</span></p>
 							<button type="button" class="hv2-more-btn" aria-expanded="false"><span>Read more</span><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
 						</div>
 					</article>
@@ -482,7 +432,7 @@
 						<span class="hv2-why-num hv2-display">02</span>
 						<h3>Work you can check</h3>
 						<div class="hv2-more" data-readmore>
-							<p>We have delivered more than 1,200 campaigns for more than 80 clients, across outdoor, transit, digital, PR, influencer marketing and <a href="https://datamysite.com/lead-generation">lead generation</a>.<span class="hv2-more-rest"> Our <a href="https://datamysite.com/client-case-studies">client case studies</a> show what ran, where it ran and what it did for the business. If you want to speak to a client in your own sector before you sign, ask us and we will arrange it.</span></p>
+							<p>We have delivered more than 1,200 campaigns for more than 80 clients, across outdoor, transit, digital, PR, influencer marketing and <a href="{{ url('/') }}/lead-generation">lead generation</a>.<span class="hv2-more-rest"> Our <a href="{{ url('/') }}/client-case-studies">client case studies</a> show what ran, where it ran and what it did for the business. If you want to speak to a client in your own sector before you sign, ask us and we will arrange it.</span></p>
 							<button type="button" class="hv2-more-btn" aria-expanded="false"><span>Read more</span><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
 						</div>
 					</article>
@@ -490,7 +440,7 @@
 						<span class="hv2-why-num hv2-display">03</span>
 						<h3>Prices in AED before you commit</h3>
 						<div class="hv2-more" data-readmore>
-							<p>Every service page shows its 2026 price bands in AED, and the <a href="https://datamysite.com/advertising-cost-in-dubai-complete-2026-price-list">full advertising price list</a> puts all of them on one page.<span class="hv2-more-rest"> Your quote lists media, production and permits on separate lines, so the number you approve is the number you pay. If a rate changes before booking, we tell you before you sign.</span></p>
+							<p>Every service page shows its 2026 price bands in AED, and the <a href="{{ url('/') }}/advertising-cost-in-dubai-complete-2026-price-list">full advertising price list</a> puts all of them on one page.<span class="hv2-more-rest"> Your quote lists media, production and permits on separate lines, so the number you approve is the number you pay. If a rate changes before booking, we tell you before you sign.</span></p>
 							<button type="button" class="hv2-more-btn" aria-expanded="false"><span>Read more</span><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
 						</div>
 					</article>
@@ -617,9 +567,9 @@
 					<button type="button" class="hv2-more-btn" aria-expanded="false"><span>Read more</span><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
 				</div>
 				<div class="hv2-contact-cards" data-reveal="up" data-delay="2">
-					<div class="hv2-contact"><i class="bi bi-geo-alt"></i><span>Office 205, Al Bayan Building, Dubai Investment Park, Dubai</span></div>
-					<a class="hv2-contact" href="https://api.whatsapp.com/send/?phone=971525287259" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i><span>Call or WhatsApp +971 52 528 7259</span></a>
-					<a class="hv2-contact" href="mailto:contact@datamysite.com"><i class="bi bi-envelope"></i><span>contact@datamysite.com</span></a>
+					<div class="hv2-contact"><i class="bi bi-geo-alt"></i><span>{{ v2_biz('address_line') }}</span></div>
+					<a class="hv2-contact" href="{{ v2_wa_url() }}" target="_blank" rel="noopener"><i class="bi bi-whatsapp"></i><span>Call or WhatsApp {{ v2_biz('phone_display') }}</span></a>
+					<a class="hv2-contact" href="mailto:{{ v2_biz('email') }}"><i class="bi bi-envelope"></i><span>{{ v2_biz('email') }}</span></a>
 				</div>
 			</div>
 			<div class="hv2-team hv2-glass hv2-glass--light" data-reveal="up" data-delay="2">
@@ -657,7 +607,7 @@
 					<span class="hv2-eyebrow" data-reveal="up">Blogs</span>
 					<h2 class="hv2-display hv2-h2" data-split>What's going on <span class="hv2-outline">in the industry?</span></h2>
 				</div>
-				<a href="{{ URL::to('/blogs/pr-and-media-relations') }}" class="hv2-btn hv2-btn--dark" target="_blank" data-magnetic data-reveal="up" data-delay="2"><span>See All Blogs <i class="bi bi-arrow-right"></i></span></a>
+				<a href="{{ route('blogs') }}" class="hv2-btn hv2-btn--dark" data-magnetic data-reveal="up" data-delay="2"><span>See All Blogs <i class="bi bi-arrow-right"></i></span></a>
 			</div>
 			<div class="hv2-blog-grid">
 				@foreach($blogs as $val)
@@ -708,7 +658,7 @@
 					</div>
 					<div class="hv2-faq-cta hv2-glass hv2-glass--light" data-reveal="up" data-delay="2">
 						<p><strong>Still have questions? Let's talk.</strong> Book a free strategy call with our UAE advertising experts — no commitment, no pressure.</p>
-						<a href="javascript:void(0)" class="hv2-btn hv2-btn--3d open-newsletter" data-magnetic><span>Book Free Strategy Call <i class="bi bi-arrow-right"></i></span></a>
+						<a href="{{ route('contact') }}" class="hv2-btn hv2-btn--3d open-newsletter" data-magnetic><span>Book Free Strategy Call <i class="bi bi-arrow-right"></i></span></a>
 					</div>
 				</aside>
 
@@ -724,9 +674,10 @@
 					</div>
 					<div class="hv2-faq-empty" id="hv2-faq-empty">
 						<i class="bi bi-search"></i>
-						<h4>No results found</h4>
+						<div class="hv2-faq-empty-t">No results found</div>
 						<p>Try a different keyword or pick a topic.</p>
 					</div>
+					@if(!v2_snippet_has('FAQPage', $headSnippet ?? null, $bodySnippet ?? null)){!! v2_faq_schema(array_map(fn ($f) => [$f[2], $f[3]], $hv2Faqs)) !!}@endif
 					<div class="hv2-faq-list" id="hv2-faq-list" role="tabpanel">
 						@foreach($hv2Faqs as $k => $faq)
 							<div class="hv2-faq-item" data-cat="{{ $faq[0] }}" data-q="{{ $faq[1] }}" @if($faq[0] !== 'general') hidden @endif>
@@ -765,7 +716,7 @@
 				<p data-reveal="up" data-delay="2">Don't miss out on this opportunity to elevate your advertising game. <strong>Smarter Marketing, Better Outcomes.</strong> Boost your brand's visibility, enhance campaign performance.</p>
 				<div class="hv2-cta-btns" data-reveal="up" data-delay="3">
 					<a class="hv2-btn hv2-btn--primary hv2-btn--pulse" href="{{ v2_url(route('contact')) }}" data-magnetic><span>Get Started - Free Consultation <i class="bi bi-arrow-right"></i></span></a>
-					<a class="hv2-btn hv2-btn--outline" href="https://api.whatsapp.com/send/?phone=971525287259" target="_blank" rel="noopener" data-magnetic><span><i class="bi bi-whatsapp"></i> WhatsApp +971 52 528 7259</span></a>
+					<a class="hv2-btn hv2-btn--outline" href="{{ v2_wa_url() }}" target="_blank" rel="noopener" data-magnetic><span><i class="bi bi-whatsapp"></i> WhatsApp {{ v2_biz('phone_display') }}</span></a>
 				</div>
 			</div>
 
@@ -795,6 +746,5 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 @endsection

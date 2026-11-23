@@ -27,6 +27,14 @@ return [
     'pagespeed' => [
         'key' => env('PAGESPEED_API_KEY'),
         'default_base' => env('PAGESPEED_BASE_URL', 'https://staging.datamysite.com'),
+        // Lighthouse category scores (0-100) used by `php artisan seo:pagespeed`:
+        //   fail = below this the command exits with an error; target = the 95-100 goal in .claude/rules/performance.md (shown as a warning)
+        'thresholds' => [
+            'performance'    => ['fail' => 90, 'target' => 95],
+            'accessibility'  => ['fail' => 95, 'target' => 100],
+            'best-practices' => ['fail' => 90, 'target' => 95],
+            'seo'            => ['fail' => 95, 'target' => 100],
+        ],
     ],
 
     'anthropic' => [

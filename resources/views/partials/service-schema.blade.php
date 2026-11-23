@@ -1,15 +1,22 @@
+{{-- Service JSON-LD for one service page. Input: $page (a Services model, or any object with name / optional schema_name,
+     title, service_type, area_served, review_count, rating_value). Business facts come from config/business.php.
+     Used by web/services-v2/page.blade.php (the old services-new pages keep web/includes/elements/local-schema.blade.php). --}}
 @php
+    $biz = config('business');
+    $root = rtrim(url('/'), '/');
     $schema = [
         '@context' => 'https://schema.org',
         '@type' => 'Service',
-        'serviceType' => $page->service_type,
-        'name' => $page->schema_name ?? $page->title,
-        'areaServed' => $page->area_served ?? ['Dubai', 'Abu Dhabi', 'Sharjah', 'Ajman', 'United Arab Emirates'],
+        'serviceType' => $page->service_type ?? $page->name ?? null,
+        'name' => $page->schema_name ?? $page->title ?? $page->name ?? $biz['name'],
+        'url' => url()->current(),
+        'areaServed' => $page->area_served ?? $biz['area_served'],
         'provider' => [
-            '@type' => 'LocalBusiness',
-            'name' => config('app.business_name', 'DataMySite'),
-            'telephone' => config('app.business_phone', '+971525287259'),
-            'url' => url('/'),
+            '@type' => 'Organization',
+            '@id' => $root . '/#organization',
+            'name' => $biz['name'],
+            'telephone' => $biz['phone'],
+            'url' => $root . '/',
         ],
     ];
 
@@ -28,5 +35,5 @@
 @endphp
 
 <script type="application/ld+json">
-{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) !!}
+{!! json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}
 </script>

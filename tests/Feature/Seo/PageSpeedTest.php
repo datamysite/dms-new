@@ -1,0 +1,98 @@
+<?php
+
+namespace Tests\Feature\Seo;
+
+use App\Services\PageSpeedService;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
+use Tests\TestCase;
+
+/**
+ * Live checks with Google PageSpeed Insights. Skipped in the normal run (it calls Google, about 20-60 s per page); run with
+ *     php vendor/bin/phpunit --group pagespeed
+ * It tests PAGESPEED_BASE_URL (default https://staging.datamysite.com) and needs PAGESPEED_API_KEY. Set PAGESPEED_TEST_BASE=live
+ * to test the live site instead. Staging only shows the audit fixes after they are deployed.
+ */
+#[Group('pagespeed')]
+class PageSpeedTest extends TestCase
+{
+    /** audits that belong to the SEO audit items and must pass (they are listed in "issues" only when they fail) */
+    private const MUST_PASS = ['image-alt', 'canonical', 'heading-order', 'document-title', 'meta-description', 'link-text', 'crawlable-anchors', 'http-status-code'];
+
+    private static array $reports = [];
+
+    private function base(PageSpeedService $psi): string
+    {
+        return $psi->resolveBase(env('PAGESPEED_TEST_BASE') ?: null);
+    }
+
+    private function report(string $path, string $strategy): array
+    {
+        $psi = app(PageSpeedService::class);
+        if (!$psi->hasKey()) $this->markTestSkipped('PAGESPEED_API_KEY is not set');
+        $url = $this->base($psi) . ($path === '/' ? '/' : $path);
+        $key = $url . '|' . $strategy;
+        if (!isset(self::$reports[$key])) {
+            [$status, $r] = $psi->run($url, $strategy);
+            $this->assertTrue($r['ok'] ?? false, "PageSpeed failed for $url: " . ($r['error'] ?? "HTTP $status"));
+            self::$reports[$key] = $r;
+        }
+        return self::$reports[$key];
+    }
+
+    private function failedIds(array $report): array
+    {
+        return array_column($report['issues'], 'id');
+    }
+
+    public static function pages(): array
+    {
+        return [['/'], ['/about-us'], ['/contact-us'], ['/faq'], ['/blogs'], ['/seo-services']];
+    }
+
+    #[DataProvider('pages')]
+    public function test_audit_items_pass_on_mobile(string $path): void
+    {
+        $failed = $this->failedIds($this->report($path, 'mobile'));
+        foreach (self::MUST_PASS as $audit) {
+            $this->assertNotContains($audit, $failed, "$path: Lighthouse audit \"$audit\" fails");
+        }
+    }
+
+    public function test_indexing_is_blocked_on_staging_and_allowed_on_live(): void
+    {
+        $psi = app(PageSpeedService::class);
+        $failed = $this->failedIds($this->report('/', 'mobile'));
+        $onLive = parse_url($this->base($psi), PHP_URL_HOST) === 'datamysite.com';
+        if ($onLive) $this->assertNotContains('is-crawlable', $failed, 'live must be indexable');
+        else $this->assertContains('is-crawlable', $failed, 'staging must be noindex');
+    }
+
+    public function test_home_scores_stay_above_the_minimums(): void
+    {
+        $thresholds = config('services.pagespeed.thresholds');
+        $scores = $this->report('/', 'mobile')['scores'];
+        foreach ($thresholds as $category => $limit) {
+            $this->assertGreaterThanOrEqual($limit['fail'], $scores[$category], "home mobile $category score");
+        }
+    }
+
+    public function test_home_core_web_vitals_meet_the_mobile_targets(): void
+    {
+        $metrics = $this->report('/', 'mobile')['metrics'];
+        foreach (PageSpeedService::TARGETS as $name => $limit) {
+            $this->assertArrayHasKey($name, $metrics);
+            $this->assertLessThanOrEqual($limit, $metrics[$name]['value'], "home mobile $name (" . $metrics[$name]['display'] . ')');
+        }
+    }
+
+    public function test_the_api_key_never_appears_in_error_messages(): void
+    {
+        $psi = app(PageSpeedService::class);
+        $key = (string) config('services.pagespeed.key');
+        if ($key === '') $this->markTestSkipped('PAGESPEED_API_KEY is not set');
+        $text = $psi->scrubKey("cURL error 28 for https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=x&strategy=mobile&key=$key&category=SEO");
+        $this->assertStringNotContainsString($key, $text);
+        $this->assertStringContainsString('key=[hidden]', $text);
+    }
+}

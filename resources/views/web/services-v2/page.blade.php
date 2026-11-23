@@ -106,6 +106,12 @@
 	if (!empty($subservice)) $sv2Crumbs[] = [$service->name, $sv2CrumbUrl([optional($mainservice ?? null)->slug, $service->slug])];
 	$sv2Crumbs[] = [$sv2Page->name, null];
 	$sv2CrumbSchema = !$sv2All->contains(fn ($x) => stripos((string) $x->content, 'BreadcrumbList') !== false);
+	/* structured data this template adds itself — skipped when the page's own (database) sections already carry it */
+	/* ... and by the database snippets (table snippet_code) that production shows for this URL ($headSnippet / $bodySnippet) */
+	$sv2Snip = fn ($t) => v2_snippet_has($t, $headSnippet ?? null, $bodySnippet ?? null);
+	$sv2ServiceSchema = config('seo.template_schema', true) && !$sv2All->contains(fn ($x) => preg_match('/"@type"\s*:\s*"(Service|LocalBusiness|ProfessionalService)"|local-schema|service-schema/i', (string) $x->content))
+		&& !$sv2Snip('Service') && !$sv2Snip('LocalBusiness');
+	$sv2FaqSchema = !$sv2All->contains(fn ($x) => stripos((string) $x->content, 'FAQPage') !== false) && !$sv2Snip('FAQPage');
 
 	/* fallback photo when the hero row has no background image */
 	$sv2Photo = $sv2Hero['photo'];
@@ -150,6 +156,18 @@
 				. '<a href="' . e($play) . '"><img src="' . e($thumb) . '" alt="Play video" loading="lazy"><span></span></a>';
 			return preg_replace('#^<iframe\b#i', '<iframe srcdoc="' . htmlspecialchars($doc, ENT_QUOTES) . '"', $m[0]);
 		}, $html);
+		/* links the legacy text wrote as href="javascript:void(0)" are not crawlable (Lighthouse "Links are not crawlable"): give them a
+		   real target and keep the behaviour — "scroll to top" links point at the hero, the copy-email link becomes a mailto that the
+		   page's own click handler cancels (it copies the address instead of opening a mail program) */
+		$html = preg_replace_callback('#<a\b[^>]*\shref\s*=\s*["\']javascript:(?:void\(0\)|;)?["\'][^>]*>#i', function ($m) {
+			$tag = $m[0];
+			if (preg_match('#copyEmail\(\s*[\'"]([^\'"]+@[^\'"]+)[\'"]#i', $tag, $e)) {
+				$tag = preg_replace('#href\s*=\s*["\']javascript:[^"\']*["\']#i', 'href="mailto:' . e($e[1]) . '"', $tag);
+				return preg_replace('#onclick\s*=\s*"([^"]*)"#i', 'onclick="$1 return false;"', $tag);
+			}
+			$target = stripos($tag, 'scroll-up') !== false ? '#hv2-hero' : '#';
+			return preg_replace('#href\s*=\s*["\']javascript:[^"\']*["\']#i', 'href="' . $target . '"', $tag);
+		}, (string) $html);
 		return preg_replace_callback('#<img\b[^>]*>#i', function ($m) {
 			$tag = $m[0];
 			if (preg_match('#\ssrc\s*=\s*["\']([^"\']+)["\']#i', $tag, $s) && preg_match('#/public/([^?"\']+?)\.(jpe?g|png)(\?[^"\']*)?$#i', $s[1], $p)) {
@@ -160,6 +178,11 @@
 					$ar = 'aspect-ratio: ' . (int) $d[0] . ' / ' . (int) $d[1] . ';';
 					$tag = preg_match('#\sstyle\s*=\s*"#i', $tag) ? preg_replace('#(\sstyle\s*=\s*")#i', '$1' . $ar . ' ', $tag, 1) : preg_replace('#^<img\b#i', '<img style="' . $ar . '"', $tag);
 				}
+			}
+			/* no alt attribute at all -> derive a readable one from the file name (existing alt text, even empty/decorative, is kept) */
+			if (!preg_match('#\salt\s*=#i', $tag)) {
+				$altFile = preg_match('#([^/"\'?\s]+?)(?:-w\d+)?\.(?:jpe?g|png|webp|gif|svg)(?:\?[^"\']*)?["\']#i', $tag, $af) ? trim(preg_replace('#[-_\s]+#', ' ', $af[1])) : '';
+				$tag = preg_replace('#^<img\b#i', '<img alt="' . e($altFile !== '' ? ucfirst($altFile) : 'DataMySite') . '"', $tag);
 			}
 			if (!preg_match('#\sloading\s*=#i', $tag)) $tag = preg_replace('#^<img\b#i', '<img loading="lazy"', $tag);
 			if (!preg_match('#\sdecoding\s*=#i', $tag)) $tag = preg_replace('#^<img\b#i', '<img decoding="async"', $tag);
@@ -209,31 +232,14 @@
 		return [
 			'title' => $h ? $sv2Text($h) : '',
 			'sub' => $p ? $sv2Text($p) : '',
-			'href' => $a ? $a->getAttribute('href') : URL::to('/blogs'),
+			/* always the blog collection: the stored "See All" links (111 sections) point at one category (/blogs/pr-and-media-relations) */
+			'href' => route('blogs'),
 			'label' => $a && $sv2Text($a) !== '' ? $sv2Text($a) : 'See All Blogs',
 		];
 	};
 
 	$hv2Img = URL::to('/public/assets/img');
-/* ---------- copied from Home V2: client logos + case studies ---------- */
-	$hv2Clients = [
-		38 => 'Nike', 12 => 'Intel', 35 => 'Whole Foods', 31 => 'e&', 1 => 'Dubai Duty Free', 4 => 'DAMAC', 17 => 'MakeMyTrip',
-		6 => 'Lenskart', 16 => 'Cerruti', 3 => 'Danube Properties', 2 => 'Jetour', 39 => 'Géant', 36 => "Haldiram's", 37 => 'GMG',
-		25 => 'Al Rawabi', 28 => 'Al Ain Farms', 20 => 'SIVVI', 40 => 'Aswaaq', 7 => 'Logicom Group', 5 => 'ILG', 24 => 'MARQ Dubai',
-		26 => 'Hayata', 27 => 'Cavo', 13 => 'Elite Group Holding', 14 => 'BNW Developments', 8 => 'Arabian Hills', 19 => 'Tranquil Developers', 21 => 'Prime Estate',
-		18 => 'Oscar Luxury Auto', 15 => 'AYS Developers', 32 => 'USI Consultancy', 34 => 'First Super Car Rental', 33 => 'Royalty Tourism', 29 => 'Darcey Flowers', 30 => 'Peace Homes Development',
-		9 => "D's Damat", 10 => 'Metamind Inspire', 11 => 'Ask Kubeir', 22 => 'Lasa Ona', 23 => 'Just Love UAE', 41 => 'Royal',
-	];
-	$hv2Cases = [
-		['bnw', 'bnw.jpg', 'BNW Developers'],
-		['ays', 'ays.jpg', 'AYS Developers'],
-		['jetour', 'jetour.jpg', 'Jetour'],
-		['tranquil', 'tranquil.jpg', 'Tranquil Developers'],
-		['ilg', 'ilg.jpg', 'ILG Luxury Group'],
-		['dubai-duty-free', 'dubai-duty-free.jpg', 'Dubai Duty Free'],
-		['danube', 'danube.jpg', 'Danube'],
-		['ksa', 'lenskart-p.png', 'KSA Influencers'],
-	];
+	$hv2Cases = v2_case_studies();   /* config/case_studies.php */
 @endphp
 
 {{-- fast loading mode (same as Home V2): third-party/legacy scripts wait for the first interaction,
@@ -267,6 +273,7 @@
 @endsection
 
 @section('content')
+@if($sv2ServiceSchema)@include('partials.service-schema', ['page' => $sv2Page])@endif
 <main class="main hv2 sv2" id="hv2" data-sv2-group="{{ ($mainservice ?? $service)->slug }}" data-sv2-page="{{ $sv2Page->slug }}" data-sv2-name="{{ $sv2Page->name }}">
 
 	<div class="hv2-progress" aria-hidden="true"><span></span></div>
@@ -341,7 +348,7 @@
 						@csrf
 						<input type="hidden" name="service" value="{{ $sv2Page->name }}">
 						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
-						<h2 class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></h2>
+						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
 						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
 						<label class="hv2-field">
 							<input type="text" name="name" placeholder=" " required autocomplete="name">
@@ -387,11 +394,6 @@
 		@continue($sec->type === 'hero')
 
 		@if($sec->section_key === 'clients')
-	@php
-		// split the size-ordered list into two rows (alternating) so both rows mix big and small brands
-		$hv2Rows = [[], []];
-		foreach (array_keys($hv2Clients) as $pos => $logoNo) { $hv2Rows[$pos % 2][$logoNo] = $hv2Clients[$logoNo]; }
-	@endphp
 	<section class="hv2-section hv2-dark hv2-clients" id="hv2-clients">
 		<span class="hv2-watermark" data-parallax="0.12" aria-hidden="true">Clients</span>
 		<div class="hv2-container">
@@ -406,23 +408,7 @@
 			</div>
 		</div>
 
-		<div class="hv2-marquee-wrap" role="group" aria-label="Our clients — {{ count($hv2Clients) }} brands" data-reveal="up" data-spotlight>
-			@foreach($hv2Rows as $r => $row)
-				<div class="hv2-marquee {{ $r === 1 ? 'hv2-marquee--reverse' : '' }}">
-					<div class="hv2-marquee-track">
-						@for($dup = 0; $dup < 2; $dup++)
-							@foreach($row as $i => $brand)
-								<div class="hv2-brand hv2-brand--lg" style="--n: {{ $loop->index }}" @if($dup) aria-hidden="true" @endif>
-									<div class="hv2-brand-logo hv2-media hv2-media--logo">
-										<img src="{{ $hv2Img }}/clients-final/{{ $i }}.webp" alt="{{ $dup ? '' : $brand.' logo' }}" loading="lazy" width="300" height="300">
-									</div>
-								</div>
-							@endforeach
-						@endfor
-					</div>
-				</div>
-			@endforeach
-		</div>
+		@include('web.home-v2.clients-marquee')
 	</section>
 
 		@elseif($sec->section_key === 'case-studies')
@@ -450,14 +436,14 @@
 		<div class="hv2-cs-viewport" data-autoplay="1500" role="region" aria-roledescription="carousel" aria-label="Case studies">
 			<div class="hv2-cs-track">
 				@foreach($hv2Cases as $k => $case)
-					<a href="{{ URL::to('/public/case-studies/'.$case[0].'.pdf') }}" target="_blank" rel="noopener" class="hv2-case" draggable="false" data-distort>
+					<a href="{{ $case['pdf_url'] }}" target="_blank" rel="noopener" class="hv2-case" draggable="false" data-distort>
 						<span class="hv2-case-num hv2-display" data-num="{{ str_pad($k + 1, 2, '0', STR_PAD_LEFT) }}" aria-hidden="true"></span>
 						<div class="hv2-media hv2-case-pic">
-							<img {!! v2_img('public/case-studies/cover/' . $case[1], '(max-width: 640px) 78vw, 480px') !!} alt="Case Studies" loading="lazy" draggable="false">
+							<img {!! v2_img($case['cover'], '(max-width: 640px) 78vw, 480px') !!} alt="{{ $case['alt'] }}" loading="lazy" draggable="false">
 							<span class="hv2-case-panel" data-label="View case study" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></span>
 						</div>
 						{{-- same card heading text as the live page (the name is already in the cover image, so it is visually hidden) --}}
-						<h5 class="sv2-sr"><span>{{ $case[2] }}</span> x <span>DMS</span> |  Case Study</h5>
+						<h3 class="sv2-sr"><span>{{ $case['name'] }}</span> x <span>DMS</span> |  Case Study</h3>
 					</a>
 				@endforeach
 			</div>
@@ -482,7 +468,7 @@
 							<h2 class="hv2-display hv2-h2" data-split>{{ $sv2B['title'] ?: 'Blogs' }}</h2>
 							@if($sv2B['sub'])<p class="hv2-lead sv2-blogs-sub" data-reveal="up" data-delay="1">{{ $sv2B['sub'] }}</p>@endif
 						</div>
-						<a href="{{ $sv2B['href'] }}" class="hv2-btn hv2-btn--dark" target="_blank" data-magnetic data-reveal="up" data-delay="2"><span>{{ $sv2B['label'] }} <i class="bi bi-arrow-right"></i></span></a>
+						<a href="{{ $sv2B['href'] }}" class="hv2-btn hv2-btn--dark" data-magnetic data-reveal="up" data-delay="2"><span>{{ $sv2B['label'] }} <i class="bi bi-arrow-right"></i></span></a>
 					</div>
 					@if(!empty($blogs) && count($blogs))
 					<div class="hv2-blog-grid">
@@ -492,7 +478,7 @@
 									<img {!! v2_img('public/storage/blogs/' . $val->banner, '(max-width: 640px) 92vw, 31vw', URL::to('public/storage/blogs/' . $val->banner)) !!} alt="{{ $val->banner_alt ?: $val->heading }}" loading="lazy">
 								</div>
 								{{-- same tags/text as the live card: h6 title, short description, "by Author - Date" --}}
-								<h6 class="sv2-blog-h" title="{{ $val->heading }}">{{ $val->heading }}</h6>
+								<h3 class="sv2-blog-h" title="{{ $val->heading }}">{{ $val->heading }}</h3>
 								<p>{{ $val->short_description }}</p>
 								<small class="hv2-blog-meta">by <b>{{ optional($val->author)->name }}</b> - {{ date('F d, Y', strtotime($val->created_at)) }}</small>
 							</a>
@@ -505,23 +491,29 @@
 		@elseif($sec->type === 'faq')
 			@php $sv2FaqHtml = $sv2Render($sec); $sv2Faqs = $sv2FaqParse($sv2FaqHtml); $sv2FaqH = $sv2FaqTitle($sv2FaqHtml); @endphp
 			@if(count($sv2Faqs))
+			@if($sv2FaqSchema){!! v2_faq_schema($sv2Faqs) !!}@endif
 			<section class="hv2-section hv2-tint sv2-faq" id="sv2-faq">
 				<div class="hv2-container sv2-faq-grid">
 					<div class="sv2-faq-side">
 						{{-- same heading tag + text as the live FAQ block --}}
-						<h4 class="hv2-display hv2-h2 sv2-faq-title" data-split>{{ $sv2FaqH ?: 'FAQs' }}</h4>
+						<h2 class="hv2-display hv2-h2 sv2-faq-title" data-split>{{ $sv2FaqH ?: 'FAQs' }}</h2>
+						{{-- the hero form is the target; pages without a hero form send the visitor to the contact page instead of a dead anchor --}}
+						@if($sv2Hero['form'])
 						<a href="#hv2-form" class="hv2-btn hv2-btn--primary hv2-btn--3d" data-scrollto="#hv2-form" data-magnetic data-reveal="up" data-delay="2"><span>Ask our team <i class="bi bi-arrow-right"></i></span></a>
+						@else
+						<a href="{{ route('contact') }}" class="hv2-btn hv2-btn--primary hv2-btn--3d" data-magnetic data-reveal="up" data-delay="2"><span>Ask our team <i class="bi bi-arrow-right"></i></span></a>
+						@endif
 					</div>
 					<div class="sv2-faq-list" data-sv2-faq>
 						@foreach($sv2Faqs as $k => $f)
 							<div class="hv2-faq-item {{ $k === 0 ? 'is-open' : '' }}" data-reveal="up" data-delay="{{ min($k, 4) }}">
-								<h5 class="hv2-faq-h">
+								<h3 class="hv2-faq-h">
 									<button type="button" class="hv2-faq-q" id="sv2-faq-q{{ $k }}" aria-expanded="{{ $k === 0 ? 'true' : 'false' }}" aria-controls="sv2-faq-a{{ $k }}">
 										<span class="hv2-faq-num" data-num="{{ str_pad($k + 1, 2, '0', STR_PAD_LEFT) }}" aria-hidden="true"></span>
 										<span class="hv2-faq-text">{{ $f[0] }}</span>
 										<span class="hv2-faq-tog" aria-hidden="true"></span>
 									</button>
-								</h5>
+								</h3>
 								<div class="hv2-faq-a" id="sv2-faq-a{{ $k }}" role="region" aria-labelledby="sv2-faq-q{{ $k }}">
 									<div>{!! $f[1] !!}</div>
 								</div>
@@ -552,7 +544,6 @@
 @section('addScript')
 	{{-- page scripts, minus aside.js (it injects a second enquiry form; V2 keeps only the hero form) --}}
 	{!! preg_replace('#<script[^>]+/aside\.js[^>]*>\s*</script>#i', '', $sv2Area('scripts')) !!}
-	<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js" defer></script>
 	{{-- service-v2.js must run before home-v2.js: it tags the legacy content for the reveal engine --}}
 	<script src="{{ v2_asset('assets/js/service-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>

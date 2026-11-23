@@ -128,14 +128,12 @@
     last = trigger || document.activeElement;
     open = true;
     modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); body.classList.add('hs-rv-open');
-    if (window.lenis && window.lenis.stop) window.lenis.stop();
     init(); if (swiper) { swiper.update(); } sync();
     panel.setAttribute('tabindex', '-1'); setTimeout(function () { panel.focus({ preventScroll: true }); }, 60);   /* focus the dialog itself: no stray ring on the close button */
   };
   var hide = function () {
     open = false;
     modal.classList.remove('is-open'); modal.setAttribute('aria-hidden', 'true'); body.classList.remove('hs-rv-open');
-    if (window.lenis && window.lenis.start) window.lenis.start();
     sync();
     if (last && last.focus) last.focus();
   };

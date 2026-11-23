@@ -518,11 +518,11 @@
     margin-top: 10px;
     text-align: center;
 }
-.aside-form h4{
+.aside-form h4, .aside-form .af-sub{
     color: #fff;
     margin-bottom: 14px;
 }
-.aside-form h3 {
+.aside-form h3, .aside-form .af-title {
     color: #e04a43;
     margin-bottom: -3px;
     text-transform: uppercase;
@@ -817,7 +817,7 @@
     padding-left: 15px;
     padding-right: 15px;
 }
-#newsletter-modal-u h2{
+#newsletter-modal-u h2, #newsletter-modal-u .modal-ttl{
 
     font-weight: bold;
     margin-bottom: 15px;
@@ -930,7 +930,7 @@
     padding-left: 15px;
     padding-right: 15px;
 }
-#seo-cta-modal-u h2{
+#seo-cta-modal-u h2, #seo-cta-modal-u .modal-ttl{
 
     font-weight: bold;
     margin-bottom: 15px;
@@ -2622,8 +2622,8 @@
 .pill{display:inline-flex;align-items:center;gap:6px;background:rgba(232,80,58,.18);border:1px solid rgba(232,80,58,.35);border-radius:20px;padding:3px 10px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#ff8a75;margin-bottom:8px}
 .dot{width:5px;height:5px;border-radius:50%;background:#ff8a75;animation:pl 1.4s infinite;flex-shrink:0}
 @keyframes pl{0%,100%{box-shadow:0 0 0 0 rgba(255,138,117,.5)}50%{box-shadow:0 0 0 5px transparent}}
-.hd h2{font-size:17px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:2px}
-.hd h2 em{font-style:italic;color:#ff8a75}
+.hd h2, .hd .modal-ttl{font-size:17px;font-weight:800;color:#fff;line-height:1.25;margin-bottom:2px}
+.hd h2 em, .hd .modal-ttl em{font-style:italic;color:#ff8a75}
 .hd p{font-size:11px;color:rgba(255,255,255,.55);line-height:1.5;margin-bottom:0}
 
 /* BODY */

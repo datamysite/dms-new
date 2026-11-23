@@ -28,7 +28,7 @@
 
 /* == Get in touch ========================================================== */
 .ctv-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(26px, 4vw, 70px); align-items: start; }
-.ctv-info h3 { margin: var(--space-3) 0 var(--space-4); }
+.ctv-info h3, .ctv-info h2 { margin: var(--space-3) 0 var(--space-4); }
 .ctv-lead { margin: 0 0 clamp(24px, 3vw, 40px); max-width: 60ch; font: 400 clamp(16px, 1.25vw, 18.5px)/1.7 var(--font-body); color: #3f524c; }
 .ctv-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; perspective: 1200px; }
 .ctv-card { position: relative; display: flex; gap: 14px; padding: 22px; border-radius: 22px; background: #fff; overflow: hidden; transform-style: preserve-3d;
@@ -56,7 +56,7 @@
 .ctv-profile-bg { position: absolute; inset: 0; background-size: cover; background-position: center; opacity: .4; transform: scale(1.06); animation: ctv-drift 26s ease-in-out infinite alternate; }
 .ctv-profile::before { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(8, 46, 35, .86), rgba(8, 46, 35, .6) 50%, rgba(8, 46, 35, .9)); }
 .ctv-profile-copy { max-width: 760px; margin-inline: auto; }
-.ctv-profile-copy h3 { margin: 0 0 var(--space-4); }
+.ctv-profile-copy h3, .ctv-profile-copy h2 { margin: 0 0 var(--space-4); }
 .ctv-profile-p { margin: 0 0 var(--space-6, 32px); font: 400 clamp(17px, 1.4vw, 21px)/1.6 var(--font-body); color: rgba(255, 255, 255, .86); }
 
 /* ==========================================================================

@@ -53,7 +53,7 @@ $(document).on("submit", "#enquiry-form", function (event) {
 
                 setTimeout(function () {
                     location.reload();
-                }, 1000);
+                }, 2500);
             } else {
                 Toast.fire({
                     icon: "warning",
@@ -66,7 +66,7 @@ $(document).on("submit", "#enquiry-form", function (event) {
             $(".loading").css({display:"none"});
             Toast.fire({
                 icon: "warning",
-                title: 'Something went wrong! Try again later.',
+                title: (e && e.responseJSON && e.responseJSON.errors ? e.responseJSON.errors[Object.keys(e.responseJSON.errors)[0]][0] : 'Something went wrong! Try again later.'),
             });
         });
     }
@@ -120,7 +120,7 @@ $(document).on("submit", "#enquiry-form-exit", function (event) {
 
                 setTimeout(function () {
                     location.reload();
-                }, 1000);
+                }, 2500);
             } else {
                 Toast.fire({
                     icon: "warning",
@@ -133,7 +133,7 @@ $(document).on("submit", "#enquiry-form-exit", function (event) {
             $(".exit-loading").css({display:"none"});
             Toast.fire({
                 icon: "warning",
-                title: 'Something went wrong! Try again later.',
+                title: (e && e.responseJSON && e.responseJSON.errors ? e.responseJSON.errors[Object.keys(e.responseJSON.errors)[0]][0] : 'Something went wrong! Try again later.'),
             });
         });
     }
@@ -187,7 +187,7 @@ $(document).on("submit", "#enquiry-help-form", function (event) {
 
                 setTimeout(function () {
                     location.reload();
-                }, 1000);
+                }, 2500);
             } else {
                 Toast.fire({
                     icon: "warning",
@@ -200,7 +200,7 @@ $(document).on("submit", "#enquiry-help-form", function (event) {
             $(".help-loading").css({opacity:"0"});
             Toast.fire({
                 icon: "warning",
-                title: 'Something went wrong! Try again later.',
+                title: (e && e.responseJSON && e.responseJSON.errors ? e.responseJSON.errors[Object.keys(e.responseJSON.errors)[0]][0] : 'Something went wrong! Try again later.'),
             });
         });
     }
@@ -255,7 +255,7 @@ $(document).on("submit", "#seo-help-form", function (event) {
 
                 setTimeout(function () {
                     location.reload();
-                }, 1000);
+                }, 2500);
             } else {
                 Toast.fire({
                     icon: "warning",
@@ -268,7 +268,7 @@ $(document).on("submit", "#seo-help-form", function (event) {
             $(".seo-loading").css({opacity:"0"});
             Toast.fire({
                 icon: "warning",
-                title: 'Something went wrong! Try again later.',
+                title: (e && e.responseJSON && e.responseJSON.errors ? e.responseJSON.errors[Object.keys(e.responseJSON.errors)[0]][0] : 'Something went wrong! Try again later.'),
             });
         });
     }
@@ -323,7 +323,7 @@ $(document).on("submit", "#seo-ads-form", function (event) {
 
                 setTimeout(function () {
                     location.reload();
-                }, 1000);
+                }, 2500);
             } else {
                 Toast.fire({
                     icon: "warning",
@@ -336,7 +336,7 @@ $(document).on("submit", "#seo-ads-form", function (event) {
             $(".seo-loading").css({opacity:"0"});
             Toast.fire({
                 icon: "warning",
-                title: 'Something went wrong! Try again later.',
+                title: (e && e.responseJSON && e.responseJSON.errors ? e.responseJSON.errors[Object.keys(e.responseJSON.errors)[0]][0] : 'Something went wrong! Try again later.'),
             });
         });
     }

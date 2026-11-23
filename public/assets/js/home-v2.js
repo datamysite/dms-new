@@ -6,7 +6,7 @@
           [data-ring] [data-tilt] [data-magnetic] [data-depth] [data-parallax]
           [data-distort] [data-readmore] [data-showmore-btn] [data-steps]
           [data-scrollto] [data-spotlight]
-   Library (optional, CDN): Lenis smooth scroll. Every feature has a
+   No scroll library: native browser scrolling. Every feature has a
    fallback so content is never left hidden.
    ========================================================================== */
 (function () {
@@ -37,14 +37,51 @@
   var onScroll = function (fn) { scrollListeners.push(fn); };
   var emitScroll = function () { for (var i = 0; i < scrollListeners.length; i++) scrollListeners[i](scrollState); };
 
-  /* Scroll-linked effects are plain functions of an element's LIVE position. (A scroll library caches positions, and
-     they went stale — page jumped, effects froze — whenever the page height changed, e.g. after "Show all services".) */
+  /* Scroll-linked effects run once per frame in TWO phases: first every effect READS what it needs (at the start of a frame
+     the layout is still clean, so reading is cheap), then every effect WRITES its styles. Reading right after another effect
+     had written forced the browser to recalculate layout 4-5 times per frame. Effects whose element is off-screen are skipped.
+     addFx(read, write, el): read() returns values, write(values) applies them; el (optional) = run only while it is near view. */
   var fx = [];
-  var runFx = function () { for (var i = 0; i < fx.length; i++) fx[i](); };
-  var addFx = function (fn) { fx.push(fn); fn(); };
+  var runFx = function () {
+    var i, f;
+    for (i = 0; i < fx.length; i++) { f = fx[i]; f.on = !f.el || f.el.__fxOn !== false; if (f.on) f.v = f.read(); }
+    for (i = 0; i < fx.length; i++) { f = fx[i]; if (f.on) f.write(f.v); }
+  };
+  var fxIO = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
+    var woke = false;
+    entries.forEach(function (en) { en.target.__fxOn = en.isIntersecting; if (en.isIntersecting) woke = true; });
+    if (woke) requestAnimationFrame(runFx);
+  }, { rootMargin: '25% 0px 25% 0px' }) : null;
+  var addFx = function (read, write, el) {
+    var f = { read: read, write: write, el: el || null, v: null, on: true };
+    fx.push(f);
+    if (f.el && fxIO) fxIO.observe(f.el);
+    f.v = read(); write(f.v);
+  };
+  /* write a style / custom property only when its value changes (an unchanged value still costs a style recalculation) */
+  var setStyle = function (el, prop, val) {
+    var key = '__s_' + prop;
+    if (el[key] === val) return;
+    el[key] = val;
+    if (prop.charAt(0) === '-') el.style.setProperty(prop, val); else el.style[prop] = val;
+  };
+
+  /* Page height and viewport are measured when the layout changes (resize, load, fonts, page height change), never per frame */
+  var geo = { vh: window.innerHeight, max: 0 };
+  var remeasurePending = 0;
+  var remeasure = function () {
+    if (remeasurePending) return;
+    remeasurePending = requestAnimationFrame(function () {
+      remeasurePending = 0;
+      geo.vh = window.innerHeight;
+      geo.max = Math.max(0, docEl.scrollHeight - geo.vh);
+      emitScroll();
+    });
+  };
   onScroll(runFx);
-  window.addEventListener('resize', runFx);
-  window.addEventListener('load', runFx);
+  window.addEventListener('resize', remeasure);
+  window.addEventListener('load', remeasure);
+  if (window.ResizeObserver) new ResizeObserver(remeasure).observe(document.body); else remeasure();
 
   /* == PAGE LOADER ======================================================== */
   /* The overlay is pure CSS (html.hv2-loading, set by an inline <head> script) so it
@@ -88,42 +125,25 @@
     setTimeout(leave, MAX + 80); /* hard stop at the 0.5 s budget (also covers throttled tabs / slow frames) */
   })();
 
-  /* == SMOOTH SCROLL (Lenis) ============================================= */
-  var lenis = null;
-  var isScrollable = function (node) {
-    while (node && node !== document.body && node.nodeType === 1) {
-      var s = window.getComputedStyle(node);
-      if (/(auto|scroll)/.test(s.overflowY) && node.scrollHeight > node.clientHeight) return true;
-      node = node.parentElement;
-    }
-    return false;
+  /* == SCROLL (native) ===================================================
+     The browser scrolls on its own (compositor) thread: no JS smooth-scroll library. A JS scroller (Lenis) turned every busy
+     moment on the main thread into a freeze followed by a jump. Scroll effects read scrollState once per frame (one passive
+     listener + one requestAnimationFrame). */
+  var lastY = window.scrollY, ticking = false;
+  window.addEventListener('scroll', function () {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(function () {
+      scrollState.y = window.scrollY; scrollState.velocity = scrollState.y - lastY; lastY = scrollState.y;
+      emitScroll(); ticking = false;
+    });
+  }, { passive: true });
+
+  /* scroll so the element's top sits just below the fixed header (scrollIntoView would put it under the header) */
+  var scrollToEl = function (el, extra, behavior) {
+    var top = el.getBoundingClientRect().top + window.pageYOffset - headerH() - (extra || 0);
+    window.scrollTo({ top: Math.max(0, top), behavior: behavior || (reduceMotion ? 'auto' : 'smooth') });
   };
-  if (window.Lenis && finePointer && !reduceMotion) {
-    lenis = new window.Lenis({
-      duration: 1.1, smoothWheel: true,
-      easing: function (t) { return Math.min(1, 1.001 - Math.pow(2, -10 * t)); },
-      prevent: function (node) {
-        return !!(node.closest && node.closest('.modal, [data-lenis-prevent], .iti__dropdown-content, .iti__country-list, .swal2-container, #navmenu')) || isScrollable(node);
-      }
-    });
-    lenis.on('scroll', function (e) {
-      scrollState.y = e.scroll; scrollState.velocity = e.velocity || 0;
-      emitScroll();
-    });
-    (function raf(t) { lenis.raf(t); requestAnimationFrame(raf); })(performance.now());
-    document.addEventListener('show.bs.modal', function () { lenis.stop(); });
-    document.addEventListener('hidden.bs.modal', function () { lenis.start(); });
-  } else {
-    var lastY = window.scrollY, ticking = false;
-    window.addEventListener('scroll', function () {
-      if (ticking) return;
-      ticking = true;
-      requestAnimationFrame(function () {
-        scrollState.y = window.scrollY; scrollState.velocity = scrollState.y - lastY; lastY = scrollState.y;
-        emitScroll(); ticking = false;
-      });
-    }, { passive: true });
-  }
 
   document.addEventListener('click', function (e) {
     var trigger = e.target.closest && e.target.closest('[data-scrollto]');
@@ -131,9 +151,8 @@
     var target = document.querySelector(trigger.getAttribute('data-scrollto'));
     if (!target) return;
     e.preventDefault();
-    var focusFirst = function () { var f = target.querySelector('input:not([type=hidden]), textarea'); if (f) f.focus({ preventScroll: true }); };
-    if (lenis) lenis.scrollTo(target, { offset: -(headerH() + 20), duration: 1.3, onComplete: focusFirst });
-    else { target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' }); setTimeout(focusFirst, 700); }
+    scrollToEl(target, 20);
+    setTimeout(function () { var f = target.querySelector('input:not([type=hidden]), textarea'); if (f) f.focus({ preventScroll: true }); }, 700);
   });
 
   /* == SPLIT TEXT ======================================================== */
@@ -228,13 +247,14 @@
       }, { rootMargin: '0px 0px -5% 0px', threshold: 0.3 });
       flyGroups.forEach(function (g) { ioFly.observe(g); });
     }
-    /* sweeper: anything the visitor has already scrolled past (fast flick, anchor jump) is simply shown */
-    var lastSweep = 0;
+    /* sweeper: anything the visitor has already scrolled past (fast flick, anchor jump) is simply shown. It runs shortly
+       after scrolling pauses (outside the scroll frame, so its position reads never force a layout mid-scroll). */
+    var sweepTimer = 0;
     var sweepReveals = function () {
       revealEls.forEach(function (el) { if (!el.classList.contains('is-in') && el.getBoundingClientRect().bottom < 0) el.classList.add('is-in'); });
     };
     if (!reduceMotion) {
-      onScroll(function () { var n = performance.now(); if (n - lastSweep > 200) { lastSweep = n; sweepReveals(); } });
+      onScroll(function () { clearTimeout(sweepTimer); sweepTimer = setTimeout(sweepReveals, 150); });
       sweepReveals();
     }
 
@@ -250,8 +270,7 @@
   /* == PROGRESS · CURSOR ================================================= */
   var progress = root.querySelector('.hv2-progress');
   var updateProgress = function () {
-    var max = docEl.scrollHeight - window.innerHeight;
-    progress.style.setProperty('--p', max > 0 ? clamp(scrollState.y / max, 0, 1) : 0);
+    setStyle(progress, '--p', (geo.max > 0 ? clamp(scrollState.y / geo.max, 0, 1) : 0).toFixed(4));
   };
   onScroll(updateProgress); updateProgress();
 
@@ -261,18 +280,17 @@
     var ringBar = topBtn.querySelector('.bar'), CIRC = 2 * Math.PI * 21;
     ringBar.style.strokeDasharray = CIRC.toFixed(2);
     var updateTop = function () {
-      var max = docEl.scrollHeight - window.innerHeight, p = max > 0 ? clamp(scrollState.y / max, 0, 1) : 0;
-      ringBar.style.strokeDashoffset = (CIRC * (1 - p)).toFixed(2);
-      topBtn.classList.toggle('is-visible', scrollState.y > window.innerHeight * 0.6);
+      var p = geo.max > 0 ? clamp(scrollState.y / geo.max, 0, 1) : 0;
+      setStyle(ringBar, 'strokeDashoffset', (CIRC * (1 - p)).toFixed(1));
+      var show = scrollState.y > geo.vh * 0.6;
+      if (topBtn.__shown !== show) { topBtn.__shown = show; topBtn.classList.toggle('is-visible', show); }
     };
     onScroll(updateTop); updateTop();
     topBtn.addEventListener('click', function () {
       if (scrollState.y < 8) return;
       topBtn.classList.remove('is-launching'); void topBtn.offsetWidth; topBtn.classList.add('is-launching');
       setTimeout(function () { topBtn.classList.remove('is-launching'); }, 1000);
-      var dur = clamp(scrollState.y / 3200, 0.9, 2.4);
-      if (lenis) lenis.scrollTo(0, { duration: dur, easing: function (t) { return 1 - Math.pow(1 - t, 4); } });
-      else window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
+      window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
     });
   }
 
@@ -303,7 +321,19 @@
     var prefix = el.getAttribute('data-prefix') || '';
     var text = function (v) { return prefix + fmt(v, dec) + (suffix ? '<sup>' + suffix + '</sup>' : ''); };
     /* A hidden copy of the FINAL value reserves the full width/height, so the layout never shifts while digits tick up */
-    var render = function (v) { el.innerHTML = '<span class="hv2-c-ghost" aria-hidden="true">' + text(target) + '</span><span class="hv2-c-live">' + text(v) + '</span>'; };
+    /* built once; each animation frame then only changes the number's text node (not the whole HTML) */
+    var liveNum = null;
+    var render = function (v) {
+      if (!liveNum) {
+        el.innerHTML = '<span class="hv2-c-ghost" aria-hidden="true">' + text(target) + '</span><span class="hv2-c-live">' + text(v) + '</span>';
+        var live = el.querySelector('.hv2-c-live');
+        liveNum = live && live.firstChild && live.firstChild.nodeType === 3 ? live.firstChild : null;
+        if (!liveNum) render = function (n) { live.innerHTML = text(n); };   /* fallback: unexpected markup */
+        return;
+      }
+      var s = prefix + fmt(v, dec);
+      if (liveNum.nodeValue !== s) liveNum.nodeValue = s;
+    };
     el.setAttribute('aria-label', prefix + fmt(target, dec) + suffix);
     if (reduceMotion) { render(target); return; }        /* final value immediately */
     render(0);
@@ -385,7 +415,11 @@
   }
   if (hero && !reduceMotion) {
     var glass = hero.querySelector('.hv2-glass3d');
-    if (glass) addFx(function () { var p = clamp(scrollState.y / Math.max(1, hero.offsetHeight), 0, 1); glass.style.transform = 'translate3d(0,' + (p * 160).toFixed(1) + 'px,0)'; });
+    if (glass) addFx(
+      function () { return clamp(scrollState.y / Math.max(1, hero.offsetHeight), 0, 1); },
+      function (p) { setStyle(glass, 'transform', 'translate3d(0,' + (p * 160).toFixed(1) + 'px,0)'); },
+      hero
+    );
   }
 
   /* == HOVER IMAGE DISTORTION (SVG displacement) ========================= */
@@ -403,8 +437,12 @@
         if (t < 1) dAnim = requestAnimationFrame(step); else el.classList.remove('is-distorting');
       })(performance.now());
     };
+    /* not while scrolling: cards sliding under a resting pointer fired mouseenter, and the SVG filter (CPU-only) ran mid-scroll */
+    var lastScrollAt = 0;
+    onScroll(function () { lastScrollAt = performance.now(); });
     $$('[data-distort]').forEach(function (el) {
       el.addEventListener('mouseenter', function () {
+        if (performance.now() - lastScrollAt < 250) return;
         $$('[data-distort].is-distorting').forEach(function (o) { if (o !== el) o.classList.remove('is-distorting'); });
         pulse(el);
       });
@@ -440,8 +478,7 @@
       if (c) c.hidden = all; if (o) o.hidden = !all;
     });
     var goTo = function (el, offset) {
-      if (lenis) lenis.scrollTo(el, { offset: offset, duration: 1.1 });
-      else el.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+      window.scrollTo({ top: Math.max(0, el.getBoundingClientRect().top + window.pageYOffset + offset), behavior: reduceMotion ? 'auto' : 'smooth' });
     };
     /* collapsing shortens the page a lot: jump (no animation) so the toggle stays under the pointer,
        and only then re-run the scroll-linked effects */
@@ -453,8 +490,8 @@
     } else {
       var backSel = sm.getAttribute('data-collapse-scroll'), back = backSel ? document.querySelector(backSel) : null;
       var target = back || sm, off = back ? -(headerH() + 24) : -Math.max(0, (window.innerHeight - sm.offsetHeight) / 2);
-      /* plain native jump: Lenis syncs to native scroll, whereas lenis.scrollTo() right after a big layout shrink snapped back */
-      window.scrollTo(0, Math.max(0, target.getBoundingClientRect().top + window.pageYOffset + off));
+      /* instant jump (no animation) right after the big layout shrink, so the toggle stays under the pointer */
+      window.scrollTo({ top: Math.max(0, target.getBoundingClientRect().top + window.pageYOffset + off), behavior: 'instant' });
       settle();
     }
   });
@@ -532,11 +569,17 @@
       if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { csInView = en[0].isIntersecting; csSync(); }, { threshold: 0.15 }).observe(vp);
       csPaintToggle();
       };
-      var csStart = function () { csLoadSwiper(csInit); };
+      /* Swiper is built while the browser is idle after page load (building it as the section approached cost ~250 ms in the
+         middle of the visitor's scroll). If the visitor reaches the section first, it is built then. */
+      var csStarted = false;
+      var csStart = function () { if (csStarted) return; csStarted = true; if (csLazy) csLazy.disconnect(); csLoadSwiper(csInit); };
+      var csLazy = null;
       if ('IntersectionObserver' in window) {
-        var csLazy = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { csLazy.disconnect(); csStart(); } }, { rootMargin: '100% 0px 100% 0px' });
+        csLazy = new IntersectionObserver(function (en) { if (en[0].isIntersecting) csStart(); }, { rootMargin: '50% 0px 50% 0px' });
         csLazy.observe(cs);
-      } else csStart();
+      }
+      var csIdle = function () { setTimeout(function () { if (window.requestIdleCallback) requestIdleCallback(csStart, { timeout: 4000 }); else csStart(); }, 1200); };
+      if (document.readyState === 'complete') csIdle(); else window.addEventListener('load', csIdle);
     }
   }
 
@@ -548,24 +591,33 @@
     stackVis = stackCards.filter(function (c) { return c.offsetParent !== null; });
     stackTops = stackVis.map(function (c) { return parseFloat(window.getComputedStyle(c).top) || 120; });
   };
-  var paintStack = function () {
-    if (reduceMotion || !stackVis.length) return;
-    var from = window.innerHeight * 0.92, i, tops = [];
-    /* read all positions first, then write (no forced reflow inside the loop) */
-    for (i = 1; i < stackVis.length; i++) tops[i] = stackVis[i].getBoundingClientRect().top;
-    for (i = 0; i < stackVis.length - 1; i++) {
-      var p = clamp((from - tops[i + 1]) / Math.max(1, from - stackTops[i + 1]), 0, 1);
-      stackVis[i].style.setProperty('--dim', (p * 0.38).toFixed(3));
-      stackVis[i].style.transform = p > 0 ? 'scale(' + (1 - p * 0.06).toFixed(4) + ')' : '';
+  /* read phase: live positions of the (sticky) cards; write phase: dim + scale, only when the value changes */
+  var readStack = function () {
+    if (reduceMotion || !stackVis.length) return null;
+    var tops = [];
+    for (var i = 1; i < stackVis.length; i++) tops[i] = stackVis[i].getBoundingClientRect().top;
+    return { from: window.innerHeight * 0.92, tops: tops };
+  };
+  var writeStack = function (r) {
+    if (!r) return;
+    for (var i = 0; i < stackVis.length - 1; i++) {
+      var p = clamp((r.from - r.tops[i + 1]) / Math.max(1, r.from - stackTops[i + 1]), 0, 1);
+      setStyle(stackVis[i], '--dim', (p * 0.38).toFixed(3));
+      setStyle(stackVis[i], 'transform', p > 0 ? 'scale(' + (1 - p * 0.06).toFixed(4) + ')' : '');
     }
     var last = stackVis[stackVis.length - 1];
-    last.style.setProperty('--dim', '0'); last.style.transform = '';
+    setStyle(last, '--dim', '0'); setStyle(last, 'transform', '');
   };
+  var paintStack = function () { writeStack(readStack()); };
   var buildStack = function () {
-    stackCards.forEach(function (c) { c.style.removeProperty('--dim'); c.style.transform = ''; });
+    stackCards.forEach(function (c) { c.style.removeProperty('--dim'); c.style.transform = ''; c['__s_--dim'] = c.__s_transform = undefined; });
     measureStack(); paintStack();
   };
-  if (stackCards.length > 1) { measureStack(); addFx(paintStack); window.addEventListener('resize', measureStack); }
+  if (stackCards.length > 1) {
+    measureStack();
+    addFx(readStack, writeStack, stackCards[0].parentNode);
+    window.addEventListener('resize', measureStack);
+  }
 
   /* == TESTIMONIAL SLIDER — looping auto-slide + controls ================== */
   /* Interval comes from data-autoplay (ms) on .hv2-q-stage. Pauses on hover/focus, off-screen,
@@ -578,11 +630,16 @@
     var QMS = parseInt(stage.getAttribute('data-autoplay'), 10) || 1500;
     var qi = 0, qTimer = null, qUser = reduceMotion, qHover = false, qSeen = true;
     var qRunning = function () { return !qUser && !qHover && qSeen && !document.hidden && !reduceMotion; };
+    /* restart the progress bar without forcing a layout (the old "void offsetWidth" trick reflowed the page on every slide,
+       and on every in-view change while scrolling) */
     var qBarReset = function (on) {
       if (!qBar) return;
-      qBar.style.animation = 'none'; void qBar.offsetWidth;
       qBar.style.setProperty('--q-ms', QMS + 'ms');
-      qBar.style.animation = on ? '' : 'none';
+      if (!on) { qBar.style.animation = 'none'; return; }
+      var wasOff = qBar.style.animation === 'none';
+      qBar.style.animation = '';
+      if (!wasOff && qBar.getAnimations) qBar.getAnimations().forEach(function (a) { a.cancel(); a.play(); });
+      else if (!wasOff) { qBar.style.animation = 'none'; void qBar.offsetWidth; qBar.style.animation = ''; }
     };
     var qSchedule = function () {
       clearTimeout(qTimer);
@@ -627,62 +684,59 @@
   if (steps) {
     var links = $$('.hv2-step-link', steps), stepEls = $$('.hv2-step', steps);
     var setLine = function (p) {
-      links.forEach(function (l, k) { l.style.setProperty('--f', clamp(p * links.length - k, 0, 1).toFixed(3)); });
-      stepEls.forEach(function (s, i) { s.classList.toggle('is-hit', p > 0 && p >= (i / (stepEls.length - 1)) - 0.02); });
+      links.forEach(function (l, k) { setStyle(l, '--f', clamp(p * links.length - k, 0, 1).toFixed(3)); });
+      stepEls.forEach(function (s, i) {
+        var hit = p > 0 && p >= (i / (stepEls.length - 1)) - 0.02;
+        if (s.__hit !== hit) { s.__hit = hit; s.classList.toggle('is-hit', hit); }
+      });
     };
     /* progress = how far the block has travelled from "top at 75% of the viewport" to "bottom at 55%" */
-    var updateProcess = function () {
+    var readProcess = function () {
       var r = steps.getBoundingClientRect(), vh = window.innerHeight;
-      setLine(clamp((vh * 0.75 - r.top) / (vh * 0.2 + r.height), 0, 1));
+      return clamp((vh * 0.75 - r.top) / (vh * 0.2 + r.height), 0, 1);
     };
-    if (reduceMotion) whenInView(steps, function () { setLine(1); }); else addFx(updateProcess);
+    if (reduceMotion) whenInView(steps, function () { setLine(1); }); else addFx(readProcess, setLine, steps);
   }
 
-  /* == MARQUEE / BAND VELOCITY =========================================== */
-  if (!reduceMotion) {
-    var skewEls = $$('.hv2-band'), velTracks = $$('.hv2-marquee-track, .hv2-band-track'), anims = null, settle = null;
-    var getAnims = function () { if (anims) return anims; anims = []; velTracks.forEach(function (t) { if (t.getAnimations) anims = anims.concat(t.getAnimations()); }); return anims; };
-    onScroll(function (s) {
-      var v = clamp(s.velocity || 0, -60, 60);
-      skewEls.forEach(function (el) { el.style.setProperty('--skew', (-v * 0.1).toFixed(2) + 'deg'); });
-      getAnims().forEach(function (a) { a.playbackRate = 1 + Math.min(Math.abs(v) * 0.08, 4); });
-      clearTimeout(settle);
-      settle = setTimeout(function () { skewEls.forEach(function (el) { el.style.setProperty('--skew', '0deg'); }); getAnims().forEach(function (a) { a.playbackRate = 1; }); }, 140);
-    });
-  }
+  /* (Marquee / band speed-up while scrolling was removed: changing the animation speed every frame made the sliders
+     stutter. They now run at a steady speed.) */
 
-  /* == MARQUEE LOGOS: load them all before the section is reached ==========
+  /* == MARQUEE LOGOS: loaded while the browser is idle after page load ==
      The logos are lazy (no cost on first paint), but lazy images inside a moving marquee only start loading as each tile
-     slides in, so tiles showed up blank for a moment. When a marquee comes within ~1.5 screens, every logo in it loads at once.
-     This only starts after the visitor's first scroll / touch / click / key — never during the initial page load
-     (on home the clients section is near the top, and loading all logos at load slowed FCP/LCP). */
+     slides in, so tiles showed up blank for a moment. They are switched to eager loading once the page has loaded and the
+     browser is idle (or on the first click / key press): never on the first scroll, where 88 image requests made it stutter. */
   (function () {
     var wraps = $$('.hv2-marquee-wrap');
     if (!wraps.length) return;
-    var eager = function (wrap) { $$('img[loading="lazy"]', wrap).forEach(function (img) { img.loading = 'eager'; }); };
-    var evs = ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown'], started = false;
-    var start = function (e) {
-      if (started || (e && e.type === 'scroll' && window.scrollY < 40)) return; started = true;
+    var started = false, evs = ['pointerdown', 'keydown'];
+    var start = function () {
+      if (started) return; started = true;
       evs.forEach(function (e) { window.removeEventListener(e, start, true); });
-      if (!('IntersectionObserver' in window)) { wraps.forEach(eager); return; }
-      var io = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) { if (e.isIntersecting) { eager(e.target); io.unobserve(e.target); } });
-      }, { rootMargin: '150% 0px 150% 0px' });
-      wraps.forEach(function (w) { io.observe(w); });
+      wraps.forEach(function (wrap) { $$('img[loading="lazy"]', wrap).forEach(function (img) { img.loading = 'eager'; }); });
     };
     evs.forEach(function (e) { window.addEventListener(e, start, { capture: true, passive: true }); });
+    var idle = function () { if (window.requestIdleCallback) requestIdleCallback(start, { timeout: 3000 }); else setTimeout(start, 200); };
+    if (document.readyState === 'complete') setTimeout(idle, 1500); else window.addEventListener('load', function () { setTimeout(idle, 1500); });
   })();
 
   /* == CTA ZOOM · PARALLAX (live-position driven) ========================= */
   if (!reduceMotion) {
     var cta = document.getElementById('hv2-cta');
     var travel = function (el) { var r = el.getBoundingClientRect(), vh = window.innerHeight; return clamp((vh - r.top) / (vh + r.height), 0, 1); };
-    /* one pass: read every position first, then write every style (avoids a forced reflow per element) */
-    var plx = $$('[data-parallax]').map(function (el) { return { el: el, sp: parseFloat(el.getAttribute('data-parallax')) || 0, host: el.parentNode }; });
-    if (cta || plx.length) addFx(function () {
-      var tc = cta ? travel(cta) : 0, tv = plx.map(function (o) { return travel(o.host); });
-      if (cta) cta.style.setProperty('--z', (1.22 - tc * 0.22).toFixed(3));
-      plx.forEach(function (o, k) { o.el.style.transform = 'translate3d(0,' + (-o.sp * 400 + tv[k] * 2 * o.sp * 400).toFixed(1) + 'px,0)'; });
+    /* CTA zoom: written straight on the image (a CSS variable on the whole section made every element in it recalculate) */
+    var ctaImg = cta ? cta.querySelector('.hv2-cta-bg img') : null;
+    if (ctaImg) addFx(
+      function () { return travel(cta); },
+      function (t) { setStyle(ctaImg, 'transform', 'scale(' + (1.22 - t * 0.22).toFixed(3) + ')'); },
+      cta
+    );
+    $$('[data-parallax]').forEach(function (el) {
+      var sp = parseFloat(el.getAttribute('data-parallax')) || 0, host = el.parentNode;
+      addFx(
+        function () { return travel(host); },
+        function (t) { setStyle(el, 'transform', 'translate3d(0,' + (-sp * 400 + t * 2 * sp * 400).toFixed(1) + 'px,0)'); },
+        host
+      );
     });
   }
 
@@ -714,8 +768,11 @@
           if (data.success === 'success') {
             toast('success', data.message);
             window.dataLayer = window.dataLayer || [];
-            window.dataLayer.push({ event: 'formSubmitEvent' });
-            setTimeout(function () { window.location.reload(); }, 1000);
+            /* reload only after Tag Manager has fired the conversion (eventCallback), or after 2.5 s if Tag Manager has not loaded yet
+               (third-party scripts wait for the first interaction on these pages) */
+            var reloaded = false, reloadNow = function () { if (!reloaded) { reloaded = true; window.location.reload(); } };
+            window.dataLayer.push({ event: 'formSubmitEvent', eventCallback: reloadNow, eventTimeout: 2000 });
+            setTimeout(reloadNow, 2500);
           } else {
             var msg = data.message;
             if (data.errors) { var k = Object.keys(data.errors)[0]; if (k) msg = data.errors[k][0]; }
@@ -796,7 +853,7 @@
       if (st.shown < total) { var from = st.shown; st.shown += PAGE; render(from); }
       else {
         st.shown = PAGE; closeAll(); render();
-        if (lenis) lenis.scrollTo(listEl, { offset: -(headerH() + 120), duration: 1 }); else listEl.scrollIntoView({ block: 'start' });
+        scrollToEl(listEl, 120);
       }
     });
     faq.addEventListener('keydown', function (e) {
@@ -827,5 +884,5 @@
     render();
   }
 
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(runFx);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
 })();

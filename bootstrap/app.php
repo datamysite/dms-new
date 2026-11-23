@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\RedirectFirstPage::class,
         ]);
         $middleware->append(\App\Http\Middleware\HandleDbRedirects::class);
+        $middleware->append(\App\Http\Middleware\StagingNoindex::class);
         $middleware->web(append: [\App\Http\Middleware\AttachLiteSpeedPurge::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

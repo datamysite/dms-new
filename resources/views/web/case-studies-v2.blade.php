@@ -34,18 +34,8 @@
 	$hv2Img = URL::to('/public/assets/img');
 	$csvPhoto = is_file(public_path('assets/img/title/faqs.png')) ? $hv2Img . '/title/faqs.png' : null;
 
-	/* ---------- Case studies (pdf, cover image, class, name) — same as the live page ---------- */
-	$csvCases = [
-		['bnw', 'bnw', 'case-studies-img', 'BNW Developers'],
-		['ays', 'ays', 'case-studies-img', 'AYS Developers'],
-		['jetour', 'jetour', 'case-studies-img-even', 'Jetour'],
-		['tranquil', 'tranquil', 'case-studies-img', 'Tranquil Developers'],
-		['ilg', 'ilg', 'case-studies-img-even', 'ILG Luxury Group'],
-		['dubai-duty-free', 'dubai-duty-free', 'case-studies-img', 'Dubai Duty Free'],
-		['lenskart', 'uae', 'case-studies-img-even', 'Lenskart'],
-		['danube', 'danube', 'case-studies-img', 'Danube'],
-		['ksa', 'lenkart', 'case-studies-img-even', 'KSA Influencers'],
-	];
+	/* ---------- Case studies: config/case_studies.php (PDFs + first-slide covers in public/case-studies/v2/) ---------- */
+	$csvCases = v2_case_studies();
 	$csvBenefits = [
 		['Inspire Confidence', 'Highlight our expertise and proven track record in transforming brands.'],
 		['Demonstrate Value', 'Show how our customized strategies create meaningful outcomes, from increased visibility to higher ROI.'],
@@ -110,7 +100,7 @@
 						@csrf
 						<input type="hidden" name="service" value="Client Case Studies">
 						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
-						<h2 class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></h2>
+						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
 						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
 						<label class="hv2-field">
 							<input type="text" name="name" placeholder=" " required autocomplete="name">
@@ -158,7 +148,7 @@
 		<div class="hv2-container csv-intro-grid">
 			<div class="csv-intro-copy">
 				<span class="hv2-eyebrow" data-reveal="up">Client Case Studies</span>
-				<h4 class="hv2-display hv2-h2" data-split>Why Does DataMySite Share <span class="hv2-outline">Case Studies?</span></h4>
+				<h2 class="hv2-display hv2-h2" data-split>Why Does DataMySite Share <span class="hv2-outline">Case Studies?</span></h2>
 				<p data-reveal="up" data-delay="1">At DataMySite, we believe in transparency and trust. Sharing case studies allows us to demonstrate the tangible impact of our marketing and advertising solutions. They provide a clear, evidence-based view of how we address specific business challenges and deliver measurable results.
 					<br>
 				By showcasing real-world success stories, we aim to:</p>
@@ -194,13 +184,13 @@
 			<div class="csv-grid" id="csv-grid">
 				@foreach($csvCases as $c)
 					<div class="case-studies-new csv-card-wrap" data-reveal="up" data-delay="{{ ($loop->index % 3) + 1 }}">
-						<a href="{{ URL::to('/public/case-studies/' . $c[0] . '.pdf') }}" target="_blank" rel="noopener" class="open-case-study csv-card" data-tilt data-tilt-max="5">
+						<a href="{{ $c['pdf_url'] }}" target="_blank" rel="noopener" class="open-case-study csv-card" data-tilt data-tilt-max="5">
 							<span class="csv-card-media hv2-media">
-								<img src="{{ URL::to('/public/case-studies/cover/' . $c[1] . '.jpg') }}" class="{{ $c[2] }}" width="100%" alt="Case Studies" loading="lazy">
+								<img {!! v2_img($c['cover'], '(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 31vw') !!} class="{{ $loop->iteration % 2 ? 'case-studies-img' : 'case-studies-img-even' }}" alt="{{ $c['alt'] }}" loading="lazy">
 								<span class="csv-card-no hv2-display" aria-hidden="true">{{ str_pad($loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
 								<span class="csv-card-go" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></span>
 							</span>
-							<h5><span>{{ $c[3] }}</span> x <span>DMS</span> |  Case Study</h5>
+							<h3><span>{{ $c['name'] }}</span> x <span>DMS</span> |  Case Study</h3>
 						</a>
 					</div>
 				@endforeach
@@ -223,12 +213,12 @@
 		<div class="hv2-container csv-why-grid">
 			<article class="csv-why-card" data-tilt data-tilt-max="4" data-reveal="up" data-delay="1">
 				<span class="csv-why-no hv2-display" aria-hidden="true">01</span>
-				<h4>Transforming Brands Through Comprehensive Marketing Solutions</h4>
+				<h2>Transforming Brands Through Comprehensive Marketing Solutions</h2>
 				<p>At DataMySite, we offer a full suite of marketing and advertising services designed to drive measurable results. From digital advertising to outdoor campaigns, public relations to influencer marketing, we help brands stand out in a competitive market. Below, we highlight the before-and-after transformations our clients experienced through our tailored marketing solutions in Dubai, UAE.</p>
 			</article>
 			<article class="csv-why-card csv-why-card--hot" data-tilt data-tilt-max="4" data-reveal="up" data-delay="2">
 				<span class="csv-why-no hv2-display" aria-hidden="true">02</span>
-				<h4>Why Choose DataMySite?</h4>
+				<h2>Why Choose DataMySite?</h2>
 				<p>Through our comprehensive marketing and advertising services, we help businesses in Dubai achieve remarkable results. Whether you're looking to enhance your online presence with digital advertising, build brand recognition through outdoor ads, or generate qualified leads through event marketing, DataMySite has the expertise to drive success.</p>
 			</article>
 		</div>
@@ -237,7 +227,6 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/case-studies-v2.js') }}" defer></script>
 @endsection

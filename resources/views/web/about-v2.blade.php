@@ -35,17 +35,6 @@
 	$hv2Img = URL::to('/public/assets/img');
 	$abvPhoto = is_file(public_path('assets/img/title/about.png')) ? $hv2Img . '/title/about.png' : null;
 
-	/* client logos — same as the Home V2 marquee */
-	$hv2Clients = [
-		38 => 'Nike', 12 => 'Intel', 35 => 'Whole Foods', 31 => 'e&', 1 => 'Dubai Duty Free', 4 => 'DAMAC', 17 => 'MakeMyTrip',
-		6 => 'Lenskart', 16 => 'Cerruti', 3 => 'Danube Properties', 2 => 'Jetour', 39 => 'Géant', 36 => "Haldiram's", 37 => 'GMG',
-		25 => 'Al Rawabi', 28 => 'Al Ain Farms', 20 => 'SIVVI', 40 => 'Aswaaq', 7 => 'Logicom Group', 5 => 'ILG', 24 => 'MARQ Dubai',
-		26 => 'Hayata', 27 => 'Cavo', 13 => 'Elite Group Holding', 14 => 'BNW Developments', 8 => 'Arabian Hills', 19 => 'Tranquil Developers', 21 => 'Prime Estate',
-		18 => 'Oscar Luxury Auto', 15 => 'AYS Developers', 32 => 'USI Consultancy', 34 => 'First Super Car Rental', 33 => 'Royalty Tourism', 29 => 'Darcey Flowers', 30 => 'Peace Homes Development',
-		9 => "D's Damat", 10 => 'Metamind Inspire', 11 => 'Ask Kubeir', 22 => 'Lasa Ona', 23 => 'Just Love UAE', 41 => 'Royal',
-	];
-	$hv2Rows = [[], []];
-	foreach (array_keys($hv2Clients) as $pos => $logoNo) { $hv2Rows[$pos % 2][$logoNo] = $hv2Clients[$logoNo]; }
 
 	/* DATA — services + case studies. A controller may pass $aboutServices / $aboutCases (same shape) to replace these defaults;
 	   the layout adapts to any count (grids auto-fit, last odd card spans, "See More" appears past the limit). */
@@ -74,8 +63,8 @@
 			'list' => ['Airline Advertising', 'Taxi Wraps', 'Bus Branding'],
 			'outro' => 'Be seen from city streets to airport lounges — every moment is a branding opportunity.'],
 	];
-	/* case studies: [pdf file, cover image file, img class, brand name] */
-	$abvCases = $aboutCases ?? [['dubai-duty-free', 'dubai-duty-free', 'case-studies-img', 'Dubai Duty Free'], ['lenskart', 'lenskart', 'case-studies-img-even', 'Lenskart'], ['danube', 'danube', 'case-studies-img', 'Danube'], ['ksa', 'ksa', 'case-studies-img-even', 'KSA Influencers']];
+	/* case studies: config/case_studies.php (the page shows the first few and a "See More" button for the rest) */
+	$abvCases = v2_case_studies();
 	$abvSteps = [
 		['bi-list-task', 'Select Your Service', 'Helps us understand your needs and aligns our strategies with your business goals.'],
 		['bi-calendar4-week', 'Media Plan & Approvals', 'We’ll finalize the details and set a timeline to kick off your customized marketing strategy.'],
@@ -154,7 +143,7 @@
 		</div>
 		<div class="hv2-container">
 			<div class="abv-head" data-reveal="up">
-				<h3 class="hv2-display hv2-h2" data-split>Driving Impactful Brand Visibility <span class="hv2-outline">Since 2021</span></h3>
+				<h2 class="hv2-display hv2-h2" data-split>Driving Impactful Brand Visibility <span class="hv2-outline">Since 2021</span></h2>
 				<hr>
 			</div>
 			<div class="abv-intro-grid">
@@ -167,15 +156,15 @@
 				</div>
 				<div class="abv-acc" id="abv-acc" data-reveal="up" data-delay="2">
 					<div class="abv-acc-item is-open">
-						<h5 class="abv-acc-q"><button type="button" aria-expanded="true"><span class="abv-acc-no hv2-display" aria-hidden="true">01</span>Mission<i class="bi bi-plus-lg" aria-hidden="true"></i></button></h5>
+						<h3 class="abv-acc-q"><button type="button" aria-expanded="true"><span class="abv-acc-no hv2-display" aria-hidden="true">01</span>Mission<i class="bi bi-plus-lg" aria-hidden="true"></i></button></h3>
 						<div class="abv-acc-a"><div><p>To <strong>deliver measurable, innovative, and brand-aligned marketing solutions</strong> that elevate visibility, spark engagement, and drive results across physical and digital channels.</p></div></div>
 					</div>
 					<div class="abv-acc-item">
-						<h5 class="abv-acc-q"><button type="button" aria-expanded="false"><span class="abv-acc-no hv2-display" aria-hidden="true">02</span>Vision<i class="bi bi-plus-lg" aria-hidden="true"></i></button></h5>
+						<h3 class="abv-acc-q"><button type="button" aria-expanded="false"><span class="abv-acc-no hv2-display" aria-hidden="true">02</span>Vision<i class="bi bi-plus-lg" aria-hidden="true"></i></button></h3>
 						<div class="abv-acc-a"><div><p>To become the most trusted and innovative <strong>marketing partner</strong> for brands across the UAE and beyond — providing creativity, strategy, and execution under one roof.</p></div></div>
 					</div>
 					<div class="abv-acc-item">
-						<h5 class="abv-acc-q"><button type="button" aria-expanded="false"><span class="abv-acc-no hv2-display" aria-hidden="true">03</span>Values<i class="bi bi-plus-lg" aria-hidden="true"></i></button></h5>
+						<h3 class="abv-acc-q"><button type="button" aria-expanded="false"><span class="abv-acc-no hv2-display" aria-hidden="true">03</span>Values<i class="bi bi-plus-lg" aria-hidden="true"></i></button></h3>
 						<div class="abv-acc-a"><div><p>We value <strong>creativity, integrity, innovation,</strong> and <strong>results—empowering</strong> brands to connect, engage, and grow through bold ideas and strategic execution.</p></div></div>
 					</div>
 				</div>
@@ -200,23 +189,7 @@
 				<p class="hv2-lead" data-reveal="up" data-delay="2">At DataMySite, we are proud to partner with a diverse range of clients across various industries, from startups to established global brands.</p>
 			</div>
 		</div>
-		<div class="hv2-marquee-wrap" role="group" aria-label="Our clients — {{ count($hv2Clients) }} brands" data-reveal="up" data-spotlight>
-			@foreach($hv2Rows as $r => $row)
-				<div class="hv2-marquee {{ $r === 1 ? 'hv2-marquee--reverse' : '' }}">
-					<div class="hv2-marquee-track">
-						@for($dup = 0; $dup < 2; $dup++)
-							@foreach($row as $i => $brand)
-								<div class="hv2-brand hv2-brand--lg" style="--n: {{ $loop->index }}" @if($dup) aria-hidden="true" @endif>
-									<div class="hv2-brand-logo hv2-media hv2-media--logo">
-										<img src="{{ $hv2Img }}/clients-final/{{ $i }}.webp" alt="{{ $dup ? '' : $brand.' logo' }}" loading="lazy" width="300" height="300">
-									</div>
-								</div>
-							@endforeach
-						@endfor
-					</div>
-				</div>
-			@endforeach
-		</div>
+		@include('web.home-v2.clients-marquee')
 	</section>
 
 	{{-- OUR SUCCESSFUL PROJECTS — counters --}}
@@ -260,12 +233,12 @@
 			<div class="abv-cs-grid" id="abv-cs-grid">
 				@foreach($abvCases as $c)
 					<div class="case-studies-new abv-cs-wrap{{ $loop->iteration > $abvCaseLimit ? ' abv-extra' : '' }}" data-reveal="up" data-delay="{{ ($loop->index % 4) + 1 }}">
-						<a href="{{ URL::to('/public/case-studies/' . $c[0] . '.pdf') }}" target="_blank" rel="noopener" class="open-case-study abv-cs" data-tilt data-tilt-max="5">
+						<a href="{{ $c['pdf_url'] }}" target="_blank" rel="noopener" class="open-case-study abv-cs" data-tilt data-tilt-max="5">
 							<span class="abv-cs-media hv2-media">
-								<img src="{{ URL::to('/public/case-studies/' . $c[1] . '.jpg') }}" class="{{ $c[2] }}" width="100%" alt="Case Studies" loading="lazy">
+								<img {!! v2_img($c['cover'], '(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 24vw') !!} class="{{ $loop->iteration % 2 ? 'case-studies-img' : 'case-studies-img-even' }}" alt="{{ $c['alt'] }}" loading="lazy">
 								<span class="abv-cs-go" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></span>
 							</span>
-							<h5><span>{{ $c[3] }}</span> x <span>DMS</span> |  Case Study</h5>
+							<h3><span>{{ $c['name'] }}</span> x <span>DMS</span> |  Case Study</h3>
 						</a>
 					</div>
 				@endforeach
@@ -287,7 +260,7 @@
 				<span class="abv-why-frame hv2-media"><img src="{{ URL::to('/public/about.jpg') }}" width="100%" alt="Why Brands Choose DMS" loading="lazy"></span>
 			</div>
 			<div class="abv-why-copy">
-				<h3 class="hv2-display hv2-h2" data-split>Why Brands Choose <span class="hv2-outline">DataMySite</span></h3>
+				<h2 class="hv2-display hv2-h2" data-split>Why Brands Choose <span class="hv2-outline">DataMySite</span></h2>
 				<ul class="abv-ticks">
 					<li data-reveal="up" data-delay="1">Multi-channel expertise in both traditional and digital media</li>
 					<li data-reveal="up" data-delay="2">Access to premium media networks across the MENA region</li>
@@ -308,28 +281,28 @@
 		</div>
 		<div class="hv2-container">
 			<div class="abv-head abv-head--center" data-reveal="up">
-				<h3 class="hv2-display hv2-h2 text-theme" data-split>OUR <span class="hv2-outline">SERVICES</span></h3>
+				<h2 class="hv2-display hv2-h2 text-theme" data-split>OUR <span class="hv2-outline">SERVICES</span></h2>
 			</div>
 			<div class="abv-svc-grid" id="abv-svc-grid">
 				@foreach($abvServices as $svc)
 					<article class="abv-svc{{ $loop->iteration > $abvSvcLimit ? ' abv-extra' : '' }}" data-tilt data-tilt-max="4" data-reveal="up" data-delay="{{ ($loop->index % 2) + 1 }}">
 						@if(!empty($svc['url']))
-							<a href="{{ v2_url($svc['url']) }}"><h4>- {{ $svc['title'] }}</h4></a>
+							<a href="{{ v2_url($svc['url']) }}"><h3>- {{ $svc['title'] }}</h3></a>
 						@else
-							<h4>- {{ $svc['title'] }}</h4>
+							<h3>- {{ $svc['title'] }}</h3>
 						@endif
 						<p>{{ $svc['intro'] }}</p>
 						@if(!empty($svc['split']))
 							<div class="abv-svc-split">
 								@foreach($svc['split'] as $grp)
 									<div>
-										<a href="{{ v2_url($grp[1]) }}"><h5>{{ $grp[0] }}</h5></a>
+										<a href="{{ v2_url($grp[1]) }}"><div class="abv-svc-lbl">{{ $grp[0] }}</div></a>
 										<ul>@foreach($grp[2] as $li)<li>{{ $li }}</li>@endforeach</ul>
 									</div>
 								@endforeach
 							</div>
 						@else
-							@if(!empty($svc['lead']))<h5>{{ $svc['lead'] }}</h5>@endif
+							@if(!empty($svc['lead']))<div class="abv-svc-lbl">{{ $svc['lead'] }}</div>@endif
 							@if(!empty($svc['list']))<ul>@foreach($svc['list'] as $li)<li>{{ $li }}</li>@endforeach</ul>@endif
 						@endif
 						@if(!empty($svc['outro']))<p>{{ $svc['outro'] }}</p>@endif
@@ -353,7 +326,7 @@
 		<div class="hv2-container">
 			<div class="abv-head abv-head--center">
 				<span class="hv2-eyebrow" data-reveal="up">HOW WE WORK</span>
-				<h3 class="hv2-display hv2-h2" data-split>Our Working <span class="hv2-outline">Proccess</span></h3>
+				<h2 class="hv2-display hv2-h2" data-split>Our Working <span class="hv2-outline">Proccess</span></h2>
 			</div>
 			<div class="abv-steps">
 				@foreach($abvSteps as $k => $s)
@@ -377,31 +350,16 @@
 		</div>
 		<div class="hv2-container">
 			<div class="abv-head" data-reveal="up">
-				<h3 class="hv2-display hv2-h2" data-split>Partner <span class="hv2-outline">With Us</span></h3>
+				<h2 class="hv2-display hv2-h2" data-split>Partner <span class="hv2-outline">With Us</span></h2>
 				<p class="abv-sub abv-sub--left">At <strong>DataMySite</strong>, we're not just another agency — we’re your <strong>marketing growth partner</strong>. Whether you're looking to launch your brand, scale your reach, or dominate your market, we’re ready to help you make an impact.<br><br>
 				<strong>Let’s talk</strong> — and let’s bring your brand to life.</p>
 			</div>
 			<div class="abv-partner-grid">
 				<div class="abv-contact">
 					<span class="hv2-eyebrow" data-reveal="up">MAKE APPOINTMENT</span>
-					<h3 class="abv-h3 text-bold" data-reveal="up" data-delay="1">Get Our Service Easily</h3>
+					<h2 class="abv-h3 text-bold" data-reveal="up" data-delay="1">Get Our Service Easily</h2>
 					<div class="abv-contact-grid">
-						<div class="abv-cc" data-tilt data-tilt-max="4" data-reveal="up" data-delay="1">
-							<i class="bi bi-pin-map" aria-hidden="true"></i>
-							<div><p class="working-title">Location</p><p>Office 205, Al Bayan Building, Dubai Investment Park 1, Dubai - UAE</p></div>
-						</div>
-						<div class="abv-cc" data-tilt data-tilt-max="4" data-reveal="up" data-delay="2">
-							<i class="bi bi-envelope-at" aria-hidden="true"></i>
-							<div><p class="working-title">Email</p><p><strong class="email-slot">contact@datamysite.com</strong> <button type="button" class="copy-email" data-copy="contact@datamysite.com"><span class="bi bi-copy"></span>&nbsp;&nbsp;Copy</button></p></div>
-						</div>
-						<div class="abv-cc" data-tilt data-tilt-max="4" data-reveal="up" data-delay="3">
-							<i class="bi bi-telephone" aria-hidden="true"></i>
-							<div><p class="working-title">Phone</p><p class="mb-0">TEL: <a href="tel:042957001" class="webCellPhone">042 957 001</a></p><p class="mb-0">Cell: <a href="tel:0525287259" class="webCellPhone">+971 52 528 7259</a></p></div>
-						</div>
-						<div class="abv-cc" data-tilt data-tilt-max="4" data-reveal="up" data-delay="4">
-							<i class="bi bi-clock" aria-hidden="true"></i>
-							<div><p class="working-title">Work Hours</p><p><strong>Mon - Fri | 9:30 am - 7:30 pm</strong> <br>Saturday & Sunday | Closed</p></div>
-						</div>
+					@include('web.home-v2.contact-cards', ['cardClass' => 'abv-cc'])
 					</div>
 				</div>
 				<div class="abv-form hv2-form-card hv2-glass" data-tilt data-tilt-max="3" data-reveal="scale" data-delay="2">
@@ -435,7 +393,6 @@
 @endsection
 
 @section('addScript')
-	<script src="{{ URL::to('/public/assets/vendor/lenis/lenis-1.1.13.min.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/home-v2.js') }}" defer></script>
 	<script src="{{ v2_asset('assets/js/about-v2.js') }}" defer></script>
 @endsection

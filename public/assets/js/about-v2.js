@@ -30,17 +30,32 @@
     var io = new IntersectionObserver(function (es) { es.forEach(function (e) { e.target.classList.toggle('is-paused', !e.isIntersecting); if (e.isIntersecting) inView.add(e.target); else inView.delete(e.target); }); }, { rootMargin: '150px' });
     els.forEach(function (el) { io.observe(el); });
   } else { els.forEach(function (el) { inView.add(el); }); }
-  function paint() {
-    ticking = false;
-    inView.forEach(function (el) {
+  /* positions are measured on load / resize / page-height change and cached, so each frame only WRITES (reading a position
+     per decoration, after other scripts had written styles in the same frame, forced a layout every time) */
+  var geo = new Map();
+  function measure() {
+    var sy = window.pageYOffset;
+    geo.clear();
+    els.forEach(function (el) {
       var r = el.parentElement.getBoundingClientRect();
-      var d = parseFloat(el.getAttribute('data-abv-depth')) || 0;
-      el.style.translate = '0 ' + ((r.top + r.height / 2 - vh / 2) * -d).toFixed(1) + 'px';
+      geo.set(el, { mid: r.top + sy + r.height / 2, d: parseFloat(el.getAttribute('data-abv-depth')) || 0 });
     });
   }
+  function paint() {
+    ticking = false;
+    var sy = window.pageYOffset, half = vh / 2;
+    inView.forEach(function (el) {
+      var g = geo.get(el); if (!g) return;
+      var t = '0 ' + ((g.mid - sy - half) * -g.d).toFixed(1) + 'px';
+      if (el.__t !== t) { el.__t = t; el.style.translate = t; }
+    });
+  }
+  if ('ResizeObserver' in window) new ResizeObserver(function () { measure(); req(); }).observe(document.body);
+  addEventListener('load', function () { measure(); req(); }, { once: true });
+  measure();
   function req() { if (!ticking) { ticking = true; requestAnimationFrame(paint); } }
   addEventListener('scroll', req, { passive: true });
-  addEventListener('resize', function () { vh = innerHeight; req(); });
+  addEventListener('resize', function () { vh = innerHeight; measure(); req(); });
   req();
 })();
 

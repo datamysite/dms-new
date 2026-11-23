@@ -215,7 +215,7 @@ function closeExitPopup(){document.getElementById('ov').classList.remove('show')
     window.scrollY > 100 ? selectBody.classList.add('scrolled') : selectBody.classList.remove('scrolled');
   }
 
-  document.addEventListener('scroll', toggleScrolled);
+  if (!document.getElementById('hv2')) document.addEventListener('scroll', toggleScrolled, { passive: true });   /* redesigned (V2) pages have no .header to toggle: no scroll listener there */
   window.addEventListener('load', toggleScrolled);
 
   /**
@@ -277,7 +277,7 @@ function closeExitPopup(){document.getElementById('ov').classList.remove('show')
  
 
   window.addEventListener('load', toggleScrollTop);
-  document.addEventListener('scroll', toggleScrollTop);
+  if (!document.getElementById('hv2')) document.addEventListener('scroll', toggleScrollTop, { passive: true });   /* V2 pages have their own back-to-top button */
 
 
 })();

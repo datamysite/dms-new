@@ -45,8 +45,8 @@
 .plv-toc a.is-on { background: var(--green, #0b3d2e); color: #fff; } .plv-toc a.is-on::before { color: var(--coral-s, #ff8a84); }
 .plv-article { padding: clamp(26px, 3.4vw, 54px); border-radius: 28px; background: #fff; box-shadow: 0 1px 0 rgba(11, 61, 46, .06), 0 30px 60px -28px rgba(11, 61, 46, .4); font: 400 clamp(16px, 1.15vw, 17.5px)/1.8 var(--font-body); color: #3f524c; }
 .plv-article > *:first-child { margin-top: 0; }
-.plv-article h4 { position: relative; margin: clamp(30px, 3.4vw, 46px) 0 14px; padding-top: 20px; font: 800 clamp(21px, 1.9vw, 28px)/1.2 var(--font-heading); letter-spacing: -.015em; color: var(--heading-c, #0b3d2e); scroll-margin-top: 110px; }
-.plv-article h4::before { content: ""; position: absolute; left: 0; top: 0; width: 52px; height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--coral), var(--coral-s)); }
+.plv-article h4, .plv-article h2 { position: relative; margin: clamp(30px, 3.4vw, 46px) 0 14px; padding-top: 20px; font: 800 clamp(21px, 1.9vw, 28px)/1.2 var(--font-heading); letter-spacing: -.015em; color: var(--heading-c, #0b3d2e); scroll-margin-top: 110px; }
+.plv-article h4::before, .plv-article h2::before { content: ""; position: absolute; left: 0; top: 0; width: 52px; height: 4px; border-radius: 4px; background: linear-gradient(90deg, var(--coral), var(--coral-s)); }
 .plv-article p { margin: 0 0 1em; white-space: pre-line; }
 .plv-article strong, .plv-article b { color: var(--heading-c, #0b3d2e); font-weight: 800; }
 .plv-article a { color: var(--coral); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; } .plv-article a:hover { color: var(--green, #0b3d2e); }
