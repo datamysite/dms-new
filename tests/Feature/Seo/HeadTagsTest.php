@@ -114,5 +114,7 @@ class HeadTagsTest extends TestCase
         $htaccess = file_get_contents(base_path('.htaccess'));
         $this->assertMatchesRegularExpression('/^\s*# RewriteRule \^robots\\\\\.txt\$ robots-staging\.txt/m', $htaccess, 'the staging robots.txt rewrite is present but disabled');
         $this->assertDoesNotMatchRegularExpression('/^\s*RewriteRule \^robots\\\\\.txt\$ robots-staging\.txt/m', $htaccess, 'no active rewrite');
+        // a CDN must not keep an old copy of robots.txt (a cached "Disallow: /" kept PageSpeed reporting "blocked from indexing")
+        $this->assertMatchesRegularExpression('/<Files "robots\.txt">\s*Header set Cache-Control "no-cache, must-revalidate"/', $htaccess);
     }
 }

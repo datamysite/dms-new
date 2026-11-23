@@ -48,6 +48,13 @@
         Header set Cache-Control "max-age=31536000, public"
     </FilesMatch>
 </IfModule>
+<IfModule mod_headers.c>
+    # robots.txt must never be served from a stale CDN / browser copy: an old "Disallow: /" kept search engines and PageSpeed out
+    # after the file had changed. no-cache = always revalidate (a 304 costs almost nothing).
+    <Files "robots.txt">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </Files>
+</IfModule>
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/css
 </IfModule>
