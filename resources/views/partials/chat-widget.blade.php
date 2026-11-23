@@ -263,7 +263,7 @@ const CONFIG = {
 
   // ── PROACTIVE TEASER (small bubble + one-tap chips) ─────────
   teaser: {
-    enabled: true,
+    enabled: false,           // off: no chat preview bubble on page load
     delayMs: 6000,            // shown this long after the visitor first scrolls/touches/moves
     requireEngagement: true,  // wait for a real engagement signal first (filters bots, catches readers)
     hooks: {                  // page-path fragment → opening line (first match wins; "" = default)
