@@ -948,7 +948,6 @@ html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
 .hv2-marquee-wrap {
   --skew: 0deg; --tile-w: clamp(210px, 21vw, 290px); --tile-gap: var(--space-4);
   display: grid; gap: var(--space-4); margin-top: clamp(8px, 2vw, 24px); padding-block: 6px;
-  transform: skewX(var(--skew)); transition: transform .5s var(--ease);
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
 }
 .hv2-marquee { overflow: hidden; padding-block: 14px; }
@@ -1021,8 +1020,6 @@ html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
 .hv2-marquee-wrap .hv2-marquee--reverse .hv2-marquee-track { animation-duration: 88s; }
 .hv2-marquee .hv2-brand { padding: 9px 9px 11px; border-radius: 16px; gap: 2px; }
 .hv2-marquee .hv2-brand-name { font-size: 11.5px; min-height: 2.5em; }
-/* wave: logos bob one after another along each row */
-.hv2-marquee .hv2-brand-logo { animation: hv2-bob-s 5.5s ease-in-out infinite; animation-delay: calc(var(--n, 0) * -.45s); }
 /* entrance: tiles flip in one after another when the section appears */
 .hv2-marquee-wrap.is-in .hv2-brand { animation: hv2-tile-in .8s var(--ease) backwards; animation-delay: calc(var(--n, 0) * 35ms); }
 /* hover: pop + glow */

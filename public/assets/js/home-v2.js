@@ -640,7 +640,7 @@
 
   /* == MARQUEE / BAND VELOCITY =========================================== */
   if (!reduceMotion) {
-    var skewEls = $$('.hv2-marquee-wrap, .hv2-band'), velTracks = $$('.hv2-marquee-track, .hv2-band-track'), anims = null, settle = null;
+    var skewEls = $$('.hv2-band'), velTracks = $$('.hv2-marquee-track, .hv2-band-track'), anims = null, settle = null;
     var getAnims = function () { if (anims) return anims; anims = []; velTracks.forEach(function (t) { if (t.getAnimations) anims = anims.concat(t.getAnimations()); }); return anims; };
     onScroll(function (s) {
       var v = clamp(s.velocity || 0, -60, 60);
