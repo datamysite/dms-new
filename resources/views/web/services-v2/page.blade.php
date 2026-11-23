@@ -173,6 +173,12 @@
 			if (preg_match('#\ssrc\s*=\s*["\']([^"\']+)["\']#i', $tag, $s) && preg_match('#/public/([^?"\']+?)\.(jpe?g|png)(\?[^"\']*)?$#i', $s[1], $p)) {
 				$rel = $p[1] . '.' . $p[2];
 				if (is_file(public_path($p[1] . '.webp'))) $tag = str_replace($s[1], str_replace($rel, $p[1] . '.webp', $s[1]), $tag);
+				/* legacy text writes width="100%" with no height: the browser cannot reserve space from that (PageSpeed "unsized images").
+				   Use the file's real width/height as attributes (they give the aspect ratio) and keep the image fluid with CSS, as before */
+				if (preg_match('#\swidth\s*=\s*["\']\s*\d+(?:\.\d+)?%\s*["\']#i', $tag) && !preg_match('#\sheight\s*=#i', $tag) && ($d = @getimagesize(public_path($rel))) && $d[0] && $d[1]) {
+					$tag = preg_replace('#\swidth\s*=\s*["\'][^"\']*["\']#i', ' width="' . (int) $d[0] . '" height="' . (int) $d[1] . '"', $tag, 1);
+					$tag = preg_match('#\sstyle\s*=\s*"#i', $tag) ? preg_replace('#(\sstyle\s*=\s*")#i', '$1width:100%;height:auto;', $tag, 1) : preg_replace('#^<img\b#i', '<img style="width:100%;height:auto"', $tag);
+				}
 				/* aspect-ratio (not width/height attributes): reserves space without overriding any size the legacy CSS sets */
 				if (!preg_match('#\s(width|height)\s*=#i', $tag) && stripos($tag, 'aspect-ratio') === false && ($d = @getimagesize(public_path($rel))) && $d[0] && $d[1]) {
 					$ar = 'aspect-ratio: ' . (int) $d[0] . ' / ' . (int) $d[1] . ';';

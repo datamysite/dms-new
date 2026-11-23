@@ -257,7 +257,7 @@
 		</div>
 		<div class="hv2-container abv-why-grid">
 			<div class="abv-why-img" data-reveal="up">
-				<span class="abv-why-frame hv2-media"><img src="{{ URL::to('/public/about.jpg') }}" width="100%" alt="Why Brands Choose DMS" loading="lazy"></span>
+				<span class="abv-why-frame hv2-media"><img {!! v2_img('public/about.jpg', '(max-width: 991px) 92vw, 46vw') !!} alt="Why Brands Choose DMS" loading="lazy"></span>
 			</div>
 			<div class="abv-why-copy">
 				<h2 class="hv2-display hv2-h2" data-split>Why Brands Choose <span class="hv2-outline">DataMySite</span></h2>

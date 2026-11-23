@@ -19,6 +19,19 @@ class AltTextAndHeadingsTest extends TestCase
         }
     }
 
+    public function test_content_images_have_real_width_and_height_so_the_browser_can_reserve_space(): void
+    {
+        // PageSpeed "unsized images": width="100%" with no height gives the browser nothing to reserve (stored text on service pages included)
+        foreach (['/about-us', '/seo-services', '/outdoor-advertising', '/lead-generation', '/client-case-studies', '/blogs'] as $path) {
+            foreach ($this->images($this->html($path)) as $img) {
+                if (str_contains($img, 'popup-m.jpg') || str_contains($img, 'clients-final/')) continue;   // popup photo is inside a closed popup; logos are sized elsewhere
+                $this->assertDoesNotMatchRegularExpression('/\swidth="\d+(?:\.\d+)?%"/', $img, "$path: percentage width without a height: " . substr($img, 0, 140));
+            }
+        }
+        $about = $this->html('/about-us');
+        $this->assertMatchesRegularExpression('#<img src="[^"]*public/about\.jpg" width="\d+" height="\d+"[^>]*alt="Why Brands Choose DMS"#', $about);
+    }
+
     public function test_client_logos_have_a_descriptive_alt_text_in_both_marquee_passes(): void
     {
         $brands = config('clients');
