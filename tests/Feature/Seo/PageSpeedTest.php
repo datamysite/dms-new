@@ -59,13 +59,11 @@ class PageSpeedTest extends TestCase
         }
     }
 
-    public function test_indexing_is_blocked_on_staging_and_allowed_on_live(): void
+    public function test_the_page_is_indexable_on_staging_and_on_live(): void
     {
-        $psi = app(PageSpeedService::class);
+        // staging is served exactly like production (config seo.block_non_production is off), so "Page is blocked from indexing" must not appear
         $failed = $this->failedIds($this->report('/', 'mobile'));
-        $onLive = parse_url($this->base($psi), PHP_URL_HOST) === 'datamysite.com';
-        if ($onLive) $this->assertNotContains('is-crawlable', $failed, 'live must be indexable');
-        else $this->assertContains('is-crawlable', $failed, 'staging must be noindex');
+        $this->assertNotContains('is-crawlable', $failed, 'the page must not be blocked from indexing');
     }
 
     public function test_home_scores_stay_above_the_minimums(): void

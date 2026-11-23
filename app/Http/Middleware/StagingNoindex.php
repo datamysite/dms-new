@@ -17,6 +17,7 @@ class StagingNoindex
     public static function isStaging(?Request $request = null): bool
     {
         $request = $request ?: request();
+        if (!config('seo.block_non_production', false)) return false;      // switched off: every host is served like production
         return !in_array(strtolower($request->getHost()), self::PRODUCTION_HOSTS, true);
     }
 

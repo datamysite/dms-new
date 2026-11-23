@@ -65,13 +65,31 @@ class HeadTagsTest extends TestCase
         }
     }
 
-    public function test_staging_is_noindex_in_the_page_and_in_the_header(): void
+    public function test_staging_is_served_exactly_like_production_by_default(): void
     {
+        // staging must be indexable and auditable like the live site (no noindex tag, no X-Robots-Tag header)
+        $this->assertFalse(config('seo.block_non_production'), 'blocking non-production hosts is OFF by default');
+        foreach (['/', '/about-us', '/seo-services'] as $path) {
+            $response = $this->page($path, self::STAGING)->assertOk();
+            $this->assertStringNotContainsString('name="robots"', $response->getContent(), $path);
+            $this->assertNull($response->headers->get('X-Robots-Tag'), $path);
+        }
+    }
+
+    public function test_blocking_can_be_switched_on_for_non_production_hosts_and_never_touches_production(): void
+    {
+        config(['seo.block_non_production' => true]);
         foreach (['/', '/about-us', '/seo-services'] as $path) {
             $response = $this->page($path, self::STAGING)->assertOk();
             $this->assertStringContainsString('<meta name="robots" content="noindex, nofollow, noarchive">', $response->getContent(), $path);
             $this->assertStringContainsString('noindex', (string) $response->headers->get('X-Robots-Tag'), $path);
+            foreach (['https://datamysite.com', 'https://www.datamysite.com'] as $host) {
+                $prod = $this->get($host . $path)->assertOk();
+                $this->assertStringNotContainsString('name="robots"', $prod->getContent(), "$host$path");
+                $this->assertNull($prod->headers->get('X-Robots-Tag'), "$host$path");
+            }
         }
+        config(['seo.block_non_production' => false]);
     }
 
     public function test_production_is_never_noindex(): void
@@ -85,16 +103,16 @@ class HeadTagsTest extends TestCase
         }
     }
 
-    public function test_staging_robots_txt_blocks_everything_and_production_robots_txt_does_not(): void
+    public function test_robots_txt_is_the_same_everywhere_and_the_block_everything_file_is_ready_but_off(): void
     {
-        $this->assertStringContainsString('Disallow: /', file_get_contents(base_path('robots-staging.txt')));
+        $this->assertStringContainsString('Disallow: /', file_get_contents(base_path('robots-staging.txt')), 'the block-everything file still exists, ready to be switched on');
         // the catch-all group ("User-agent: *") of the production file must not be a blanket "Disallow: /" (specific scraper bots may be)
         $prod = str_replace("\r", '', file_get_contents(base_path('robots.txt')));
         $this->assertSame(1, preg_match('/^User-agent: \*[ \t]*\n((?:(?!User-agent).*\n?)*)/mi', $prod, $m), 'production robots.txt has a "User-agent: *" group');
         $this->assertDoesNotMatchRegularExpression('/^Disallow:\s*\/\s*$/mi', $m[1], 'the production catch-all group must not block the whole site');
-        // the host rule that swaps the file lives in .htaccess and must not apply to the production hosts
+        // staging serves the normal robots.txt: the rewrite to robots-staging.txt in .htaccess is present but commented out (OFF)
         $htaccess = file_get_contents(base_path('.htaccess'));
-        $this->assertStringContainsString('RewriteRule ^robots\.txt$ robots-staging.txt', $htaccess);
-        $this->assertStringContainsString('!^(www\.)?datamysite\.com$', $htaccess);
+        $this->assertMatchesRegularExpression('/^\s*# RewriteRule \^robots\\\\\.txt\$ robots-staging\.txt/m', $htaccess, 'the staging robots.txt rewrite is present but disabled');
+        $this->assertDoesNotMatchRegularExpression('/^\s*RewriteRule \^robots\\\\\.txt\$ robots-staging\.txt/m', $htaccess, 'no active rewrite');
     }
 }
