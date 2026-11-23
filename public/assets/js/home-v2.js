@@ -28,7 +28,8 @@
   var siteHeader = document.getElementById('header');
   var headerH = function () { return siteHeader ? siteHeader.offsetHeight : 0; };
   var syncHeader = function () { docEl.style.setProperty('--hv2-header', headerH() + 'px'); };
-  syncHeader();
+  /* first read waits one frame (no forced layout during start-up); the CSS default already equals the real header height */
+  requestAnimationFrame(syncHeader);
   window.addEventListener('resize', syncHeader);
 
   var scrollState = { y: window.scrollY, velocity: 0 };
@@ -162,9 +163,10 @@
     splitNode(el);
   };
   var splitLater = [];
-  $$('[data-split]').forEach(function (el) {
-    if (el.getBoundingClientRect().top < window.innerHeight * 1.2) splitOne(el); else splitLater.push(el);
-  });
+  /* measure every heading first, THEN split: splitting changes the DOM, so measuring in between forced a layout per heading */
+  var splitNow = [], splitVh = window.innerHeight * 1.2;
+  $$('[data-split]').forEach(function (el) { (el.getBoundingClientRect().top < splitVh ? splitNow : splitLater).push(el); });
+  splitNow.forEach(splitOne);
   if (splitLater.length) {
     var idle = window.requestIdleCallback || function (fn) { return setTimeout(function () { fn({ timeRemaining: function () { return 8; } }); }, 200); };
     var splitChunk = function (dl) {
@@ -467,10 +469,31 @@
     var AUTO = parseInt(vp.getAttribute('data-autoplay'), 10) || 1500;
     var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
     var setPos = function (i) { curEl.textContent = pad2(i + 1); barEl.style.transform = 'scaleX(' + ((i + 1) / slidesN).toFixed(3) + ')'; };
-    if (window.Swiper) {
-      /* Swiper is built only when the carousel comes within ~1 screen (it sits far below the first screen):
-         its setup (≈250 ms of layout work on mobile) no longer runs during the page load. */
+    /* Swiper is built only when the carousel comes within ~1 screen (it sits far below the first screen): its setup
+       (≈250 ms of layout work on mobile) no longer runs during the page load. If Swiper's script is not loaded yet
+       (pages without v2keep delay it), it is downloaded at that moment from the page's own Swiper <script> tag. */
+    var csFallback = function () {
+      /* fallback: plain scrolling row with working arrows */
+      togBtn.hidden = true;
+      var cards = $$('.hv2-case', cs);
+      var stepW = function () { return cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : vp.clientWidth; };
+      var slideBy = function (dir) { vp.scrollBy({ left: dir * stepW(), behavior: reduceMotion ? 'auto' : 'smooth' }); };
+      prevBtn.addEventListener('click', function () { slideBy(-1); });
+      nextBtn.addEventListener('click', function () { slideBy(1); });
+      vp.addEventListener('scroll', function () { setPos(clamp(Math.round(vp.scrollLeft / stepW()), 0, slidesN - 1)); }, { passive: true });
+    };
+    var csLoadSwiper = function (done) {
+      if (window.Swiper) { done(); return; }
+      var tag = document.querySelector('script[src*="swiper-bundle"]');
+      if (!tag) { done(); return; }
+      var s = document.createElement('script');
+      s.src = tag.getAttribute('src'); s.async = true;
+      s.onload = s.onerror = function () { done(); };
+      document.head.appendChild(s);
+    };
+    {
       var csInit = function () {
+      if (!window.Swiper) { csFallback(); return; }
       cs.classList.add('is-swiper');
       var csSwiper = new window.Swiper(vp, {
         wrapperClass: 'hv2-cs-track', slideClass: 'hv2-case',
@@ -509,19 +532,11 @@
       if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { csInView = en[0].isIntersecting; csSync(); }, { threshold: 0.15 }).observe(vp);
       csPaintToggle();
       };
+      var csStart = function () { csLoadSwiper(csInit); };
       if ('IntersectionObserver' in window) {
-        var csLazy = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { csLazy.disconnect(); csInit(); } }, { rootMargin: '100% 0px 100% 0px' });
+        var csLazy = new IntersectionObserver(function (en) { if (en[0].isIntersecting) { csLazy.disconnect(); csStart(); } }, { rootMargin: '100% 0px 100% 0px' });
         csLazy.observe(cs);
-      } else csInit();
-    } else {
-      /* fallback: plain scrolling row with working arrows */
-      togBtn.hidden = true;
-      var cards = $$('.hv2-case', cs);
-      var stepW = function () { return cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : vp.clientWidth; };
-      var slideBy = function (dir) { vp.scrollBy({ left: dir * stepW(), behavior: reduceMotion ? 'auto' : 'smooth' }); };
-      prevBtn.addEventListener('click', function () { slideBy(-1); });
-      nextBtn.addEventListener('click', function () { slideBy(1); });
-      vp.addEventListener('scroll', function () { setPos(clamp(Math.round(vp.scrollLeft / stepW()), 0, slidesN - 1)); }, { passive: true });
+      } else csStart();
     }
   }
 
