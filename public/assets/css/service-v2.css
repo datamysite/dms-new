@@ -616,3 +616,7 @@
 
 /* NO WRAPPER TUMBLE (see page CSS) */
 .sv2h-hs { animation: none !important; rotate: none !important; transform-style: flat; }
+
+/* Hero copy is always left-aligned. Some pages store the heading with an inline style="text-align:center" (e.g. /website-development:
+   <h1 style="text-align:center">), which centred the title while every other service hero is left-aligned. !important beats the inline style. */
+.sv2 .sv2-hero .sv2-hero-body, .sv2 .sv2-hero .sv2-hero-body * { text-align: left !important; }
