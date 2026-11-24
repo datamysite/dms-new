@@ -139,6 +139,26 @@ class AssetPipelineTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('~\.blv-main\s*\{[^}]*overflow~', $css);
     }
 
+    public function test_blog_detail_has_compact_hero_no_3d_and_sticky_form_sidebar(): void
+    {
+        $view = file_get_contents(resource_path('views/web/blog-detail-v2.blade.php'));
+        preg_match('~<section class="hv2-hero.*?</section>~s', $view, $m);
+        foreach (['bdv-hero-photo', 'bdv-deco--hero2', 'bdv-hs', 'hv2-enquiry-form'] as $bad) {
+            $this->assertStringNotContainsString($bad, $m[0], "blog detail hero must not contain $bad");
+        }
+        $this->assertStringNotContainsString('$bdvStage(', $view, 'no 3D stages on the blog page');
+        $this->assertStringContainsString('bdv-hero-meta', $m[0], 'author and date sit in the hero, after the title');
+        $this->assertStringNotContainsString('class="author"', $view);
+        $this->assertMatchesRegularExpression('~<aside class="bdv-side" id="hv2-form".*?bdv-sticky.*?hv2-enquiry-form.*?</aside>~s', $view);
+        $css = file_get_contents(public_path('assets/css/blog-detail-v2.css'));
+        $this->assertStringNotContainsString('bdv-photo-drift', $css);
+        $this->assertStringContainsString('.bdv-side .bdv-sticky { position: sticky; top: 100px; align-self: start; }', $css);
+        $this->assertStringContainsString('.bdv-side .bdv-sticky { position: static; }', $css, 'sticky is off below 1024px');
+        $this->assertMatchesRegularExpression('~\.hv2 \.bdv-article-sec \{ overflow: visible; \}~', $css);
+        $this->assertDoesNotMatchRegularExpression('~\.bdv-layout-grid\s*\{[^}]*overflow~', $css);
+        $this->assertDoesNotMatchRegularExpression('~\.bdv-main\s*\{[^}]*overflow~', $css);
+    }
+
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));

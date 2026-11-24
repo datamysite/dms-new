@@ -78,51 +78,27 @@
 		</filter>
 	</svg>
 
-	{{-- HERO — post banner as the background, breadcrumb + title, the live page's sidebar enquiry form --}}
+	{{-- HERO — breadcrumb + title only; the enquiry form is the sticky sidebar of the article below --}}
 	<section class="hv2-hero hv2-dark bdv-hero" id="hv2-hero">
 		<div class="hv2-hero-bg" aria-hidden="true">
-			@if(!empty($data->banner))<span class="bdv-hero-photo" style="background-image: url('{{ $bdvBanner }}')"></span>@endif
 			<span class="hv2-blob hv2-blob--1"></span><span class="hv2-blob hv2-blob--2"></span><span class="hv2-blob hv2-blob--3"></span>
 			<span class="hv2-grid-lines"></span>
 		</div>
 		<div class="hv2-streaks" aria-hidden="true">
 			@for($s = 0; $s < 8; $s++)<i style="top: {{ 10 + $s * 11 }}%; --t: {{ 2.8 + ($s % 4) * .7 }}s; --dl: {{ $s * .5 }}s"></i>@endfor
 		</div>
-		<div class="bdv-deco bdv-deco--dark bdv-deco--hero2" aria-hidden="true"><div class="bdv-hs bdv-hs--n1" data-bdv-depth="0.06"><div class="bdv-hp"><div class="bdv-hg"><span class="bdv-hg-top"></span><span class="bdv-hg-bot"></span><span class="bdv-hg-line"></span><i class="bdv-hg-cap t"></i><i class="bdv-hg-cap b"></i></div></div></div><div class="bdv-hs bdv-hs--n2" data-bdv-depth="-0.08"><div class="bdv-hp"><div class="bdv-share"><svg viewBox="0 0 150 120" width="150" height="120" aria-hidden="true"><path d="M30,60 L112,20 M30,60 L112,100" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-dasharray="6 6" fill="none"/><circle class="n1" cx="30" cy="60" r="16" fill="#f44d46"/><circle class="n2" cx="112" cy="20" r="13" fill="#fff"/><circle class="n3" cx="112" cy="100" r="13" fill="#0f5741" stroke="#fff" stroke-width="3"/></svg></div></div></div><div class="bdv-hs bdv-hs--n3" data-bdv-depth="0.1"><div class="bdv-hp"><div class="bdv-quote"><b>“</b></div></div></div></div>
 		<div class="hv2-container hv2-hero-inner">
 			<div class="hv2-hero-copy">
 				@include('web.home-v2.breadcrumbs', ['crumbs' => [['Home', URL::to('/')], ['Blogs', route('blogs')], [$data->heading, null]], 'crumbSchema' => false])
 				<div class="bdv-hero-body">
 					<h1 data-reveal="up" data-delay="1">{{ $data->heading }}</h1>
+					<div class="bdv-hero-meta">
+						<span class="bdv-hero-author"><i class="bi bi-person" aria-hidden="true"></i> Author: <strong>{{ $data->author->name }}</strong></span>
+						<time datetime="{{ date('Y-m-d', strtotime($data->created_at)) }}"><i class="bi bi-calendar2-week" aria-hidden="true"></i> {{ date('F d, Y', strtotime($data->created_at)) }}</time>
+					</div>
 				</div>
 			</div>
 
-			<div class="hv2-hero-form-col" id="hv2-form">
-				<div class="hv2-form-card hv2-glass" data-tilt data-tilt-max="4" data-reveal="scale" data-delay="2">
-					<span class="hv2-glare" aria-hidden="true"></span>
-					<form action="{{ route('enquiry.submit') }}" id="hv2-enquiry-form">
-						@csrf
-						<input type="hidden" name="service" value="Blogs">
-						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
-						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
-						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
-						<label class="hv2-field"><input type="text" name="name" placeholder=" " required autocomplete="name"><span>Your Full Name</span></label>
-						<div class="hv2-field hv2-field--tel">
-							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" placeholder="Your phone number" aria-label="Phone number">
-							<input type="hidden" name="phone" id="hv2-fullphone">
-						</div>
-						<label class="hv2-field"><input type="email" name="email" id="hv2-email" placeholder=" " required autocomplete="email"><span>Your Email Address</span></label>
-						<label class="hv2-field"><textarea name="description" rows="3" placeholder=" " required></textarea><span>Tell us what you need</span></label>
-						<button class="hv2-btn hv2-btn--primary hv2-btn--block" type="submit"><span>Get Free Consultation <i class="bi bi-arrow-right"></i></span></button>
-						<ul class="hv2-form-trust">
-							<li><i class="bi bi-star-fill"></i> No spam, ever</li>
-							<li><i class="bi bi-check-circle-fill"></i> Reply in 60 min</li>
-							<li><i class="bi bi-lock-fill"></i> 100% Private</li>
-						</ul>
-					</form>
-					<div class="hv2-form-loader" aria-hidden="true"><span class="hv2-spinner"></span></div>
-				</div>
-			</div>
 		</div>
 		<a href="#bdv-article" class="hv2-scroll-cue" data-scrollto="#bdv-article" aria-label="Scroll to content"></a>
 	</section>
@@ -131,17 +107,16 @@
 	{{-- ARTICLE --}}
 	<section class="hv2-section hv2-tint bdv-article-sec" id="bdv-article">
 		<div class="bdv-deco" aria-hidden="true">
-			{!! $bdvStage('r', '0.10') !!}{!! $bdvStage('l', '-0.08') !!}{!! $bdvMotifs !!}
+			{!! $bdvMotifs !!}
 		</div>
-		<div class="hv2-container bdv-wrap">
+		<div class="hv2-container bdv-layout-grid">
+			<div class="bdv-main">
 			<div class="bdv-cover" data-reveal="up">
 				<img {!! v2_img('public/storage/blogs/' . $data->banner, '(max-width: 1020px) 94vw, 980px') !!} alt="{{ $data->heading }}">
 				<div class="bdv-summary">
 					<p class="summary"><strong>Summary</strong>:<br>
 						{{ $data->short_description }}
 					</p>
-					<p class="author"><i class="bi bi-person"></i> {{ $data->author->name }} </p>
-					<p class="date"><i class="bi bi-calendar2-week"></i> &nbsp;{{ date('F d, Y', strtotime($data->created_at)) }}</p>
 				</div>
 			</div>
 
@@ -168,6 +143,33 @@
 					<a href="javascript:void(0)" data-link="{{ URL::current() }}" class="share-copy"><i class="bi bi-copy"></i> <span>Copy Link</span></a>
 				</div>
 			</div>
+			</div>
+			<aside class="bdv-side" id="hv2-form" aria-label="Free consultation">
+				<div class="hv2-form-card hv2-glass hv2-dark bdv-sticky" data-tilt data-tilt-max="4" data-reveal="scale" data-delay="2">
+					<span class="hv2-glare" aria-hidden="true"></span>
+					<form action="{{ route('enquiry.submit') }}" id="hv2-enquiry-form">
+						@csrf
+						<input type="hidden" name="service" value="Blogs">
+						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
+						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
+						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
+						<label class="hv2-field"><input type="text" name="name" placeholder=" " required autocomplete="name"><span>Your Full Name</span></label>
+						<div class="hv2-field hv2-field--tel">
+							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" placeholder="Your phone number" aria-label="Phone number">
+							<input type="hidden" name="phone" id="hv2-fullphone">
+						</div>
+						<label class="hv2-field"><input type="email" name="email" id="hv2-email" placeholder=" " required autocomplete="email"><span>Your Email Address</span></label>
+						<label class="hv2-field"><textarea name="description" rows="3" placeholder=" " required></textarea><span>Tell us what you need</span></label>
+						<button class="hv2-btn hv2-btn--primary hv2-btn--block" type="submit"><span>Get Free Consultation <i class="bi bi-arrow-right"></i></span></button>
+						<ul class="hv2-form-trust">
+							<li><i class="bi bi-star-fill"></i> No spam, ever</li>
+							<li><i class="bi bi-check-circle-fill"></i> Reply in 60 min</li>
+							<li><i class="bi bi-lock-fill"></i> 100% Private</li>
+						</ul>
+					</form>
+					<div class="hv2-form-loader" aria-hidden="true"><span class="hv2-spinner"></span></div>
+				</div>
+			</aside>
 		</div>
 	</section>
 
@@ -175,7 +177,6 @@
 	<section class="hv2-section hv2-dark bdv-related" id="bdv-related">
 		<span class="hv2-watermark" data-parallax="0.12" aria-hidden="true">Articles</span>
 		<div class="bdv-deco bdv-deco--dark" aria-hidden="true">
-			{!! $bdvStage('a', '0.08') !!}{!! $bdvStage('b', '-0.1') !!}
 			<span class="bdv-dots bdv-dots--l"></span><span class="bdv-dots bdv-dots--r"></span>
 			<span class="bdv-glow g1" data-bdv-depth="0.08"></span><span class="bdv-glow g2" data-bdv-depth="-0.1"></span>
 			<span class="bdv-plus p1" data-bdv-depth="0.18">+</span><span class="bdv-plus p2" data-bdv-depth="-0.14">+</span>
