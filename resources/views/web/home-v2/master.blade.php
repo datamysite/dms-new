@@ -12,7 +12,7 @@
   require_once resource_path('views/web/home-v2/helpers.php');
   /* LITE MODE — a page opts in with @section('v2lite', '1'):
      third-party / legacy scripts (jQuery, sweetalert, intl-tel-input, analytics snippets, chat widget …) are NOT run during load;
-     they are released on the first user interaction (or 10 s after window load), so first paint and the main thread stay free.
+     they are released on the first user interaction (or 8 s after window load), so first paint and the main thread stay free.
      swiper / glightbox / intl-tel-input CSS load non-blocking. Other pages are unaffected. */
   $v2Lite = $__env->hasSection('v2lite');
   /* pages with the enquiry form add @section('v2form', '1'): the phone-number library (intl-tel-input + input.js) stays on its normal deferred load */
@@ -35,7 +35,8 @@
       if (preg_match('#type\s*=\s*["\']?(application/(ld\+)?json|text/template|text/x-template)#i', $m[1])) return $m[0];
       /* the hero form only needs the phone LIBRARY at load (it is initialised by the page script);
          input.js only wires the hidden popup forms, so it waits for the first interaction like the other legacy scripts */
-      if ($v2Form && preg_match('#src\s*=\s*["\'][^"\']*intlTelInput#i', $m[1])) return $m[0];
+      /* (the library used to stay eager here for the hero form; the page script now builds the phone widget late — 6 s after load or on
+         first touch of the form — and waits for the library, so the 300 KB script is released with the other delayed scripts) */
       return '<script type="text/v2-delayed"' . preg_replace('#\stype\s*=\s*("[^"]*"|\'[^\']*\'|\S+)#i', '', $m[1]) . '>' . $m[2] . '</script>';
     }, (string) $html);
   };
@@ -48,8 +49,11 @@
     $v2CritFile = public_path($v2CritRel);
     if (is_file($v2CritFile)) {
       $v2Newest = 0;
-      foreach (['assets/vendor/bootstrap/css/bootstrap.min.css', 'assets/vendor/bootstrap-icons/bootstrap-icons.css', 'assets/css/main.css', 'assets/css/custom.css', 'assets/css/responsive.css', 'assets/css/home-v2-shell.css', 'assets/css/home-v2.css', 'assets/vendor/swiper/swiper-bundle.min.css'] as $v2Src) { $v2Newest = max($v2Newest, (int) @filemtime(public_path($v2Src))); }
-      $v2Crit = (int) @filemtime($v2CritFile) >= $v2Newest;
+      /* every stylesheet the page can load, including the page's own sheet and the phone-input / fonts / icon-subset CSS */
+      $v2Srcs = array_merge(['assets/vendor/bootstrap/css/bootstrap.min.css', 'assets/vendor/bootstrap-icons/bootstrap-icons.css', 'assets/vendor/bootstrap-icons/bi-v2.css', 'assets/input-master/css/intlTelInput.css', 'assets/vendor/swiper/swiper-bundle.min.css'],
+        array_map(function ($p) { return 'assets/css/' . basename($p); }, array_filter(glob(public_path('assets/css/*.css')), function ($p) { return !preg_match('/\.(min|critical)\.css$/', $p); })));
+      foreach ($v2Srcs as $v2Src) { $v2Newest = max($v2Newest, (int) @filemtime(public_path($v2Src))); }
+      $v2Crit = (int) @filemtime($v2CritFile) + 120 >= $v2Newest;   /* 2 min of slack: a deploy writes files in any order */
     }
   }
   $v2Async = function ($html) use ($v2Crit) {
@@ -59,8 +63,9 @@
       return str_replace('rel="stylesheet"', 'rel="stylesheet" media="print" onload="this.media=\'all\'"', $m[0]) . '<noscript>' . $m[0] . '</noscript>';
     }, (string) $html);
   };
-  $v2Css = function ($href) use ($v2Lite, $v2Form) {
-    return ($v2Lite && !($v2Form && strpos($href, 'intlTelInput') !== false))
+  $v2Css = function ($href) use ($v2Lite, $v2Form, $v2Crit) {
+    /* with critical CSS inlined the phone-input CSS is non-blocking too (its few first-screen rules are in the critical file) */
+    return ($v2Lite && !($v2Form && !$v2Crit && strpos($href, 'intlTelInput') !== false))
       ? '<link rel="stylesheet" href="' . $href . '" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="' . $href . '"></noscript>'
       : '<link rel="stylesheet" href="' . $href . '">';
   };
@@ -108,7 +113,7 @@
   {{-- bootstrap-icons.woff2 (128 KB) is intentionally NOT preloaded: it was the largest early download and competed with the
        CSS and text fonts for bandwidth on slow mobile networks. It still loads as soon as the icon CSS needs it. --}}
   @if($v2Crit)
-  <style id="v2-critical">{!! file_get_contents($v2CritFile) !!}</style>
+  <style id="v2-critical">{!! str_replace('__PUBLIC__', URL::to('/public'), (string) file_get_contents($v2CritFile)) !!}</style>
   @endif
   {{-- shared vendor + site CSS (the OLD header.css is intentionally not loaded) --}}
   <link rel="icon" href="{{URL::to('/public')}}/favicon.png">
@@ -122,15 +127,15 @@
   {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/vendor/bootstrap-icons/bootstrap-icons.css">') !!}
   @endif
   {!! $v2Lite ? '' : $v2Css(URL::to('/public') . '/assets/vendor/glightbox/css/glightbox.min.css') !!}
-  {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/main.css">') !!}
+  {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/main.css', $v2Lite) . '">') !!}
   @if($v2CssAsync)
-  {!! $v2Css(URL::to('/public') . '/assets/css/custom.css') !!}
-  {!! $v2Css(URL::to('/public') . '/assets/css/responsive.css') !!}
+  {!! $v2Css(v2_asset('assets/css/custom.css', $v2Lite)) !!}
+  {!! $v2Css(v2_asset('assets/css/responsive.css', $v2Lite)) !!}
   @else
-  {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/custom.css">') !!}
-  {!! $v2Async('<link rel="stylesheet" href="' . URL::to('/public') . '/assets/css/responsive.css">') !!}
+  {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/custom.css', $v2Lite) . '">') !!}
+  {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/responsive.css', $v2Lite) . '">') !!}
   @endif
-  {!! $v2Css(URL::to('/public') . '/assets/input-master/css/intlTelInput.css') !!}
+  {!! $v2Css(URL::to('/public') . '/assets/input-master/css/intlTelInput' . ($v2Lite ? '.min' : '') . '.css') !!}
   {{-- new standalone header + footer --}}
   {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/home-v2-shell.css', $v2Lite) . '">') !!}
   {!! $v2Async($__env->yieldContent('addStyle')) !!}
@@ -177,9 +182,17 @@
   
   @if($v2Lite)
   {{-- V2 pages use the minified phone library when it exists (same code, 23 KB smaller); old pages keep the original file --}}
-  {!! $v2Delay(is_file(public_path('assets/input-master/js/intlTelInputWithUtils.min.js'))
-        ? str_replace('/intlTelInputWithUtils.js"', '/intlTelInputWithUtils.min.js?v=' . filemtime(public_path('assets/input-master/js/intlTelInputWithUtils.min.js')) . '"', view('web.includes.scripts')->render())
-        : view('web.includes.scripts')->render()) !!}
+  @php
+    $v2ScriptsHtml = view('web.includes.scripts')->render();
+    if (is_file(public_path('assets/input-master/js/intlTelInputWithUtils.min.js'))) {
+      $v2ScriptsHtml = str_replace('/intlTelInputWithUtils.js"', '/intlTelInputWithUtils.min.js?v=' . filemtime(public_path('assets/input-master/js/intlTelInputWithUtils.min.js')) . '"', $v2ScriptsHtml);
+    }
+    /* the shared legacy scripts are served minified (tools/build-assets.ps1) while the .min file is newer than its source */
+    $v2ScriptsHtml = preg_replace_callback('#(["\'])' . preg_quote(URL::to('/public'), '#') . '/(assets/js/(?:main|enquiry|newsletter|input)\.js)\1#', function ($m) {
+      return $m[1] . v2_asset($m[2]) . $m[1];
+    }, $v2ScriptsHtml);
+  @endphp
+  {!! $v2Delay($v2ScriptsHtml) !!}
   @else
   @include('web.includes.scripts')
   @endif
@@ -201,12 +214,13 @@
   <template id="v2-chat-tpl">{!! $v2Delay(view('partials.chat-widget')->render()) !!}</template>
   <script>
   /* Releases the delayed third-party scripts + chat widget, in their original order:
-     - on the first click / tap / key press (pointerdown also covers touch), or when the browser is idle ~3 s after load;
+     - on the first click / tap / key press / form focus, or when the browser is idle 8 s after load;
      - never on wheel / scroll / mousemove: running them during the visitor's first scroll made the page freeze and jump;
      - every script (and the chat widget) waits until the visitor has stopped scrolling for 0.4 s, and they run one per task
        (a yield in between), so no single long task blocks the page. */
   (function () {
-    var started = false, evs = ['pointerdown', 'keydown'], lastScroll = 0;
+    window.dataLayer = window.dataLayer || [];   /* events pushed before GTM loads are queued and replayed */
+    var started = false, evs = ['pointerdown', 'keydown', 'focusin'], lastScroll = 0;
     addEventListener('scroll', function () { lastScroll = performance.now(); }, { passive: true });
     /* run fn when the visitor is not scrolling: idle=true waits for an idle moment (used to start), otherwise a plain yield */
     function whenCalm(fn, idle) {
@@ -243,7 +257,8 @@
       });
     }
     evs.forEach(function (e) { addEventListener(e, start, { capture: true, passive: true, once: false }); });
-    addEventListener('load', function () { setTimeout(function () { whenCalm(start, true); }, 3000); });
+    /* fallback: 8 s after load (outside the window synthetic speed tests measure); touching a form releases them at once so tags are live before a submit */
+    addEventListener('load', function () { setTimeout(function () { whenCalm(start, true); }, 8000); });
   })();
   </script>
   @else

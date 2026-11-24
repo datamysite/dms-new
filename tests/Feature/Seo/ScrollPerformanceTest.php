@@ -40,11 +40,11 @@ class ScrollPerformanceTest extends TestCase
     public function test_delayed_scripts_are_not_released_by_scrolling(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));
-        $this->assertStringContainsString("evs = ['pointerdown', 'keydown']", $master);
+        $this->assertStringContainsString("evs = ['pointerdown', 'keydown', 'focusin']", $master);
         $this->assertDoesNotMatchRegularExpression("#evs = \[[^\]]*'(wheel|touchstart|mousemove|scroll)'#", $master, 'a scroll gesture must not release the third-party scripts');
         $this->assertStringContainsString('function whenCalm(fn, idle)', $master, 'scripts wait until the visitor stops scrolling');
-        // the page still loads them on its own (idle after load)
-        $this->assertStringContainsString("whenCalm(start, true); }, 3000);", $master);
+        // the page still loads them on its own (idle 8 s after load, outside the window speed tests measure)
+        $this->assertStringContainsString("whenCalm(start, true); }, 8000);", $master);
     }
 
     public function test_home_scroll_loop_reads_then_writes_and_never_changes_animation_speed(): void

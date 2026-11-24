@@ -7,7 +7,10 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || doc).querySelectorAll(s)); };
 
   /* scrolled state */
-  var onScroll = function () { header.classList.toggle('is-scrolled', window.scrollY > 24); };
+  /* no read at script time (window.scrollY forces the first layout inside script evaluation): check after the first frame, then on scroll */
+  var ticking = false;
+  var apply = function () { ticking = false; header.classList.toggle('is-scrolled', window.scrollY > 24); };
+  var onScroll = function () { if (!ticking) { ticking = true; requestAnimationFrame(apply); } };
   onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
 
   /* mega menu */

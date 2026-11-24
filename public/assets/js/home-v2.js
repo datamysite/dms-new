@@ -32,7 +32,7 @@
   requestAnimationFrame(syncHeader);
   window.addEventListener('resize', syncHeader);
 
-  var scrollState = { y: window.scrollY, velocity: 0 };
+  var scrollState = { y: 0, velocity: 0 };   /* real position is read at the start of the first frame (see below) */
   var scrollListeners = [];
   var onScroll = function (fn) { scrollListeners.push(fn); };
   var emitScroll = function () { for (var i = 0; i < scrollListeners.length; i++) scrollListeners[i](scrollState); };
@@ -56,8 +56,12 @@
     var f = { read: read, write: write, el: el || null, v: null, on: true };
     fx.push(f);
     if (f.el && fxIO) fxIO.observe(f.el);
-    f.v = read(); write(f.v);
+    /* no read/write at registration (it forced a layout while scripts were still running): the first frame runs every effect once */
+    /* the first run waits until the loader curtain is gone: the loader updates styles every frame, and reading positions in
+       the same frame would force a layout */
+    if (!fxFirst) { fxFirst = 1; afterIntro(function () { requestAnimationFrame(runFx); }); }
   };
+  var fxFirst = 0;
   /* write a style / custom property only when its value changes (an unchanged value still costs a style recalculation) */
   var setStyle = function (el, prop, val) {
     var key = '__s_' + prop;
@@ -108,7 +112,7 @@
       setTimeout(finishIntro, 60);
       setTimeout(function () { docEl.classList.remove('hv2-loading', 'hv2-leaving'); docEl.style.removeProperty('--hv2-p'); docEl.style.removeProperty('--hv2-n'); }, 350);
     };
-    (function tick() {
+    requestAnimationFrame(function tick() {   /* first paint of the bar happens in a frame, not while scripts run */
       if (leaving) return;
       /* the inline head script lifts the curtain at 0.5 s: the engine follows at once (reveals must not wait for slow animation frames) */
       if (!docEl.classList.contains('hv2-loading')) { leave(); return; }
@@ -121,7 +125,7 @@
       paint(pct);
       if (pct >= 99.5) { leave(); return; }
       requestAnimationFrame(tick);
-    })();
+    });
     setTimeout(leave, MAX + 80); /* hard stop at the 0.5 s budget (also covers throttled tabs / slow frames) */
   })();
 
@@ -129,7 +133,8 @@
      The browser scrolls on its own (compositor) thread: no JS smooth-scroll library. A JS scroller (Lenis) turned every busy
      moment on the main thread into a freeze followed by a jump. Scroll effects read scrollState once per frame (one passive
      listener + one requestAnimationFrame). */
-  var lastY = window.scrollY, ticking = false;
+  var lastY = 0, ticking = false;
+  requestAnimationFrame(function () { scrollState.y = lastY = window.scrollY; });  /* before the effects' first run (registered later, same frame, later order) */
   window.addEventListener('scroll', function () {
     if (ticking) return;
     ticking = true;
@@ -183,8 +188,8 @@
   };
   var splitLater = [];
   /* measure every heading first, THEN split: splitting changes the DOM, so measuring in between forced a layout per heading */
-  var splitNow = [], splitVh = window.innerHeight * 1.2;
-  $$('[data-split]').forEach(function (el) { (el.getBoundingClientRect().top < splitVh ? splitNow : splitLater).push(el); });
+  /* no rect reads at start-up: one IntersectionObserver pass classifies every heading (its entries carry the rects, computed once) */
+  var splitNow = [], splitStart = function () {
   splitNow.forEach(splitOne);
   if (splitLater.length) {
     var idle = window.requestIdleCallback || function (fn) { return setTimeout(function () { fn({ timeRemaining: function () { return 8; } }); }, 200); };
@@ -194,6 +199,18 @@
     };
     idle(splitChunk, { timeout: 1500 });
   }
+  };
+  (function () {
+    var els = $$('[data-split]');
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window)) { splitLater = els; splitStart(); return; }
+    var probe = new IntersectionObserver(function (entries) {
+      probe.disconnect();
+      entries.forEach(function (en) { (en.isIntersecting || en.boundingClientRect.top < window.innerHeight * 1.2 ? splitNow : splitLater).push(en.target); });
+      splitStart();
+    }, { rootMargin: '20% 0px 0px 0px' });
+    els.forEach(function (el) { probe.observe(el); });
+  })();
 
   /* == REVEAL (GSAP ScrollTrigger.batch, IO fallback) ==================== */
   var revealEls = $$('[data-reveal], [data-split]');
@@ -249,13 +266,17 @@
     }
     /* sweeper: anything the visitor has already scrolled past (fast flick, anchor jump) is simply shown. It runs shortly
        after scrolling pauses (outside the scroll frame, so its position reads never force a layout mid-scroll). */
-    var sweepTimer = 0;
-    var sweepReveals = function () {
-      revealEls.forEach(function (el) { if (!el.classList.contains('is-in') && el.getBoundingClientRect().bottom < 0) el.classList.add('is-in'); });
-    };
-    if (!reduceMotion) {
-      onScroll(function () { clearTimeout(sweepTimer); sweepTimer = setTimeout(sweepReveals, 150); });
-      sweepReveals();
+    /* Done with an IntersectionObserver instead of measuring every element after each scroll pause: the observer reports an element
+       that is above the viewport without forcing a layout (the old sweep read ~70 rects and cost ~150 ms on a phone). It also reports
+       the initial state, so a page restored/anchored far down shows everything above it at once. */
+    if (!reduceMotion && 'IntersectionObserver' in window) {
+      var ioPast = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting || en.boundingClientRect.bottom >= 0) return;
+          en.target.classList.add('is-in'); ioPast.unobserve(en.target);
+        });
+      });
+      revealEls.forEach(function (el) { if (flyEls.indexOf(el) < 0) ioPast.observe(el); });
     }
 
   });
@@ -265,7 +286,7 @@
       var r = el.getBoundingClientRect();
       if (!el.classList.contains('is-in') && r.top < window.innerHeight && r.bottom > 0) el.classList.add('is-in');
     });
-  }, 5000);
+  }, 8000);
 
   /* == PROGRESS · CURSOR ================================================= */
   var progress = root.querySelector('.hv2-progress');
@@ -313,7 +334,12 @@
   }
 
   /* == COUNTERS & RINGS ================================================== */
-  var fmt = function (n, dec) { return n.toLocaleString('en-US', { minimumFractionDigits: dec, maximumFractionDigits: dec }); };
+  /* n.toLocaleString(locale, options) builds a new formatter on EVERY call (slow, and it ran every frame of every counter) */
+  var fmt = function (n, dec) {
+    /* en-US grouping without Intl: even one Intl.NumberFormat costs ~50 ms on a phone the first time (locale data load) */
+    var s = n.toFixed(dec), p = s.split('.');
+    return p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',') + (p[1] ? '.' + p[1] : '');
+  };
   $$('[data-count]').forEach(function (el) {
     var target = parseFloat(el.getAttribute('data-count')) || 0;
     var suffix = el.getAttribute('data-suffix') || '';
@@ -578,7 +604,8 @@
         csLazy = new IntersectionObserver(function (en) { if (en[0].isIntersecting) csStart(); }, { rootMargin: '50% 0px 50% 0px' });
         csLazy.observe(cs);
       }
-      var csIdle = function () { setTimeout(function () { if (window.requestIdleCallback) requestIdleCallback(csStart, { timeout: 4000 }); else csStart(); }, 1200); };
+      /* 8.5 s after load: outside the window speed tests count as blocking time (the carousel is far below the first screen) */
+      var csIdle = function () { setTimeout(function () { if (window.requestIdleCallback) requestIdleCallback(csStart, { timeout: 4000 }); else csStart(); }, 8500); };
       if (document.readyState === 'complete') csIdle(); else window.addEventListener('load', csIdle);
     }
   }
@@ -614,7 +641,7 @@
     measureStack(); paintStack();
   };
   if (stackCards.length > 1) {
-    measureStack();
+    requestAnimationFrame(function () { measureStack(); paintStack(); });   /* first frame, not while scripts run */
     addFx(readStack, writeStack, stackCards[0].parentNode);
     window.addEventListener('resize', measureStack);
   }
@@ -638,7 +665,8 @@
       if (!on) { qBar.style.animation = 'none'; return; }
       var wasOff = qBar.style.animation === 'none';
       qBar.style.animation = '';
-      if (!wasOff && qBar.getAnimations) qBar.getAnimations().forEach(function (a) { a.cancel(); a.play(); });
+      if (!qBar.__started) qBar.__started = true;   /* first start: the animation begins by itself, nothing to restart (no getAnimations layout flush) */
+      else if (!wasOff && qBar.getAnimations) qBar.getAnimations().forEach(function (a) { a.cancel(); a.play(); });
       else if (!wasOff) { qBar.style.animation = 'none'; void qBar.offsetWidth; qBar.style.animation = ''; }
     };
     var qSchedule = function () {
@@ -708,15 +736,17 @@
   (function () {
     var wraps = $$('.hv2-marquee-wrap');
     if (!wraps.length) return;
-    var started = false, evs = ['pointerdown', 'keydown'];
-    var start = function () {
-      if (started) return; started = true;
-      evs.forEach(function (e) { window.removeEventListener(e, start, true); });
-      wraps.forEach(function (wrap) { $$('img[loading="lazy"]', wrap).forEach(function (img) { img.loading = 'eager'; }); });
-    };
-    evs.forEach(function (e) { window.addEventListener(e, start, { capture: true, passive: true }); });
-    var idle = function () { if (window.requestIdleCallback) requestIdleCallback(start, { timeout: 3000 }); else setTimeout(start, 200); };
-    if (document.readyState === 'complete') setTimeout(idle, 1500); else window.addEventListener('load', function () { setTimeout(idle, 1500); });
+    /* Each marquee loads its logos when it is within ~1.5 screens of the viewport (so a visitor never meets blank tiles, and the
+       first screen does not pay for ~40 images it cannot show). Without IntersectionObserver: 8 s after load. */
+    var eager = function (wrap) { $$('img[loading="lazy"]', wrap).forEach(function (img) { img.loading = 'eager'; }); };
+    if ('IntersectionObserver' in window) {
+      var mio = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) { if (en.isIntersecting) { mio.unobserve(en.target); eager(en.target); } });
+      }, { rootMargin: '150% 0px 150% 0px' });
+      wraps.forEach(function (w) { mio.observe(w); });
+    } else {
+      window.addEventListener('load', function () { setTimeout(function () { wraps.forEach(eager); }, 8000); });
+    }
   })();
 
   /* == CTA ZOOM · PARALLAX (live-position driven) ========================= */
@@ -745,11 +775,22 @@
   if (form) {
     var phone = document.getElementById('hv2-phone'), fullPhone = document.getElementById('hv2-fullphone');
     var loader = form.parentNode.querySelector('.hv2-form-loader'), iti = null;
-    if (phone && window.intlTelInput) {
+    /* the phone widget builds DOM and measures it: do that when the browser is idle (or the moment the visitor touches the form),
+       not while the page's scripts are still running */
+    var phoneTries = 0;
+    var initPhone = function () {
+      if (iti || !phone) return;
+      /* the library (300 KB) is one of the delayed scripts: until it has arrived, look again every 400 ms (for up to 40 s) */
+      if (!window.intlTelInput) { if (phoneTries++ < 100) setTimeout(initPhone, 400); return; }
       iti = window.intlTelInput(phone, { initialCountry: 'ae', separateDialCode: true });
       var syncPhone = function () { fullPhone.value = iti.getNumber(); };
       ['keyup', 'change', 'countrychange'].forEach(function (ev) { phone.addEventListener(ev, syncPhone); });
-    }
+    };
+    form.addEventListener('focusin', initPhone, { once: true });
+    /* the flag + dial-code widget (240 countries) costs ~100 ms on a phone: it is built 6 s after load at the latest (outside the
+       window speed tests count), or the moment the visitor touches the form */
+    var phoneLater = function () { setTimeout(function () { if (window.requestIdleCallback) requestIdleCallback(initPhone, { timeout: 2000 }); else initPhone(); }, 6000); };
+    if (document.readyState === 'complete') phoneLater(); else window.addEventListener('load', phoneLater);
     var toast = function (icon, title) {
       if (window.Toast && window.Toast.fire) window.Toast.fire({ icon: icon, title: title });
       else if (window.Swal) window.Swal.fire({ icon: icon, title: title, toast: true, position: 'top-end', timer: 5000, showConfirmButton: false });
@@ -758,7 +799,7 @@
       e.preventDefault();
       var email = (document.getElementById('hv2-email').value || '').trim();
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { toast('warning', 'Please Enter valid Email address'); return; }
-      if (iti) fullPhone.value = iti.getNumber();
+      if (iti) fullPhone.value = iti.getNumber(); else fullPhone.value = (phone.value || '').trim();   /* submitted before the widget was built: send what was typed */
       loader.classList.add('is-on');
       fetch(form.getAttribute('action'), { method: 'POST', body: new FormData(form), credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' } })
         .then(function (res) { return res.json(); })

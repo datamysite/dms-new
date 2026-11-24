@@ -17,10 +17,12 @@
 {{-- icon subset inlined (8 KB font instead of 128 KB) + custom/responsive CSS non-blocking — both verified for this page --}}
 @section('v2icons', '1')
 @section('v2cssasync', '1')
+{{-- first-screen CSS inlined, every stylesheet non-blocking (regenerate: tools/make-critical.ps1 -Name home -Url <home url>; stale files are ignored) --}}
+@section('v2crit', 'assets/css/home.critical.css')
 
 @section('metaAddition')
 	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},500);})();</script>
-	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.png') }}">
+	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.webp') }}">
 	{{-- self-hosted fonts: the two key files are preloaded, @font-face is inlined (font-display: swap) --}}
 	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/league-spartan-latin.woff2') }}">
 	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/nunito-sans-latin.woff2') }}">

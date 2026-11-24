@@ -90,7 +90,7 @@ if (!function_exists('v2_asset')) {
 		$use = $path;
 		if ($min) {
 			$m = preg_replace('/\.(css|js)$/', '.min.$1', $path);
-			if ($m !== $path && is_file(public_path($m)) && @filemtime(public_path($m)) >= @filemtime(public_path($path))) $use = $m;
+			if ($m !== $path && is_file(public_path($m)) && @filemtime(public_path($m)) + 60 >= @filemtime(public_path($path))) $use = $m;
 		}
 		return \Illuminate\Support\Facades\URL::to('/public/' . $use) . '?v=' . @filemtime(public_path($use));
 	}

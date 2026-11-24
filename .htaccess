@@ -56,5 +56,6 @@
     </Files>
 </IfModule>
 <IfModule mod_deflate.c>
-  AddOutputFilterByType DEFLATE text/css
+  # the page HTML now carries the inlined first-screen CSS (about 45-60 KB): make sure it is compressed on the way out too
+  AddOutputFilterByType DEFLATE text/css text/html text/plain application/javascript text/javascript application/json image/svg+xml
 </IfModule>

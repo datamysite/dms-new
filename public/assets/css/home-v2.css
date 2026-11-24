@@ -728,7 +728,11 @@ a.hv2-contact:hover { color: var(--coral); border-color: rgba(224, 74, 67, .4); 
 @keyframes hv2-pin-pulse { 0% { transform: scale(.6); opacity: 1; } 100% { transform: scale(2.2); opacity: 0; } }
 
 /* Page loader — pure CSS overlay keyed on html.hv2-loading (set by an inline script in <head>,
-   so it paints on the very first frame). JS only feeds --hv2-p (0–1) and --hv2-n (0–100). */
+   so it paints on the very first frame). JS only feeds --hv2-p (0–1) and --hv2-n (0–100).
+   Registered with inherits:false: an ordinary custom property written on <html> every frame is inherited, so every element on the
+   page had its style recalculated 30 times during the loader; these two are only read by html's own ::before / ::after. */
+@property --hv2-p { syntax: '<number>'; inherits: false; initial-value: 0.04; }
+@property --hv2-n { syntax: '<integer>'; inherits: false; initial-value: 0; }
 html.hv2-loading { overflow: hidden; }
 /* keep the site's floating widgets (chat, WhatsApp) out of the loader */
 html.hv2-loading #dms-root, html.hv2-loading #dms-teaser, html.hv2-loading .whatsapp-chat, html.hv2-loading .whatsapp-icon-position, html.hv2-loading .wa { visibility: hidden !important; }

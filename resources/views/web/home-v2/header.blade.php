@@ -23,7 +23,7 @@
 	<div class="hs-bar">
 		<div class="hs-wrap">
 			<a href="{{ v2_url(route('home')) }}" class="hs-logo" aria-label="DataMySite — Home">
-				<img src="{{ URL::to('/public/assets/img/logo-white.png') }}" alt="DataMySite" width="150" height="48">
+				<img src="{{ URL::to('/public/assets/img/logo-white.webp') }}" alt="DataMySite" width="200" height="117">
 			</a>
 
 			<nav class="hs-nav" aria-label="Primary">
@@ -89,7 +89,7 @@
 	<div class="hs-scrim" data-hs-close></div>
 	<aside class="hs-drawer" id="hs-drawer" aria-label="Menu" aria-hidden="true">
 		<div class="hs-drawer-top">
-			<img src="{{ URL::to('/public/assets/img/logo-white.png') }}" alt="DataMySite" width="130" height="42">
+			<img src="{{ URL::to('/public/assets/img/logo-white.webp') }}" alt="DataMySite" width="200" height="117">
 			<button type="button" class="hs-drawer-x" data-hs-close aria-label="Close menu"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
 		</div>
 		<nav class="hs-drawer-nav" aria-label="Mobile">
