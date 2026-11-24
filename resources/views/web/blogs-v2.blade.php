@@ -20,7 +20,7 @@
 @section('metaAddition')
 	@if(!empty($tags))<meta name="robots" content="noindex, follow">@endif
 	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},2500);})();</script>
-	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.webp') }}">
+	<link rel="preload" as="image" href="{{ v2_asset('assets/img/logo-white.webp', false) }}">
 	{{-- self-hosted fonts: the two key files are preloaded, @font-face is inlined (font-display: swap) --}}
 	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/league-spartan-latin.woff2') }}">
 	<link rel="preload" as="font" type="font/woff2" crossorigin href="{{ URL::to('/public/assets/fonts/nunito-sans-latin.woff2') }}">
@@ -80,7 +80,6 @@
 		<div class="hv2-streaks" aria-hidden="true">
 			@for($s = 0; $s < 8; $s++)<i style="top: {{ 10 + $s * 11 }}%; --t: {{ 2.8 + ($s % 4) * .7 }}s; --dl: {{ $s * .5 }}s"></i>@endfor
 		</div>
-		<div class="blv-deco blv-deco--dark blv-deco--hero2" aria-hidden="true"><div class="blv-hs blv-hs--n1" data-blv-depth="0.06"><div class="blv-hp"><div class="blv-penwrap"><svg class="blv-ink" viewBox="0 0 170 50" width="170" height="50" aria-hidden="true"><path d="M4,40 C30,4 52,50 80,26 S130,4 164,30" fill="none" stroke="#f44d46" stroke-width="5" stroke-linecap="round"/></svg><span class="blv-pen"><i></i></span></div></div></div><div class="blv-hs blv-hs--n2" data-blv-depth="-0.08"><div class="blv-hp"><div class="blv-news"><span class="blv-nw-head"></span><span class="blv-nw-img"></span><span class="blv-nw-col"></span><span class="blv-nw-col c2"></span></div></div></div><div class="blv-hs blv-hs--n3" data-blv-depth="0.1"><div class="blv-hp"><div class="blv-bm"><span></span><span class="s2"></span></div></div></div><div class="blv-hs blv-hs--n4" data-blv-depth="-0.05"><div class="blv-hp"><div class="blv-eye"><span class="blv-ey-lid"><i></i></span></div></div></div></div>
 		<div class="hv2-container hv2-hero-inner">
 			<div class="hv2-hero-copy">
 				@include('web.home-v2.breadcrumbs', ['crumbs' => empty($type) ? [['Home', URL::to('/')], [$title, null]] : [['Home', URL::to('/')], ['Blogs', route('blogs')], [$title, null]]])

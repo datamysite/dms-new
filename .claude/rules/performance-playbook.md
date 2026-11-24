@@ -35,3 +35,9 @@ Trimmed Bootstrap for non-service pages (26 KiB unused), Swiper JS size, client-
 - Header "scrolled" state uses an IntersectionObserver marker, not a scroll listener + `scrollY` (forced-reflow source). Page height / hero height come from ResizeObserver entries; cached `geo.vh` instead of `window.innerHeight` in effects.
 - Muted text colours raised (light .76, dark .78) so axe/Lighthouse never reports contrast when elements are mid-fade.
 - Phone input has a plain placeholder until the widget is built late.
+
+## Round 5 (mobile 85, desktop 91; PSI still shows service images at the OLD size)
+- **Images are cached for a year (browser + Hostinger CDN) under the same URL**, so a re-encoded file is never fetched again: the report kept showing service/2.webp at 17.8 KiB after it was already 11 KB locally. `v2_img()`, the client logos and the header/footer logo now append `?v=<filemtime>`. Always version re-encoded images this way.
+- `window.innerHeight`, `documentElement.scrollHeight` and `offsetHeight` each forced a layout (131 ms / 44 ms / 187 ms in the report) - even at start-up. Viewport height now comes from a ResizeObserver on an invisible fixed 100lvh marker, page height from a body observer, header height from a header observer (first report skipped: it equals the CSS default).
+- (Tried and reverted: content-visibility on clients/stats/solutions - those sections stay normal so anchor jumps land right; see ScrollPerformanceTest.)
+- Local A/B runs drift with machine load across the day (same code: TBT estimate 250 -> 700): compare variants back to back, never against an earlier session.

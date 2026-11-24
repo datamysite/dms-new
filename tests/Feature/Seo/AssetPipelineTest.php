@@ -89,6 +89,18 @@ class AssetPipelineTest extends TestCase
         $this->assertMatchesRegularExpression('/\.hs-nav,[^{]*\{display:none\}/', $this->src('assets/css/service.critical.css'), 'the desktop nav is hidden on phones at first paint');
     }
 
+    public function test_blogs_hero_is_compact_and_has_no_3d_pieces(): void
+    {
+        $view = file_get_contents(resource_path('views/web/blogs-v2.blade.php'));
+        preg_match('~<section class="hv2-hero.*?</section>~s', $view, $m);
+        foreach (['blv-deco--hero2', 'blv-hs'] as $bad) {
+            $this->assertStringNotContainsString($bad, $m[0], "blogs hero must not contain $bad");
+        }
+        $css = file_get_contents(public_path('assets/css/blogs-v2.css'));
+        $this->assertStringContainsString('.hv2 .blv-hero { min-height: 0;', $css);
+        $this->assertStringContainsString('hv2-streaks', $m[0], 'the line streaks stay');
+    }
+
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));
@@ -129,8 +141,11 @@ class AssetPipelineTest extends TestCase
             $this->assertMatchesRegularExpression('#<script type="text/v2-delayed"[^>]*swiper-bundle#', $html, "$path loads Swiper before the first interaction");
         }
         $js = file_get_contents(public_path('assets/js/home-v2.js'));
-        $this->assertStringContainsString('var remeasure = function (docH)', $js, 'page height comes from the ResizeObserver entry');
-        $this->assertStringContainsString('heroH = bs && bs[0]', $js);
+        $this->assertStringContainsString('lastDocH = boxH(en)', $js, 'page height comes from the ResizeObserver entry');
+        $this->assertStringContainsString('var vpMark = document.createElement', $js, 'viewport height comes from an observed marker');
+        $this->assertStringNotContainsString('docEl.scrollHeight - ', $js);
+        $this->assertStringNotContainsString('requestAnimationFrame(syncHeader)', $js, 'header size comes from a ResizeObserver');
+        $this->assertStringContainsString('heroH = boxH(en)', $js);
         $this->assertStringNotContainsString('window.innerHeight * 0.92', $js);
         $this->assertStringContainsString('f.el.__fxOn === true', $js, 'off-screen effects wait for the observer');
         $this->assertStringNotContainsString('Math.max(1, hero.offsetHeight)', $js);

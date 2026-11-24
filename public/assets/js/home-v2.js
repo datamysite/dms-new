@@ -27,10 +27,13 @@
   /* Fixed site header → expose its height for offsets */
   var siteHeader = document.getElementById('header');
   var headerH = function () { return siteHeader ? siteHeader.offsetHeight : 0; };
-  var syncHeader = function () { docEl.style.setProperty('--hv2-header', headerH() + 'px'); };
-  /* first read waits one frame (no forced layout during start-up); the CSS default already equals the real header height */
-  requestAnimationFrame(syncHeader);
-  window.addEventListener('resize', syncHeader);
+  /* --hv2-header follows the header's size through a ResizeObserver entry (no offsetHeight read; the CSS default already equals the real height) */
+  var hdrFirst = true;
+  if (siteHeader && window.ResizeObserver) new ResizeObserver(function (en) {
+    if (hdrFirst) { hdrFirst = false; return; }   /* first report = the size the CSS default already has: writing it would restyle the whole page for nothing */
+    var e = en[en.length - 1], bs = e.borderBoxSize, h = bs && bs[0] ? bs[0].blockSize : e.contentRect.height;
+    docEl.style.setProperty('--hv2-header', Math.round(h) + 'px');
+  }).observe(siteHeader);
 
   var scrollState = { y: 0, velocity: 0 };   /* real position is read at the start of the first frame (see below) */
   var scrollListeners = [];
@@ -71,28 +74,31 @@
   };
 
   /* Page height and viewport are measured when the layout changes (resize, load, fonts, page height change), never per frame */
-  var geo = { vh: window.innerHeight, max: 0 };
+  /* NOTHING here reads layout: window.innerHeight / scrollHeight / offsetHeight each forced a full layout while the page was still being
+     styled (130+ ms on a phone). Sizes come from ResizeObserver entries, delivered after layout has been done anyway: the page height
+     from <body>, the viewport height from a fixed, invisible full-screen marker. */
+  var geo = { vh: (window.screen && screen.height) || 800, max: 0 };   /* screen height until the marker reports the real viewport */
   var remeasurePending = 0, heroH = 0, lastDocH = -1;
-  var measureNow = function (docH) {
-    geo.vh = window.innerHeight;
-    if (docH >= 0) geo.max = Math.max(0, docH - geo.vh);
-    emitScroll();
-  };
-  /* the page height comes from the ResizeObserver entry (no layout read at all); the callback is coalesced to one run per frame */
-  var remeasure = function (docH) {
-    if (typeof docH === 'number') lastDocH = docH;
+  var remeasure = function () {
     if (remeasurePending) return;
     remeasurePending = requestAnimationFrame(function () {
       remeasurePending = 0;
-      if (lastDocH < 0) lastDocH = docEl.scrollHeight;   /* no ResizeObserver yet (resize / load events): one read, in a frame that has not written styles */
-      measureNow(lastDocH);
+      if (lastDocH >= 0) geo.max = Math.max(0, lastDocH - geo.vh);
+      emitScroll();
     });
   };
+  var boxH = function (en) { var e = en[en.length - 1], bs = e.borderBoxSize; return Math.round(bs && bs[0] ? bs[0].blockSize : e.contentRect.height); };
   onScroll(runFx);
-  window.addEventListener('resize', function () { lastDocH = -1; remeasure(); });
-  window.addEventListener('load', function () { remeasure(); });
-  /* a ResizeObserver callback runs right after layout, so reading the page height there is free (reading it later in a frame forced a layout) */
-  if (window.ResizeObserver) new ResizeObserver(function (en) { var bs = en[en.length - 1].borderBoxSize; remeasure(bs && bs[0] ? Math.round(bs[0].blockSize) : en[en.length - 1].contentRect.height); }).observe(document.body); else remeasure();
+  window.addEventListener('resize', remeasure);
+  window.addEventListener('load', remeasure);
+  if (window.ResizeObserver) {
+    new ResizeObserver(function (en) { lastDocH = boxH(en); remeasure(); }).observe(document.body);
+    var vpMark = document.createElement('div');
+    vpMark.setAttribute('aria-hidden', 'true');
+    vpMark.style.cssText = 'position:fixed;top:0;left:0;width:1px;height:100vh;height:100lvh;pointer-events:none;visibility:hidden';
+    document.body.appendChild(vpMark);
+    new ResizeObserver(function (en) { geo.vh = boxH(en); remeasure(); }).observe(vpMark);
+  } else { geo.vh = window.innerHeight; lastDocH = docEl.scrollHeight; remeasure(); }
 
   /* == PAGE LOADER ======================================================== */
   /* The overlay is pure CSS (html.hv2-loading, set by an inline <head> script) so it
@@ -449,7 +455,7 @@
   if (hero && !reduceMotion) {
     var glass = hero.querySelector('.hv2-glass3d');
     /* hero height from a ResizeObserver entry (never read from the DOM inside the scroll effects) */
-    if (window.ResizeObserver) new ResizeObserver(function (en) { var bs = en[en.length - 1].borderBoxSize; heroH = bs && bs[0] ? bs[0].blockSize : en[en.length - 1].contentRect.height; }).observe(hero);
+    if (window.ResizeObserver) new ResizeObserver(function (en) { heroH = boxH(en); }).observe(hero);
     else heroH = hero.offsetHeight;
     if (glass) addFx(
       function () { return clamp(scrollState.y / Math.max(1, heroH), 0, 1); },

@@ -1304,3 +1304,4 @@ html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
   .hv2-cv#hv2-why { contain-intrinsic-size: auto 1736px; } .hv2-cv#hv2-testimonials { contain-intrinsic-size: auto 985px; }
   .hv2-cv#hv2-who-we-are { contain-intrinsic-size: auto 1501px; } .hv2-cv#hv2-blogs { contain-intrinsic-size: auto 1762px; } .hv2-cv#hv2-faq { contain-intrinsic-size: auto 1450px; }
 }
+

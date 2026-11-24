@@ -257,7 +257,7 @@
 
 @section('metaAddition')
 	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},500);})();</script>
-	<link rel="preload" as="image" href="{{ URL::to('/public/assets/img/logo-white.webp') }}">
+	<link rel="preload" as="image" href="{{ v2_asset('assets/img/logo-white.webp', false) }}">
 	{{-- hero photo = LCP element: preload the right size per screen --}}
 	@if($sv2Photo && $sv2PhotoSm)
 		<link rel="preload" as="image" href="{{ $sv2PhotoSm }}" media="(max-width: 767px)" fetchpriority="high">

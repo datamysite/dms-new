@@ -107,7 +107,8 @@ if (!function_exists('v2_img')) {
 		$file = base_path($rel);
 		if ($rel === '' || substr($rel, -1) === '/' || !is_file($file)) return 'src="' . e($fallback) . '"';
 		$base = preg_replace('/\.(jpe?g|png)$/i', '', $rel);
-		$url = function ($p) { return \Illuminate\Support\Facades\URL::to('/' . $p); };
+		/* ?v=<file time>: images are cached for a year (browser + CDN), so a re-encoded file must get a new address */
+		$url = function ($p) { $t = @filemtime(base_path($p)); return \Illuminate\Support\Facades\URL::to('/' . $p) . ($t ? '?v=' . $t : ''); };
 		$out = [];
 		if ($base !== $rel && is_file(base_path($base . '.webp'))) {
 			$out[] = 'src="' . e($url($base . '.webp')) . '"';
@@ -136,7 +137,7 @@ if (!function_exists('v2_clients')) {
 			if (!isset($ext[$no])) $ext[$no] = is_file(public_path('assets/img/clients-final/' . $no . '.webp')) ? 'webp' : 'png';
 			$list[$no] = [
 				'name' => $name,
-				'src'  => \Illuminate\Support\Facades\URL::to('/public/assets/img/clients-final/' . $no . '.' . $ext[$no]),
+				'src'  => \Illuminate\Support\Facades\URL::to('/public/assets/img/clients-final/' . $no . '.' . $ext[$no]) . '?v=' . (int) @filemtime(public_path('assets/img/clients-final/' . $no . '.' . $ext[$no])),
 				'alt'  => $name . ' logo – DataMySite client',
 			];
 		}

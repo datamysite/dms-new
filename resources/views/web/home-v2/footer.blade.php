@@ -14,7 +14,7 @@
 	<div class="hs-wrap hs-foot-grid">
 		<div class="hs-foot-brand">
 			<a href="{{ v2_url(route('home')) }}" class="hs-foot-logo" aria-label="DataMySite — Home">
-				<img src="{{ URL::to('/public/assets/img/logo-white.webp') }}" alt="DataMySite" width="150" height="88" loading="lazy">
+				<img src="{{ v2_asset('assets/img/logo-white.webp', false) }}" alt="DataMySite" width="150" height="88" loading="lazy">
 			</a>
 			<p>Smarter Marketing, Better Outcomes. Boost your brand’s visibility and campaign performance across Dubai and the UAE.</p>
 			@php

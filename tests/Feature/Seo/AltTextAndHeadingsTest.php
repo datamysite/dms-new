@@ -29,7 +29,7 @@ class AltTextAndHeadingsTest extends TestCase
             }
         }
         $about = $this->html('/about-us');
-        $this->assertMatchesRegularExpression('#<img src="[^"]*public/about\.jpg" width="\d+" height="\d+"[^>]*alt="Why Brands Choose DMS"#', $about);
+        $this->assertMatchesRegularExpression('#<img src="[^"]*public/about\.jpg(?:\?v=\d+)?" width="\d+" height="\d+"[^>]*alt="Why Brands Choose DMS"#', $about);
     }
 
     public function test_client_logos_have_a_descriptive_alt_text_in_both_marquee_passes(): void
@@ -38,7 +38,7 @@ class AltTextAndHeadingsTest extends TestCase
         $this->assertGreaterThanOrEqual(44, count($brands));
         foreach (['/', '/about-us', '/services', '/seo-services'] as $path) {
             $html = $this->html($path);
-            preg_match_all('#<img src="[^"]*clients-final/(\d+)\.(webp|png)" alt="([^"]*)"#', $html, $m, PREG_SET_ORDER);
+            preg_match_all('#<img src="[^"]*clients-final/(\d+)\.(webp|png)(?:\?v=\d+)?" alt="([^"]*)"#', $html, $m, PREG_SET_ORDER);
             $this->assertCount(count($brands) * 2, $m, "$path shows every logo twice (endless loop)");
             foreach ($m as [$all, $no, $ext, $alt]) {
                 $this->assertStringContainsString('DataMySite client', $alt, "$path logo $no");
