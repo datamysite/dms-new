@@ -15,13 +15,19 @@ $sources += Get-ChildItem $js -Filter '*-v2*.js' | Where-Object { $_.Name -notli
 foreach ($n in 'custom.css', 'main.css', 'responsive.css') { $p = Join-Path $css $n; if (Test-Path $p) { $sources += Get-Item $p } }
 foreach ($n in 'main.js', 'enquiry.js', 'newsletter.js', 'input.js', 'aside.js') { $p = Join-Path $js $n; if (Test-Path $p) { $sources += Get-Item $p } }
 
-$totalIn = 0; $totalOut = 0
+$totalIn = 0; $totalOut = 0; $manifest = [ordered]@{}
 foreach ($s in $sources) {
   $out = [IO.Path]::ChangeExtension($s.FullName, 'min' + $s.Extension)
   & $esb $s.FullName --minify --legal-comments=none "--outfile=$out" --log-level=warning
   if ($LASTEXITCODE -ne 0) { throw "esbuild failed on $($s.Name)" }
   (Get-Item $out).LastWriteTime = [DateTime]::Now   # always newer than the source
+  # content fingerprint of the source (CR characters removed, so Windows and Linux checkouts hash the same): v2_asset() serves the .min
+  # when this matches the source on the server, whatever the file timestamps are after a deploy
+  $bytes = [IO.File]::ReadAllBytes($s.FullName); $clean = New-Object System.Collections.Generic.List[byte]; foreach ($x in $bytes) { if ($x -ne 13) { $clean.Add($x) } }
+  $hash = ([BitConverter]::ToString([Security.Cryptography.MD5]::Create().ComputeHash($clean.ToArray())) -replace '-', '').ToLower()
+  $manifest[('assets/' + $(if ($s.Extension -eq '.css') { 'css' } else { 'js' }) + '/' + $s.Name)] = $hash
   $a = $s.Length; $b = (Get-Item $out).Length; $totalIn += $a; $totalOut += $b
   '{0,-34} {1,8} -> {2,8}  ({3:P0})' -f $s.Name, $a, $b, ($b / [Math]::Max(1, $a))
 }
-'{0} files, {1:N0} KB -> {2:N0} KB' -f $sources.Count, ($totalIn / 1KB), ($totalOut / 1KB)
+[IO.File]::WriteAllText((Join-Path $root 'public\assets\min-manifest.json'), ($manifest | ConvertTo-Json), (New-Object Text.UTF8Encoding($false)))
+'{0} files, {1:N0} KB -> {2:N0} KB  (+ public/assets/min-manifest.json)' -f $sources.Count, ($totalIn / 1KB), ($totalOut / 1KB)

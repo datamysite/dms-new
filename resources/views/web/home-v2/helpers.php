@@ -90,7 +90,22 @@ if (!function_exists('v2_asset')) {
 		$use = $path;
 		if ($min) {
 			$m = preg_replace('/\.(css|js)$/', '.min.$1', $path);
-			if ($m !== $path && is_file(public_path($m)) && @filemtime(public_path($m)) + 60 >= @filemtime(public_path($path))) $use = $m;
+			if ($m !== $path && is_file(public_path($m))) {
+				/* The .min is used when public/assets/min-manifest.json (written by tools/build-assets.ps1) says it was built from exactly the
+				   source that is on the server (md5, CR characters ignored): file timestamps after a deploy are in any order, so they cannot
+				   be trusted. Without a manifest entry the old rule applies: the .min must not be older than the source (60 s slack). */
+				static $manifest = null, $hashes = [];
+				if ($manifest === null) {
+					$mf = public_path('assets/min-manifest.json');
+					$manifest = is_file($mf) ? (array) json_decode((string) file_get_contents($mf), true) : [];
+				}
+				if (isset($manifest[$path])) {
+					if (!isset($hashes[$path])) $hashes[$path] = md5(str_replace("\r", '', (string) @file_get_contents(public_path($path))));
+					if (hash_equals((string) $manifest[$path], $hashes[$path])) $use = $m;
+				} elseif (@filemtime(public_path($m)) + 60 >= @filemtime(public_path($path))) {
+					$use = $m;
+				}
+			}
 		}
 		return \Illuminate\Support\Facades\URL::to('/public/' . $use) . '?v=' . @filemtime(public_path($use));
 	}

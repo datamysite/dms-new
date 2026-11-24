@@ -78,7 +78,7 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   {{-- Non-blocking stylesheets are switched on TOGETHER once the last one has arrived (or after 4 s): applying them one by one made the
        browser recalculate styles and layout for the whole page after every sheet, which counted as blocking time. --}}
-  <script>var v2q=[],v2N=0,v2d=false;function v2f(){if(v2d||!v2N||v2q.length<v2N)return;v2d=true;v2q.forEach(function(l){l.media='all'})}function v2cs(l){if(v2d){l.media='all';return}v2q.push(l);v2f()}setTimeout(function(){v2d=true;v2q.forEach(function(l){l.media='all'})},4000)</script>
+  <script>var v2q=[],v2N=0,v2d=false;function v2f(){if(v2d||!v2N||v2q.length<v2N)return;v2d=true;v2q.forEach(function(l){l.media='all'})}function v2cs(l){if(v2d){l.media='all';return}v2q.push(l);v2f()}setTimeout(function(){v2d=true;v2q.forEach(function(l){l.media='all'})},4000);var v2ic=null;function v2IntlCss(cb){if(!v2ic){v2ic={l:false,q:[]};var m=document.querySelector('meta[name=v2_intl_css]');if(!m){v2ic.l=true}else{var k=document.createElement('link');k.rel='stylesheet';k.href=m.content;k.onload=k.onerror=function(){v2ic.l=true;v2ic.q.splice(0).forEach(function(f){f()})};document.head.appendChild(k)}}if(cb){if(v2ic.l)cb();else v2ic.q.push(cb)}}</script>
   @if(\App\Http\Middleware\StagingNoindex::isStaging())<meta name="robots" content="noindex, nofollow, noarchive">@endif
   <title>{{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}</title>
   <meta name="description" content="{{@$metaTags->description}}{{@$ametaTags['description']}}">
@@ -138,7 +138,13 @@
   {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/custom.css', $v2Lite) . '">') !!}
   {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/responsive.css', $v2Lite) . '">') !!}
   @endif
-  {!! $v2Css(URL::to('/public') . '/assets/input-master/css/intlTelInput' . ($v2Lite ? '.min' : '') . '.css') !!}
+  @if($v2Lite)
+  {{-- phone-input CSS (2.7 KB) is not needed until the phone widget exists (built ~6 s after load or on first touch of a form): it is added then by v2IntlCss(), no longer a render-blocking request --}}
+  <meta name="v2_intl_css" content="{{ URL::to('/public') }}/assets/input-master/css/intlTelInput.min.css">
+  <noscript><link rel="stylesheet" href="{{ URL::to('/public') }}/assets/input-master/css/intlTelInput.min.css"></noscript>
+  @else
+  {!! $v2Css(URL::to('/public') . '/assets/input-master/css/intlTelInput.css') !!}
+  @endif
   {{-- new standalone header + footer --}}
   {!! $v2Async('<link rel="stylesheet" href="' . v2_asset('assets/css/home-v2-shell.css', $v2Lite) . '">') !!}
   {!! $v2Async($__env->yieldContent('addStyle')) !!}
@@ -247,6 +253,7 @@
     function start() {
       if (started) return; started = true;
       evs.forEach(function (e) { removeEventListener(e, start, true); });
+      v2IntlCss();   /* the popups' phone fields need the phone-input CSS once their script runs */
       var list = [].slice.call(document.querySelectorAll('script[type="text/v2-delayed"]'));
       whenCalm(function () {
         runList(list, function () {

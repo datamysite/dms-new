@@ -50,3 +50,14 @@ Trimmed Bootstrap for non-service pages (26 KiB unused), Swiper JS size, client-
 - Reproduce with `late_js`-style test: block the script, inject it at 3 s, log opacity of the hero pieces every frame (before: 1 -> 0 -> 1; after: 1 throughout).
 - **Critical CSS + async stylesheets are OFF** (`config/v2.php`, `V2_CRITICAL_CSS`): PageSpeed scored 76-85 with it and 98/98 without. The mode used to be chosen by
   file timestamps, so a deploy could flip it; it is now an explicit switch. Never depend on mtimes for behaviour.
+
+## Round 6 (mobile 97, SI 4.3 in one UI run vs 3.1-3.4 in five API runs of the same code)
+- **Judge changes with several runs.** `php artisan seo:pagespeed --base=staging --strategy=both --path=/ --fresh` (run it 3x, ~100 s apart; Google caches
+  identical requests for a short while) gave mobile 96-99, SI 3.1-3.4 s, TBT 0-190 ms, desktop 97-99 on the same deployed code. The PageSpeed web UI showed 4.3 s once
+  (its server response took 530 ms instead of ~190 ms). A single report cannot show that a change helped or hurt Speed Index.
+- Lighthouse's mobile Speed Index is simulated from layout/paint work after FCP: a smaller render-blocking CSS payload and no late hide/show of the hero are the safe levers.
+- `v2_asset()` now picks the `.min` file by content (md5 manifest `public/assets/min-manifest.json`, written by `tools/build-assets.ps1`), never by timestamps;
+  the phone-input CSS is added by `v2IntlCss()` when the widget is built (or when the delayed scripts are released); on a tap in the form the phone
+  library is fetched immediately (widget in ~0.5 s) instead of waiting for the delayed-script queue; the loader logo is a 8.7 KB WebP.
+- Local Speed Index meter: `speedindex.ps1` (Slow-4G + CPU throttle + screencast) is only useful for before/after on the same machine; it shows the home page is
+  visually complete at first paint (SI = FCP) with the hero fix.

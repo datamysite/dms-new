@@ -181,7 +181,8 @@ class AssetPipelineTest extends TestCase
         $this->assertStringContainsString('requestAnimationFrame(function tick()', $js, 'the loader starts painting in a frame');
         $this->assertStringContainsString('var probe = new IntersectionObserver', $js, 'headings are classified without rect reads');
         $this->assertStringContainsString('requestIdleCallback(initPhone, { timeout: 2000 })', $js, 'the phone widget is built late, when idle');
-        $this->assertStringContainsString("form.addEventListener('focusin', initPhone", $js, 'and at once when the visitor touches the form');
+        $this->assertStringContainsString("form.addEventListener('focusin', function () {", $js, 'and at once when the visitor touches the form');
+        $this->assertStringContainsString("document.querySelector('script[src*=\"intlTelInputWithUtils\"]')", $js, 'a tap fetches the phone library immediately, not through the delayed-script queue');
         $this->assertStringContainsString('if (!qBar.__started) qBar.__started = true;', $js);
     }
 
@@ -209,6 +210,44 @@ class AssetPipelineTest extends TestCase
         $this->assertStringNotContainsString('Math.max(1, hero.offsetHeight)', $js);
         $shell = file_get_contents(public_path('assets/js/home-v2-shell.js'));
         $this->assertStringContainsString('keep trying for up to 15 s', $shell, 'the reviews panel waits for the late Swiper');
+    }
+
+    public function test_phone_input_css_is_not_render_blocking_and_is_added_when_the_widget_is_built(): void
+    {
+        foreach (['/', '/about-us', '/contact-us', '/seo-services'] as $path) {
+            $html = $this->html($path);
+            $outside = preg_replace('#<noscript>.*?</noscript>#s', '', $html);
+            $this->assertDoesNotMatchRegularExpression('#<link\b[^>]*intlTelInput#i', $outside, "$path still has a stylesheet link for the phone input in the head");
+            $this->assertStringContainsString('<meta name="v2_intl_css" content=', $html, $path);
+            $this->assertMatchesRegularExpression('#<noscript><link rel="stylesheet" href="[^"]*intlTelInput\.min\.css"></noscript>#', $html, "$path keeps a no-JS fallback");
+            $this->assertStringContainsString('function v2IntlCss(cb)', $html, $path);
+            $this->assertStringContainsString('v2IntlCss();', $html, "$path: the delayed-script release adds the CSS for the popup forms");
+        }
+        $js = file_get_contents(public_path('assets/js/home-v2.js'));
+        $this->assertStringContainsString('window.v2IntlCss(build)', $js, 'the widget is built once its stylesheet is in');
+    }
+
+    public function test_minified_files_are_chosen_by_content_not_by_timestamp(): void
+    {
+        require_once resource_path('views/web/home-v2/helpers.php');
+        $manifestFile = public_path('assets/min-manifest.json');
+        $this->assertFileExists($manifestFile, 'run tools/build-assets.ps1');
+        $manifest = json_decode(file_get_contents($manifestFile), true);
+        $this->assertArrayHasKey('assets/css/home-v2.css', $manifest);
+        foreach (['assets/css/home-v2.css', 'assets/js/home-v2.js', 'assets/css/home-v2-shell.css'] as $src) {
+            $this->assertSame($manifest[$src], md5(str_replace("\r", '', file_get_contents(public_path($src)))), "$src changed after the last build: run tools/build-assets.ps1");
+        }
+        // a deploy that leaves the sources newer than the .min files must not switch minification off
+        $src = public_path('assets/css/home-v2.css');
+        $old = filemtime($src);
+        touch($src, time() + 3600);
+        clearstatcache();
+        try {
+            $this->assertStringContainsString('home-v2.min.css', $this->html('/'), 'minified CSS must still be served when the source file is newer than the .min');
+        } finally {
+            touch($src, $old);
+            clearstatcache();
+        }
     }
 
     public function test_shared_scripts_are_served_minified_on_v2_pages(): void

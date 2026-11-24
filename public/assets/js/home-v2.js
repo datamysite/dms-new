@@ -798,11 +798,26 @@
       if (iti || !phone) return;
       /* the library (300 KB) is one of the delayed scripts: until it has arrived, look again every 400 ms (for up to 40 s) */
       if (!window.intlTelInput) { if (phoneTries++ < 100) setTimeout(initPhone, 400); return; }
-      iti = window.intlTelInput(phone, { initialCountry: 'ae', separateDialCode: true });
-      var syncPhone = function () { fullPhone.value = iti.getNumber(); };
-      ['keyup', 'change', 'countrychange'].forEach(function (ev) { phone.addEventListener(ev, syncPhone); });
+      if (building) return; building = true;
+      /* the widget is built once its stylesheet is in (v2IntlCss, defined in the page head), so it never shows unstyled */
+      var build = function () {
+        iti = window.intlTelInput(phone, { initialCountry: 'ae', separateDialCode: true });
+        var syncPhone = function () { fullPhone.value = iti.getNumber(); };
+        ['keyup', 'change', 'countrychange'].forEach(function (ev) { phone.addEventListener(ev, syncPhone); });
+      };
+      if (window.v2IntlCss) window.v2IntlCss(build); else build();
     };
-    form.addEventListener('focusin', initPhone, { once: true });
+    var building = false;
+    /* The visitor touched the form: do not wait for the delayed-script queue (23 scripts, one per task) to reach the 300 KB phone library;
+       fetch it now from its own delayed <script> tag (the queue later re-runs the same cached file, harmless). Only on real intent, never on the timer. */
+    form.addEventListener('focusin', function () {
+      if (!window.intlTelInput) {
+        var tag = document.querySelector('script[src*="intlTelInputWithUtils"]');
+        if (tag) { var s = document.createElement('script'); s.src = tag.getAttribute('src'); s.async = true; document.head.appendChild(s); }
+      }
+      if (window.v2IntlCss) window.v2IntlCss();
+      initPhone();
+    }, { once: true });
     /* the flag + dial-code widget (240 countries) costs ~100 ms on a phone: it is built 6 s after load at the latest (outside the
        window speed tests count), or the moment the visitor touches the form */
     var phoneLater = function () { setTimeout(function () { if (window.requestIdleCallback) requestIdleCallback(initPhone, { timeout: 2000 }); else initPhone(); }, 6000); };

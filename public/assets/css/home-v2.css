@@ -751,7 +751,7 @@ html.hv2-loading::after {
   content: counter(hv2n) "%"; counter-reset: hv2n var(--hv2-n, 0);
   position: fixed; z-index: 10101; left: 50%; top: calc(50% - 20px); transform: translate(-50%, -50%);
   width: min(300px, 64vw); height: 150px; display: flex; align-items: flex-end; justify-content: center;
-  background: url('../img/logo-white.png') no-repeat center top / auto 92px;
+  background: url('../img/logo-white-300.webp') no-repeat center top / auto 92px;
   color: #fff; font: 800 20px/1 'League Spartan', system-ui, sans-serif; letter-spacing: .12em; text-indent: .12em;
   animation: hv2-load-breathe 1.8s ease-in-out infinite;
   transition: opacity .35s ease;
