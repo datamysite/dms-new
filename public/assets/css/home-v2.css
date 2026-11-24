@@ -1316,3 +1316,8 @@ html.hv2-loading.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > s
   .hv2-cv#hv2-who-we-are { contain-intrinsic-size: auto 1501px; } .hv2-cv#hv2-blogs { contain-intrinsic-size: auto 1762px; } .hv2-cv#hv2-faq { contain-intrinsic-size: auto 1450px; }
 }
 
+
+/* == WhatsApp on the RIGHT ==
+   The chat widget that used the bottom-right corner is gone, so the WhatsApp button moves there from the bottom-left. The back-to-top
+   button stays bottom-centre (rule above), level with it. */
+.hs-body .whatsapp-chat { left: auto; right: -16px; bottom: -16px; }
