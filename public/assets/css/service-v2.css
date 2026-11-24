@@ -621,3 +621,8 @@
 /* Hero copy is always left-aligned. Some pages store the heading with an inline style="text-align:center" (e.g. /website-development:
    <h1 style="text-align:center">), which centred the title while every other service hero is left-aligned. !important beats the inline style. */
 .sv2 .sv2-hero .sv2-hero-body, .sv2 .sv2-hero .sv2-hero-body * { text-align: left !important; }
+
+/* /global-marketing and /global-marketing/*: the tall side images (section-images, 482x896) fill a whole phone screen once the columns stack, so they are hidden on phones */
+@media (max-width: 767px) {
+  .sv2[data-sv2-group="global-marketing"] .sv2-legacy img[src*="/section-images/"] { display: none; }
+}

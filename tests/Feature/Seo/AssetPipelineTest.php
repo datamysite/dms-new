@@ -197,6 +197,15 @@ class AssetPipelineTest extends TestCase
         $this->assertStringContainsString('svl-clients', $view, 'the brands section stays');
     }
 
+    public function test_global_marketing_side_images_are_hidden_on_phones(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('.sv2[data-sv2-group="global-marketing"] .sv2-legacy img[src*="/section-images/"] { display: none; }', $css);
+        foreach (['/global-marketing', '/global-marketing/china-marketing'] as $path) {
+            $this->assertStringContainsString('data-sv2-group="global-marketing"', $this->html($path), "$path carries the group hook the rule needs");
+        }
+    }
+
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));
