@@ -1218,6 +1218,17 @@ html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
 .hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { transform: translateY(35%); filter: none; opacity: 0; }
 .hv2-hero--fast [data-split].is-in .hv2-w > span { opacity: 1; }
 
+/* SI: hero stays visible once it has been painted.
+   `.hv2-js` is added by home-v2.js, a deferred script that can run 2–3 s after first paint on a slow phone; keying the hidden state on it made
+   the hero (title words, buttons, form card) disappear when the script ran and fade back in ~0.5 s later: a visible → blank → visible dip that
+   Speed Index counts as unfinished. The hidden "before reveal" state now exists only while the loader curtain is up (html.hv2-loading, set by the
+   inline head script before first paint and removed after 0.5 s), so on a fast connection the hero still fades in as the curtain lifts, and on a
+   slow one it is simply there from the first frame. */
+.hv2-js .hv2 .hv2-hero--fast [data-reveal]:not(.is-in) { opacity: 1; translate: none; scale: 1; }
+.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { opacity: 1; transform: none; }
+html.hv2-loading.hv2-js .hv2 .hv2-hero--fast [data-reveal]:not(.is-in) { opacity: 0; translate: 0 10px; }
+html.hv2-loading.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { opacity: 0; transform: translateY(35%); }
+
 
 /* == SCROLL PERFORMANCE LAYER ==============================================
    Same design, cheaper to draw while scrolling. Everything below overrides earlier rules (kept together so it is easy to

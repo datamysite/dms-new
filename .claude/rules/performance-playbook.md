@@ -41,3 +41,12 @@ Trimmed Bootstrap for non-service pages (26 KiB unused), Swiper JS size, client-
 - `window.innerHeight`, `documentElement.scrollHeight` and `offsetHeight` each forced a layout (131 ms / 44 ms / 187 ms in the report) - even at start-up. Viewport height now comes from a ResizeObserver on an invisible fixed 100lvh marker, page height from a body observer, header height from a header observer (first report skipped: it equals the CSS default).
 - (Tried and reverted: content-visibility on clients/stats/solutions - those sections stay normal so anchor jumps land right; see ScrollPerformanceTest.)
 - Local A/B runs drift with machine load across the day (same code: TBT estimate 250 -> 700): compare variants back to back, never against an earlier session.
+
+## Speed Index (staging 98/98 but SI 3.7 s while LCP was 1.5 s)
+- A gap between LCP and Speed Index means the first screen changes after first paint. Cause here: the hero was visible in the static HTML, then
+  `home-v2.js` (deferred, 2-3 s on a slow phone) added `.hv2-js`, which hid the hero (opacity 0) and faded it back in ~0.5 s later: visible -> blank -> visible.
+  **Never hide above-the-fold content behind a class that deferred JS adds.** The pre-reveal state now lives only under `html.hv2-loading`
+  (set by the inline head script before first paint, removed after 0.5 s).
+- Reproduce with `late_js`-style test: block the script, inject it at 3 s, log opacity of the hero pieces every frame (before: 1 -> 0 -> 1; after: 1 throughout).
+- **Critical CSS + async stylesheets are OFF** (`config/v2.php`, `V2_CRITICAL_CSS`): PageSpeed scored 76-85 with it and 98/98 without. The mode used to be chosen by
+  file timestamps, so a deploy could flip it; it is now an explicit switch. Never depend on mtimes for behaviour.

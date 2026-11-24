@@ -44,7 +44,7 @@
      the first-screen CSS (generated from ALL stylesheets, see scratchpad/qa/critical.js) is inlined and every stylesheet
      loads non-blocking. Only used while the critical file is newer than every stylesheet it was built from (else normal blocking links). */
   $v2Crit = false;
-  if ($v2Lite && $__env->hasSection('v2crit')) {
+  if ($v2Lite && config('v2.critical_css', false) && $__env->hasSection('v2crit')) {   /* off by default: see config/v2.php */
     $v2CritRel = trim($__env->yieldContent('v2crit'));
     $v2CritFile = public_path($v2CritRel);
     if (is_file($v2CritFile)) {

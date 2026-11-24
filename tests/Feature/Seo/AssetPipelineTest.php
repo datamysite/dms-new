@@ -46,8 +46,19 @@ class AssetPipelineTest extends TestCase
         }
     }
 
-    public function test_every_v2_template_page_inlines_fresh_critical_css_and_has_no_blocking_stylesheet(): void
+    public function test_critical_css_mode_works_when_switched_on_and_the_files_are_fresh(): void
     {
+        config(['v2.critical_css' => true]);
+        $newest = 0;
+        foreach (glob(public_path('assets/css/*.css')) as $css) {
+            if (!preg_match('/\.(min|critical)\.css$/', $css)) $newest = max($newest, filemtime($css));
+        }
+        foreach (self::CRITICAL as $name) {
+            $f = public_path("assets/css/$name.critical.css");
+            if (!is_file($f) || filemtime($f) + 120 < $newest) {
+                $this->markTestSkipped('critical CSS is stale (optional mode, off by default): run tools/make-critical-all.ps1 to test it');
+            }
+        }
         foreach (self::CRITICAL as $path => $name) {
             $file = public_path("assets/css/$name.critical.css");
             $this->assertFileExists($file, "$name critical CSS: run tools/make-critical-all.ps1");
@@ -68,17 +79,33 @@ class AssetPipelineTest extends TestCase
         }
     }
 
-    public function test_critical_css_is_newer_than_every_stylesheet_it_was_built_from(): void
+    public function test_critical_css_is_off_by_default_and_the_good_blocking_css_path_is_served(): void
     {
-        $newest = 0;
-        foreach (glob(public_path('assets/css/*.css')) as $css) {
-            if (!preg_match('/\.(min|critical)\.css$/', $css)) {
-                $newest = max($newest, filemtime($css));
+        $this->assertFalse(config('v2.critical_css'), 'critical + async CSS scored 76-85 in PageSpeed; blocking minified CSS scored 98/98');
+        foreach (array_keys(self::CRITICAL) as $path) {
+            $html = $this->html($path);
+            $this->assertStringNotContainsString('id="v2-critical"', $html, "$path inlines critical CSS although the mode is off");
+            $outside = preg_replace('#<noscript>.*?</noscript>#s', '', $html);
+            preg_match_all('#<link\b[^>]*rel="stylesheet"[^>]*>#i', $outside, $links);
+            $core = array_filter($links[0], fn ($l) => preg_match('#(bootstrap\.min|home-v2-shell|/home-v2[.-])#', $l));
+            $this->assertNotEmpty($core, "$path core stylesheets");
+            foreach ($core as $link) {
+                $this->assertStringNotContainsString('media="print"', $link, "$path: core stylesheets must stay render-blocking: $link");
             }
         }
-        foreach (self::CRITICAL as $name) {
-            $this->assertGreaterThanOrEqual($newest, filemtime(public_path("assets/css/$name.critical.css")), "$name.critical.css is older than a stylesheet: it would be ignored; re-run tools/make-critical-all.ps1");
-        }
+    }
+
+    public function test_hero_stays_visible_when_the_deferred_script_runs_late(): void
+    {
+        $css = file_get_contents(public_path('assets/css/home-v2.css'));
+        // visible after hv2-js is added ...
+        $this->assertStringContainsString('.hv2-js .hv2 .hv2-hero--fast [data-reveal]:not(.is-in) { opacity: 1; translate: none; scale: 1; }', $css);
+        $this->assertStringContainsString('.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { opacity: 1; transform: none; }', $css);
+        // ... and hidden only while the loader curtain is up
+        $this->assertStringContainsString('html.hv2-loading.hv2-js .hv2 .hv2-hero--fast [data-reveal]:not(.is-in) { opacity: 0;', $css);
+        $this->assertStringContainsString('html.hv2-loading.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { opacity: 0;', $css);
+        // the overrides come after the original hero rules, so they win
+        $this->assertGreaterThan(strpos($css, '.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { transform: translateY(35%)'), strpos($css, '.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > span { opacity: 1; transform: none; }'));
     }
 
     public function test_critical_css_keeps_the_hidden_state_of_the_drawer_and_the_first_paint_loader(): void
@@ -97,8 +124,19 @@ class AssetPipelineTest extends TestCase
             $this->assertStringNotContainsString($bad, $m[0], "blogs hero must not contain $bad");
         }
         $css = file_get_contents(public_path('assets/css/blogs-v2.css'));
-        $this->assertStringContainsString('.hv2 .blv-hero { min-height: 0;', $css);
         $this->assertStringContainsString('hv2-streaks', $m[0], 'the line streaks stay');
+        $this->assertStringNotContainsString('hv2-enquiry-form', $m[0], 'the form lives in the sticky sidebar, not in the hero');
+        // sticky consultation sidebar: a 2-column wrapper down to the Explore section, form pulled up into the hero
+        $this->assertMatchesRegularExpression('~<aside class="blv-side" id="hv2-form".*?blv-sticky.*?hv2-enquiry-form.*?</aside>~s', $view);
+        $this->assertStringContainsString('.blv-side .blv-sticky { position: sticky; top: 100px; align-self: start; }', $css);
+        $this->assertStringNotContainsString('--blv-body', $css, 'the form does not overlap the hero');
+        $this->assertStringContainsString('.blv-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));', $css, 'two cards per row');
+        $this->assertStringContainsString('@media (max-width: 1023px)', $css);
+        $this->assertStringContainsString('.blv-side .blv-sticky { position: static; }', $css, 'sticky is off below 1024px');
+        // no ancestor of the form may clip or scroll (it would break sticky)
+        $this->assertMatchesRegularExpression('~\.hv2 \.blv-layout \{ overflow: visible;~', $css);
+        $this->assertDoesNotMatchRegularExpression('~\.blv-layout-grid\s*\{[^}]*overflow~', $css);
+        $this->assertDoesNotMatchRegularExpression('~\.blv-main\s*\{[^}]*overflow~', $css);
     }
 
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void

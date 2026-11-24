@@ -88,38 +88,12 @@
 				</div>
 			</div>
 
-			<div class="hv2-hero-form-col" id="hv2-form">
-				<div class="hv2-form-card hv2-glass" data-tilt data-tilt-max="4" data-reveal="scale" data-delay="2">
-					<span class="hv2-glare" aria-hidden="true"></span>
-					<form action="{{ route('enquiry.submit') }}" id="hv2-enquiry-form">
-						@csrf
-						<input type="hidden" name="service" value="Blogs">
-						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
-						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
-						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
-						<label class="hv2-field"><input type="text" name="name" placeholder=" " required autocomplete="name"><span>Your Full Name</span></label>
-						<div class="hv2-field hv2-field--tel">
-							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" placeholder="Your phone number" aria-label="Phone number">
-							<input type="hidden" name="phone" id="hv2-fullphone">
-						</div>
-						<label class="hv2-field"><input type="email" name="email" id="hv2-email" placeholder=" " required autocomplete="email"><span>Your Email Address</span></label>
-						<label class="hv2-field"><textarea name="description" rows="3" placeholder=" " required></textarea><span>Tell us what you need</span></label>
-						<button class="hv2-btn hv2-btn--primary hv2-btn--block" type="submit"><span>Get Free Consultation <i class="bi bi-arrow-right"></i></span></button>
-						<ul class="hv2-form-trust">
-							<li><i class="bi bi-star-fill"></i> No spam, ever</li>
-							<li><i class="bi bi-check-circle-fill"></i> Reply in 60 min</li>
-							<li><i class="bi bi-lock-fill"></i> 100% Private</li>
-						</ul>
-					</form>
-					<div class="hv2-form-loader" aria-hidden="true"><span class="hv2-spinner"></span></div>
-				</div>
-			</div>
 		</div>
 		<a href="#blv-latest" class="hv2-scroll-cue" data-scrollto="#blv-latest" aria-label="Scroll to content"></a>
 	</section>
 	<span class="js-count-particles" hidden></span>
 
-	{{-- FEATURED / LEAD POST --}}
+	{{-- FEATURED / LEAD POST — full width --}}
 	@if($blvFirst)
 	<section class="hv2-section hv2-tint blv-latest" id="blv-latest">
 		<div class="blv-deco" aria-hidden="true">
@@ -155,9 +129,8 @@
 	</section>
 	@endif
 
-	{{-- POST GRID --}}
-	<section class="hv2-section hv2-light blv-posts" id="blv-posts">
-		<span class="hv2-watermark" data-parallax="0.12" aria-hidden="true">Blogs</span>
+	{{-- POSTS (2 per row) + STICKY CONSULTATION FORM: one 2-column wrapper running down to the Explore section --}}
+	<div class="blv-layout hv2-light" id="blv-posts-wrap">
 		<div class="blv-deco" aria-hidden="true">
 			{!! $blvStage('l', '0.1') !!}
 			<span class="blv-dots" data-blv-depth="-0.06"></span>
@@ -166,12 +139,13 @@
 			<span class="blv-glow g1" data-blv-depth="0.08"></span><span class="blv-glow g2" data-blv-depth="-0.1"></span>
 			<span class="blv-bar b1" data-blv-depth="0.2"></span><span class="blv-bar b2" data-blv-depth="-0.18"></span>
 		</div>
-		<div class="hv2-container">
+		<div class="hv2-container blv-layout-grid">
+			<div class="blv-main" id="blv-posts">
 			<div class="blv-grid" id="blv-grid">
 				@foreach($blvRest as $val)
 					<article class="blv-card" data-tilt data-tilt-max="4" data-reveal="up" data-delay="{{ ($loop->index % 3) + 1 }}">
 						<a class="blv-card-media hv2-media" href="{{ v2_blog_url($val->slug) }}" target="_blank">
-							<img {!! v2_img('public/storage/blogs/' . $val->banner, '(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 31vw') !!} alt="{{ empty($val->banner_alt) ? $val->heading : $val->banner_alt }}" loading="lazy">
+							<img {!! v2_img('public/storage/blogs/' . $val->banner, '(max-width: 640px) 92vw, (max-width: 1023px) 46vw, 31vw') !!} alt="{{ empty($val->banner_alt) ? $val->heading : $val->banner_alt }}" loading="lazy">
 							<span class="blv-card-go" aria-hidden="true"><i class="bi bi-arrow-up-right"></i></span>
 						</a>
 						<div class="blv-card-body">
@@ -195,8 +169,35 @@
 			<div class="blv-pagination">
 				{!! $data->withQueryString()->withPath(url()->current())->links('pagination::bootstrap-5') !!}
 			</div>
+			</div>
+			<aside class="blv-side" id="hv2-form" aria-label="Free consultation">
+				<div class="hv2-form-card hv2-glass hv2-dark blv-sticky" data-tilt data-tilt-max="4" data-reveal="scale" data-delay="2">
+					<span class="hv2-glare" aria-hidden="true"></span>
+					<form action="{{ route('enquiry.submit') }}" id="hv2-enquiry-form">
+						@csrf
+						<input type="hidden" name="service" value="Blogs">
+						<span class="hv2-form-kicker"><i class="hv2-live-dot"></i> Experts online · reply in 60 min</span>
+						<div class="hv2-form-title">Ready to Get <span class="hv2-hot">Results?</span></div>
+						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
+						<label class="hv2-field"><input type="text" name="name" placeholder=" " required autocomplete="name"><span>Your Full Name</span></label>
+						<div class="hv2-field hv2-field--tel">
+							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" placeholder="Your phone number" aria-label="Phone number">
+							<input type="hidden" name="phone" id="hv2-fullphone">
+						</div>
+						<label class="hv2-field"><input type="email" name="email" id="hv2-email" placeholder=" " required autocomplete="email"><span>Your Email Address</span></label>
+						<label class="hv2-field"><textarea name="description" rows="3" placeholder=" " required></textarea><span>Tell us what you need</span></label>
+						<button class="hv2-btn hv2-btn--primary hv2-btn--block" type="submit"><span>Get Free Consultation <i class="bi bi-arrow-right"></i></span></button>
+						<ul class="hv2-form-trust">
+							<li><i class="bi bi-star-fill"></i> No spam, ever</li>
+							<li><i class="bi bi-check-circle-fill"></i> Reply in 60 min</li>
+							<li><i class="bi bi-lock-fill"></i> 100% Private</li>
+						</ul>
+					</form>
+					<div class="hv2-form-loader" aria-hidden="true"><span class="hv2-spinner"></span></div>
+				</div>
+			</aside>
 		</div>
-	</section>
+	</div>
 
 	{{-- EXPLORE — the live sidebar's "Our Services" and "Blog Categories" link lists --}}
 	<section class="hv2-section hv2-dark blv-explore" id="blv-explore">
