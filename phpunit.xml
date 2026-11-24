@@ -25,6 +25,8 @@
     </source>
     <php>
         <env name="APP_ENV" value="testing"/>
+        <!-- the tests describe the live site: a developer's local APP_URL (e.g. http://localhost/datamysite) must not change their output; tests that need another APP_URL set config() themselves -->
+        <env name="APP_URL" value="https://datamysite.com" force="true"/>
         <env name="APP_MAINTENANCE_DRIVER" value="file"/>
         <env name="BCRYPT_ROUNDS" value="4"/>
         <env name="CACHE_STORE" value="array"/>

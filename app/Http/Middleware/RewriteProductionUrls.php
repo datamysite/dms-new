@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
  *   production: APP_URL=https://datamysite.com           -> this middleware does nothing (output is untouched)
  *   staging:    APP_URL=https://staging.datamysite.com   -> every https://datamysite.com URL in HTML (and in redirect Location headers)
  *                                                           is rewritten to the staging address
+ * Second job, same variable: when APP_URL has a folder (local XAMPP: APP_URL=http://localhost/datamysite) root-relative links (href="/x", from templates
+ * and stored content) get that folder, so they do not jump to http://localhost/x. No folder (staging, production) = nothing to do.
  * E-mail addresses (name@datamysite.com) are not URLs and are never touched.
  */
 class RewriteProductionUrls
@@ -26,26 +28,66 @@ class RewriteProductionUrls
     {
         $response = $next($request);
 
-        $base = self::baseFor((string) config('app.url'));
-        if ($base === null) {
+        $appUrl = (string) config('app.url');
+        $base = self::baseFor($appUrl);          // job 1: live-site URLs -> APP_URL (null on the live site)
+        $prefix = self::prefixFor($appUrl);      // job 2: root-relative links get the folder of APP_URL ('' unless served from a sub-folder)
+        if ($base === null && $prefix === '') {
             return $response;
         }
 
         $location = $response->headers->get('Location');
-        if ($location && stripos($location, 'datamysite.com') !== false) {
-            $response->headers->set('Location', self::rewrite($location, $base));
+        if ($location) {
+            if ($base !== null && stripos($location, 'datamysite.com') !== false) {
+                $location = self::rewrite($location, $base);
+            }
+            if ($prefix !== '') {
+                $location = self::prefixBasePath($location, $prefix, true);
+            }
+            $response->headers->set('Location', $location);
         }
 
         $type = (string) $response->headers->get('Content-Type');
         if (stripos($type, 'text/html') !== false && !$response instanceof \Symfony\Component\HttpFoundation\StreamedResponse
             && !$response instanceof \Symfony\Component\HttpFoundation\BinaryFileResponse) {
             $html = $response->getContent();
-            if (is_string($html) && stripos($html, 'datamysite.com') !== false) {
-                $response->setContent(self::rewrite($html, $base));
+            if (is_string($html)) {
+                if ($base !== null && stripos($html, 'datamysite.com') !== false) {
+                    $html = self::rewrite($html, $base);
+                }
+                if ($prefix !== '') {
+                    $html = self::prefixBasePath($html, $prefix);
+                }
+                $response->setContent($html);
             }
         }
 
         return $response;
+    }
+
+    /** The folder part of APP_URL ("/datamysite" for http://localhost/datamysite), '' when the site is served from the host root. */
+    public static function prefixFor(string $appUrl): string
+    {
+        $path = (string) parse_url(trim($appUrl), PHP_URL_PATH);
+        $path = '/' . trim($path, '/');
+        return $path === '/' ? '' : $path;
+    }
+
+    /**
+     * Prefix root-relative URLs (href="/x") with the site's folder so they work when the site is not at the host root.
+     * Left alone: //cdn/x, https://x, #x, mailto:, tel:, and URLs that already start with the folder.
+     * $isUrl = true treats the whole string as one URL (a Location header).
+     */
+    public static function prefixBasePath(string $text, string $prefix, bool $isUrl = false): string
+    {
+        if ($prefix === '') {
+            return $text;
+        }
+        $already = preg_quote(ltrim($prefix, '/'), '~');
+        if ($isUrl) {
+            return preg_match('~^/(?!/)(?!' . $already . '(?:[/?#]|$))~', $text) ? $prefix . $text : $text;
+        }
+        $pattern = '~(\s(?:href|src|action|poster|formaction|data-[\w-]*(?:href|url|src))\s*=\s*)(["\'])/(?!/)(?!' . $already . '(?:[/"\'?#]|$))~i';
+        return (string) preg_replace($pattern, '$1$2' . $prefix . '/', $text);
     }
 
     /** The address to rewrite to, or null when this server IS the live site (or APP_URL is not a usable URL). */

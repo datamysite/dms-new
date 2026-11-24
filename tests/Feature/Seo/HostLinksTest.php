@@ -117,6 +117,70 @@ class HostLinksTest extends TestCase
         $this->assertSame('https://datamysite.com/new-page', $res->headers->get('Location'), 'production keeps its redirects');
     }
 
+    public function test_root_relative_links_get_the_folder_of_app_url(): void
+    {
+        $p = '/datamysite';
+        $cases = [
+            '<a href="/a">' => '<a href="/datamysite/a">',
+            "<a href='/a/b?x=1#y'>" => "<a href='/datamysite/a/b?x=1#y'>",
+            '<a data-hs-href="/services" class="x">' => '<a data-hs-href="/datamysite/services" class="x">',
+            '<img src="/public/a.png"> <form action="/enquiry">' => '<img src="/datamysite/public/a.png"> <form action="/datamysite/enquiry">',
+            '<a href="/">' => '<a href="/datamysite/">',
+            // left alone
+            '<a href="//cdn.example/x">' => '<a href="//cdn.example/x">',
+            '<a href="https://x.example/a">' => '<a href="https://x.example/a">',
+            '<a href="#top">' => '<a href="#top">',
+            '<a href="mailto:a@b.c"> <a href="tel:+9715">' => '<a href="mailto:a@b.c"> <a href="tel:+9715">',
+            '<a href="javascript:void(0)">' => '<a href="javascript:void(0)">',
+            '<a href="/datamysite/a"> <a href="/datamysite"> <a href="/datamysite?x=1">' => '<a href="/datamysite/a"> <a href="/datamysite"> <a href="/datamysite?x=1">',
+            '<a href="a/relative">' => '<a href="a/relative">',
+            // the folder name must match on a path boundary
+            '<a href="/datamysiteblog">' => '<a href="/datamysite/datamysiteblog">',
+        ];
+        foreach ($cases as $in => $out) {
+            $this->assertSame($out, RewriteProductionUrls::prefixBasePath($in, $p), $in);
+        }
+        $this->assertSame('<a href="/a">', RewriteProductionUrls::prefixBasePath('<a href="/a">', ''), 'no folder: identical');
+        $this->assertSame('/datamysite/new', RewriteProductionUrls::prefixBasePath('/new', $p, true));
+        $this->assertSame('https://x.example/new', RewriteProductionUrls::prefixBasePath('https://x.example/new', $p, true));
+        $this->assertSame('/datamysite/new', RewriteProductionUrls::prefixBasePath('/datamysite/new', $p, true));
+        $this->assertSame('/datamysite', RewriteProductionUrls::prefixFor('http://localhost/datamysite'));
+        $this->assertSame('/datamysite', RewriteProductionUrls::prefixFor('http://localhost/datamysite/'));
+        $this->assertSame('', RewriteProductionUrls::prefixFor('https://staging.datamysite.com'));
+        $this->assertSame('', RewriteProductionUrls::prefixFor('https://datamysite.com/'));
+    }
+
+    public function test_a_local_copy_in_a_sub_folder_keeps_every_internal_link_inside_the_folder(): void
+    {
+        config(['app.url' => 'http://localhost/datamysite']);
+        foreach (['/services', '/website-development', '/'] as $path) {
+            $html = $this->get('http://localhost' . $path)->assertOk()->getContent();   // the test kernel serves from the host root; APP_URL is what carries the folder
+            preg_match_all('~\shref="(/(?!/)[^"]*)"~', $html, $m);
+            $bad = array_values(array_filter($m[1], fn ($u) => !preg_match('~^/datamysite(?:[/?#]|$)~', $u)));
+            $this->assertSame([], array_slice($bad, 0, 5), "$path has root-relative links outside /datamysite");
+            $this->assertSame([], $this->leaks($html), "$path still links to the live site");
+        }
+        $html = $this->get('http://localhost/services')->getContent();
+        $this->assertStringContainsString('href="/datamysite/influencer-marketing"', $html, 'the Influencer Marketing link stays inside the folder');
+    }
+
+    public function test_hosts_served_from_the_root_keep_their_root_relative_links(): void
+    {
+        foreach (['https://staging.datamysite.com', 'https://datamysite.com'] as $appUrl) {
+            config(['app.url' => $appUrl]);
+            $html = $this->get($appUrl . '/services')->assertOk()->getContent();
+            $this->assertStringContainsString('href="/influencer-marketing"', $html, $appUrl);
+            $this->assertStringNotContainsString('href="/datamysite/', $html, $appUrl);
+        }
+    }
+
+    public function test_root_relative_redirects_get_the_folder_too(): void
+    {
+        config(['app.url' => 'http://localhost/datamysite']);
+        $res = (new RewriteProductionUrls())->handle(Request::create('http://localhost/datamysite/old'), fn () => new RedirectResponse('/new-page'));
+        $this->assertSame('/datamysite/new-page', $res->headers->get('Location'));
+    }
+
     public function test_only_html_is_rewritten(): void
     {
         config(['app.url' => 'https://staging.datamysite.com']);
