@@ -190,6 +190,13 @@ class AssetPipelineTest extends TestCase
         $this->assertStringContainsString('min read', $m[0]);
     }
 
+    public function test_services_landing_has_no_clientele_section(): void
+    {
+        $view = file_get_contents(resource_path('views/web/services-landing-v2.blade.php'));
+        $this->assertStringNotContainsString('svl-clientele', $view);
+        $this->assertStringContainsString('svl-clients', $view, 'the brands section stays');
+    }
+
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));

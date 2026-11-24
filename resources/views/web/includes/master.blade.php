@@ -461,7 +461,7 @@
   @yield('addScript')
   
   
-  @include('partials.chat-widget')
+  @if(config('services.chatbot.enabled'))@include('partials.chat-widget')@endif
 </body>
 
 </html>

@@ -46,6 +46,7 @@ class LinksTest extends TestCase
 
     public function test_chat_widget_posts_to_the_current_host(): void
     {
+        config(['services.chatbot.enabled' => true]);   // the chatbot is switched off by default
         // the widget file is @verbatim (Blade cannot fill it in), so it reads the address every layout prints in <meta name="home_url">
         foreach ([self::STAGING, self::PRODUCTION] as $host) {
             $html = $this->html('/', $host);

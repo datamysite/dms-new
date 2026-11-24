@@ -221,7 +221,7 @@
     else if (t.closest('#newsletter-modal-u .close, #newsletter-modal-u .cancel')) { m.classList.remove('show'); m.style.display = 'none'; }
   });
   </script>
-  <template id="v2-chat-tpl">{!! $v2Delay(view('partials.chat-widget')->render()) !!}</template>
+  @if(config('services.chatbot.enabled'))<template id="v2-chat-tpl">{!! $v2Delay(view('partials.chat-widget')->render()) !!}</template>@endif
   <script>
   /* Releases the delayed third-party scripts + chat widget, in their original order:
      - on the first click / tap / key press / form focus, or when the browser is idle 8 s after load;
@@ -273,7 +273,7 @@
   })();
   </script>
   @else
-  @include('partials.chat-widget')
+  @if(config('services.chatbot.enabled'))@include('partials.chat-widget')@endif
   @endif
 </body>
 

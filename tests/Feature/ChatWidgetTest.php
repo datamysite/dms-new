@@ -161,8 +161,18 @@ class ChatWidgetTest extends TestCase
         $this->assertSame(substr_count($js, '['), substr_count($js, ']'), 'brackets balance');
     }
 
+    public function test_widget_is_hidden_by_default_while_the_chatbot_is_switched_off(): void
+    {
+        foreach (['/', '/about-us', '/seo-services', '/blogs'] as $path) {
+            $html = $this->html($path);
+            $this->assertStringNotContainsString('id="dms-launcher"', $html, "$path must not show the chat launcher");
+            $this->assertStringNotContainsString('<template id="v2-chat-tpl"', $html, $path);
+        }
+    }
+
     public function test_widget_is_on_every_v2_page_with_the_new_launcher_and_the_site_address_for_its_api(): void
     {
+        config(['services.chatbot.enabled' => true]);   // the chatbot is off by default; the widget itself is unchanged and returns when enabled
         foreach (['/', '/about-us', '/contact-us', '/seo-services', '/blogs'] as $path) {
             $html = $this->html($path);
             $this->assertStringContainsString('id="dms-launcher"', $html, $path);

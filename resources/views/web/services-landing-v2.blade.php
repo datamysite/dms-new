@@ -118,23 +118,6 @@
 	</section>
 
 	{{-- ===================================================================
-	     CLIENTELE — live banner section (image + heading + text)
-	==================================================================== --}}
-	<section class="hv2-section hv2-dark svl-clientele" id="svl-clientele">
-		<span class="svl-clientele-bg" aria-hidden="true" style="background-image: url('{{ $hv2Img }}/clientele.jpg')"></span>
-		<span class="hv2-blob hv2-blob--2" aria-hidden="true"></span>
-		
-		<div class="svl-deco svl-deco--dark" aria-hidden="true"><img class="svl-3d svl-3d--c1" src="{{ $svl3d }}/stage-480.webp" srcset="{{ $svl3d }}/stage-240.webp 240w, {{ $svl3d }}/stage-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="480" height="451" alt="" decoding="async" loading="lazy" data-svl-depth="0.06"><img class="svl-3d svl-3d--c2" src="{{ $svl3d }}/radio-480.webp" srcset="{{ $svl3d }}/radio-240.webp 240w, {{ $svl3d }}/radio-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="370" height="480" alt="" decoding="async" loading="lazy" data-svl-depth="-0.06"></div>
-		<div class="hv2-container">
-			<div class="svl-clientele-copy">
-				<span class="hv2-eyebrow" data-reveal="up">Clientele</span>
-				<h2 class="hv2-display hv2-h2" data-split>Clientele</h2>
-				<p class="hv2-lead" data-reveal="up" data-delay="2">We’ve helped these brands achieve their goals and see how we can do the same for you.</p>
-			</div>
-		</div>
-	</section>
-
-	{{-- ===================================================================
 	     OUR CLIENTS — live "Brands we work with" section, logos in the Home V2 marquee
 	==================================================================== --}}
 	<section class="hv2-section hv2-dark hv2-clients svl-clients" id="hv2-clients">

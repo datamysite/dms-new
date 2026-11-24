@@ -58,6 +58,11 @@ return [
         ],
     ],
     
+    /* The Ava chat widget is hidden while it is not working. Set CHATBOT_ENABLED=true in .env (then php artisan config:cache) to bring it back; no code change needed. */
+    'chatbot' => [
+        'enabled' => (bool) env('CHATBOT_ENABLED', false),
+    ],
+
     'blog_api' => [
         'token'     => env('BLOG_API_TOKEN'),
         'author_id' => env('BLOG_API_AUTHOR_ID'),
