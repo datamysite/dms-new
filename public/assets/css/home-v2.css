@@ -610,7 +610,7 @@ a.hv2-contact:hover { color: var(--coral); border-color: rgba(224, 74, 67, .4); 
 .hv2-blog:hover { color: var(--fg); }
 .hv2-media--blog { aspect-ratio: 16 / 10; border-radius: var(--radius); }
 .hv2-blog:hover .hv2-media img { transform: scale(1.06); }
-.hv2-blog time { display: block; margin-top: var(--space-4); color: var(--coral); font-weight: 800; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
+.hv2-blog time { display: block; margin-top: var(--space-4); color: #b8302a; /* darker coral: 5:1 on the light section (coral was 3.9:1) */ font-weight: 800; font-size: 12px; letter-spacing: .2em; text-transform: uppercase; }
 .hv2-blog h3 { margin-top: var(--space-2) !important; font-size: var(--fs-h3); font-weight: 800; line-height: 1.25; transition: color .3s; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .hv2-blog:hover h3 { color: var(--green); }
 .hv2-blog p { color: var(--muted); font-size: 15px; margin-top: var(--space-2) !important; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }

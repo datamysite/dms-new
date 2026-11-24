@@ -20,7 +20,9 @@ $prof = Join-Path $env:TEMP ('crit-prof-' + [guid]::NewGuid().ToString('N').Subs
 
 $collect = @'
 (function () {
-  var vh = innerHeight, vw = innerWidth, items = [], frames = {};
+  /* 1.6 screens, not 1: a first-screen box (the hero form card) also contains content below the fold; without its rules the box
+     changes height when the full stylesheets arrive = a layout shift */
+  var vh = innerHeight * 1.6, vw = innerWidth, items = [], frames = {};
   var de = document.documentElement; de.classList.add('hv2-loading', 'hv2-leaving');
   var home = (document.querySelector('meta[name="home_url"]') || {}).content || location.origin;
   var pub = home.replace(/\/$/, '') + '/public';

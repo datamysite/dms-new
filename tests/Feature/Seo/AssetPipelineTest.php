@@ -63,7 +63,7 @@ class AssetPipelineTest extends TestCase
             $this->assertNotEmpty($links[0], $path);
             foreach ($links[0] as $link) {
                 $this->assertStringContainsString('media="print"', $link, "$path has a render-blocking stylesheet: $link");
-                $this->assertStringContainsString("this.media='all'", $link, $path);
+                $this->assertStringContainsString('onload="v2cs(this)"', $link, $path);
             }
         }
     }

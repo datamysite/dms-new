@@ -60,13 +60,13 @@
     if (!$v2Crit) return $html;
     return preg_replace_callback('#<link\b[^>]*rel="stylesheet"[^>]*>#i', function ($m) {
       if (stripos($m[0], 'media="print"') !== false) return $m[0];
-      return str_replace('rel="stylesheet"', 'rel="stylesheet" media="print" onload="this.media=\'all\'"', $m[0]) . '<noscript>' . $m[0] . '</noscript>';
+      return str_replace('rel="stylesheet"', 'rel="stylesheet" media="print" onload="v2cs(this)"', $m[0]) . '<noscript>' . $m[0] . '</noscript>';
     }, (string) $html);
   };
   $v2Css = function ($href) use ($v2Lite, $v2Form, $v2Crit) {
     /* with critical CSS inlined the phone-input CSS is non-blocking too (its few first-screen rules are in the critical file) */
     return ($v2Lite && !($v2Form && !$v2Crit && strpos($href, 'intlTelInput') !== false))
-      ? '<link rel="stylesheet" href="' . $href . '" media="print" onload="this.media=\'all\'"><noscript><link rel="stylesheet" href="' . $href . '"></noscript>'
+      ? '<link rel="stylesheet" href="' . $href . '" media="print" onload="v2cs(this)"><noscript><link rel="stylesheet" href="' . $href . '"></noscript>'
       : '<link rel="stylesheet" href="' . $href . '">';
   };
 @endphp
@@ -76,6 +76,9 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  {{-- Non-blocking stylesheets are switched on TOGETHER once the last one has arrived (or after 4 s): applying them one by one made the
+       browser recalculate styles and layout for the whole page after every sheet, which counted as blocking time. --}}
+  <script>var v2q=[],v2N=0,v2d=false;function v2f(){if(v2d||!v2N||v2q.length<v2N)return;v2d=true;v2q.forEach(function(l){l.media='all'})}function v2cs(l){if(v2d){l.media='all';return}v2q.push(l);v2f()}setTimeout(function(){v2d=true;v2q.forEach(function(l){l.media='all'})},4000)</script>
   @if(\App\Http\Middleware\StagingNoindex::isStaging())<meta name="robots" content="noindex, nofollow, noarchive">@endif
   <title>{{@$metaTags->title}}{{@$ametaTags['title']}}{{empty($metaTags->title) && empty($ametaTags['title']) ? env('APP_NAME') : ''}}</title>
   <meta name="description" content="{{@$metaTags->description}}{{@$ametaTags['description']}}">
@@ -147,6 +150,7 @@
       <!-- {{$val->name}} // End -->
     @endif
   @endforeach
+  <script>v2N=document.querySelectorAll('link[rel=stylesheet][media=print]').length;v2f()</script>
 </head>
 
 <body class="index-page hs-body{{ $v2Lite ? ' v2-lite' : '' }}">
