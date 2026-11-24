@@ -100,7 +100,7 @@
 						<p class="hv2-form-sub">Drop us your details — our experts respond within 60 minutes.</p>
 						<label class="hv2-field"><input type="text" name="name" placeholder=" " required autocomplete="name"><span>Your Full Name</span></label>
 						<div class="hv2-field hv2-field--tel">
-							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" aria-label="Phone number">
+							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" placeholder="Your phone number" aria-label="Phone number">
 							<input type="hidden" name="phone" id="hv2-fullphone">
 						</div>
 						<label class="hv2-field"><input type="email" name="email" id="hv2-email" placeholder=" " required autocomplete="email"><span>Your Email Address</span></label>

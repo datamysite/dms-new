@@ -18,7 +18,15 @@ class PageSpeedService
     const PSI_ENDPOINT = 'https://www.googleapis.com/pagespeedonline/v5/runPagespeed';
 
     /** mobile (Slow 4G) targets from .claude/rules/performance.md: metric => [limit, unit] (ms, CLS has no unit) */
-    const TARGETS = ['FCP' => 1800, 'LCP' => 2500, 'TBT' => 200, 'CLS' => 0.1, 'SI' => 3400];
+    /* Core Web Vitals limits (ms; CLS unitless) per strategy: keep in sync with .claude/rules/performance.md */
+    const TARGETS_MOBILE  = ['FCP' => 1700, 'LCP' => 2400, 'TBT' => 190, 'CLS' => 0.1, 'SI' => 3300];
+    const TARGETS_DESKTOP = ['FCP' => 800,  'LCP' => 1100, 'TBT' => 140, 'CLS' => 0.1, 'SI' => 1200];
+    const TARGETS = self::TARGETS_MOBILE;   // kept for older callers
+
+    public static function targets(string $strategy): array
+    {
+        return $strategy === 'desktop' ? self::TARGETS_DESKTOP : self::TARGETS_MOBILE;
+    }
 
     /** base URLs the tool may test (host allow-list) */
     public function bases()

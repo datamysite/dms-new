@@ -370,7 +370,7 @@
 						<label class="hv2-field"><input type="text" name="name" placeholder=" " required autocomplete="name"><span>Your Name</span></label>
 						<label class="hv2-field"><input type="email" name="email" id="hv2-email" placeholder=" " required autocomplete="email"><span>Your Email</span></label>
 						<div class="hv2-field hv2-field--tel">
-							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" aria-label="Phone number">
+							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" placeholder="Your phone number" aria-label="Phone number">
 							<input type="hidden" name="phone" id="hv2-fullphone">
 						</div>
 						<div class="abv-dd" data-abv-dd>

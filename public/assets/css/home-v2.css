@@ -64,12 +64,12 @@
 
 /* theme slots */
 .hv2, .hv2-light, .hv2-tint {
-  --fg: rgba(27, 47, 69, .82); --muted: rgba(27, 47, 69, .66); --heading: var(--heading-c); --stroke: var(--heading-c);
+  --fg: rgba(27, 47, 69, .86); --muted: rgba(27, 47, 69, .76); --heading: var(--heading-c); --stroke: var(--heading-c);
   --eyebrow: var(--green); --hair: rgba(27, 47, 69, .12);
   --glass-bg: rgba(255, 255, 255, .66); --glass-line: rgba(11, 61, 46, .12);
 }
 .hv2-dark, .hv2-green {
-  --fg: rgba(255, 255, 255, .8); --muted: rgba(255, 255, 255, .66); --heading: var(--white); --stroke: var(--white);
+  --fg: rgba(255, 255, 255, .86); --muted: rgba(255, 255, 255, .78); --heading: var(--white); --stroke: var(--white);
   --eyebrow: var(--coral-s); --hair: rgba(255, 255, 255, .14);
   --glass-bg: rgba(255, 255, 255, .06); --glass-line: rgba(255, 255, 255, .14);
 }
@@ -152,17 +152,18 @@
 .hv2-media::before {
   content: ""; position: absolute; inset: 0; z-index: 0;
   background: linear-gradient(100deg, rgba(11, 61, 46, .06) 20%, rgba(255, 255, 255, .6) 40%, rgba(11, 61, 46, .08) 55%, rgba(11, 61, 46, .06) 70%);
-  background-size: 250% 100%; animation: hv2-shimmer 1.4s linear infinite; transition: opacity .6s var(--ease);
+  background-size: 250% 100%; animation: none;   /* static placeholder: an endless shimmer on every not-yet-loaded image kept the main thread restyling thousands of times */ transition: opacity .6s var(--ease);
 }
 .hv2-dark .hv2-media::before, .hv2-green .hv2-media::before { background-image: linear-gradient(100deg, rgba(255, 255, 255, .03) 20%, rgba(255, 255, 255, .12) 40%, rgba(255, 255, 255, .05) 55%, rgba(255, 255, 255, .03) 70%); }
 .hv2-media img {
   position: relative; z-index: 1; display: block; width: 100%; height: 100%; object-fit: cover;
-  opacity: 0; filter: blur(14px); scale: 1.06;
-  transition: opacity .8s var(--ease), filter .9s var(--ease), scale 1.2s var(--ease), transform 1.3s var(--ease);
+  opacity: 0; scale: 1.04;   /* reveal = opacity + a little scale (a blur() transition re-rasterised every image on every frame) */
+  transition: opacity .6s var(--ease), scale .9s var(--ease), transform 1.3s var(--ease);
 }
 .hv2-media.is-loaded::before { opacity: 0; animation: none; }
 .hv2-media.is-loaded img { opacity: 1; filter: none; scale: 1; }
 .hv2-media--logo { background: transparent !important; }
+.hv2-media--logo img { opacity: 1; scale: 1; transition: transform .6s var(--ease); }   /* client logos: no reveal animation (88 of them animating at once cost ~2,600 style recalculations) */
 .hv2-media--logo::before { inset: 22%; border-radius: 8px; }
 .hv2-media--logo img { object-fit: contain; }
 [data-distort].is-distorting .hv2-media img { filter: url(#hv2-distort); }
@@ -373,7 +374,7 @@ a.hv2-brand { cursor: pointer; }
 .hv2-brand:hover::before { transform: translateX(130%); }
 /* logos are 300×300 with wide white margins → show the square at full tile width and crop the empty top/bottom */
 .hv2-brand-logo { width: 100%; aspect-ratio: 3 / 2; display: flex; align-items: center; justify-content: center; border-radius: 12px; }
-.hv2-brand-logo img { flex: none; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; transition: transform .6s var(--ease), filter .9s var(--ease), opacity .8s var(--ease), scale 1.2s var(--ease); }
+.hv2-brand-logo img { flex: none; width: 100%; height: auto; aspect-ratio: 1; object-fit: contain; transition: transform .6s var(--ease); }
 .hv2-brand:hover .hv2-brand-logo img { transform: scale(1.1); }
 .hv2-brand-name { font-size: 12.5px; font-weight: 800; letter-spacing: .03em; text-align: center; line-height: 1.3; color: rgba(27, 47, 69, .78); }
 .hv2-brand--lg { padding: 16px 16px 18px; border-radius: 22px; }
@@ -1261,7 +1262,7 @@ html.hv2-loading.hv2-leaving::after { opacity: 0; animation: none; }
 }
 @keyframes hv2-travel { from { translate: -60% 0; } to { translate: 60% 0; } }
 .hv2-media::before { inset: 0 auto 0 0; width: 250%; background-size: 100% 100%; }
-.hv2-media--logo::before { inset: 22%; width: auto; background-size: 250% 100%; animation: none; }   /* logo tiles: small static placeholder (logos are preloaded) */       /* image placeholder shimmer: was "background-position" */
+.hv2-media--logo::before { display: none; }   /* logo tiles: small static placeholder (logos are preloaded) */       /* image placeholder shimmer: was "background-position" */
 @keyframes hv2-shimmer { from { translate: 0 0; } to { translate: -60% 0; } }
 .hv2-live-dot { position: relative; animation: none; }                                  /* live dot: ring scales + fades (was "box-shadow") */
 .hv2-live-dot::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: rgba(224, 74, 67, .6); animation: hv2-dot-ring 1.6s ease-out infinite; }

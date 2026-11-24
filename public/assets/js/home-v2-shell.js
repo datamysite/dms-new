@@ -8,10 +8,20 @@
 
   /* scrolled state */
   /* no read at script time (window.scrollY forces the first layout inside script evaluation): check after the first frame, then on scroll */
-  var ticking = false;
-  var apply = function () { ticking = false; header.classList.toggle('is-scrolled', window.scrollY > 24); };
-  var onScroll = function () { if (!ticking) { ticking = true; requestAnimationFrame(apply); } };
-  onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+  /* A 1px-wide, 24px-tall marker at the very top of the page is watched with an IntersectionObserver: when it scrolls out of view the
+     header is "scrolled". No scroll listener and no scrollY read at all (reading scrollY after the loader changed styles was a forced layout). */
+  if ('IntersectionObserver' in window) {
+    var mark = document.createElement('div');
+    mark.setAttribute('aria-hidden', 'true');
+    mark.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:25px;pointer-events:none;visibility:hidden';
+    body.appendChild(mark);
+    new IntersectionObserver(function (en) { header.classList.toggle('is-scrolled', !en[en.length - 1].isIntersecting); }).observe(mark);
+  } else {
+    var ticking = false;
+    var apply = function () { ticking = false; header.classList.toggle('is-scrolled', window.scrollY > 24); };
+    var onScroll = function () { if (!ticking) { ticking = true; requestAnimationFrame(apply); } };
+    onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
+  }
 
   /* mega menu */
   var mega = header.querySelector('[data-hs-mega]');

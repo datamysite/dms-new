@@ -29,3 +29,9 @@ Trimmed Bootstrap for non-service pages (26 KiB unused), Swiper JS size, client-
 - Re-encoding already-optimised WebP (client logos) at a smaller size made them BIGGER; check the byte size before replacing. Recompress from the PNG source instead (service/1-3.webp: 17 -> 13 KB).
 - Local measurements are poisoned by leftover headless Chrome processes (58 once!): the helper scripts must always stop their own Chrome; check `remote-debugging-port` processes before trusting numbers. Never kill all `chrome.exe` (it is the user's browser too).
 - Remaining PageSpeed items that are not worth the risk: unused Bootstrap CSS (non-blocking, byte-only), client logo "oversized" notice (DPR makes 300 px right for phones), Speed Index (~3.4 s: loader + hero).
+
+## Round 4 (the same code scored 96 then 79: PSI is noisy, so remove main-thread work, not just chase one report)
+- The trace showed ~2,600 "Animation" style recalculations on `<img>` and ~2,100 on `::before`: image reveals used a `blur()` + scale transition and every unloaded image had an endless shimmer. Now: opacity+scale reveal only, static placeholder, client logos (88 tiles) have no reveal at all. Local blocking-time estimate fell from ~400 ms to ~250 ms.
+- Header "scrolled" state uses an IntersectionObserver marker, not a scroll listener + `scrollY` (forced-reflow source). Page height / hero height come from ResizeObserver entries; cached `geo.vh` instead of `window.innerHeight` in effects.
+- Muted text colours raised (light .76, dark .78) so axe/Lighthouse never reports contrast when elements are mid-fade.
+- Phone input has a plain placeholder until the widget is built late.

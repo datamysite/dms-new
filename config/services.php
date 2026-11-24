@@ -28,7 +28,7 @@ return [
         'key' => env('PAGESPEED_API_KEY'),
         'default_base' => env('PAGESPEED_BASE_URL', 'https://staging.datamysite.com'),
         // Lighthouse category scores (0-100) used by `php artisan seo:pagespeed`:
-        //   fail = below this the command exits with an error; target = the 95-100 goal in .claude/rules/performance.md (shown as a warning)
+        //   fail = below this the command exits with an error; target = the 95-100 goal; Core Web Vitals limits per strategy live in PageSpeedService::TARGETS_* and .claude/rules/performance.md (shown as a warning)
         'thresholds' => [
             'performance'    => ['fail' => 90, 'target' => 95],
             'accessibility'  => ['fail' => 95, 'target' => 100],

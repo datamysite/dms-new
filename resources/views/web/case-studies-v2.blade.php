@@ -108,7 +108,7 @@
 							<span>Your Full Name</span>
 						</label>
 						<div class="hv2-field hv2-field--tel">
-							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" aria-label="Phone number">
+							<input type="tel" name="mainphone" id="hv2-phone" required autocomplete="tel" placeholder="Your phone number" aria-label="Phone number">
 							<input type="hidden" name="phone" id="hv2-fullphone">
 						</div>
 						<label class="hv2-field">

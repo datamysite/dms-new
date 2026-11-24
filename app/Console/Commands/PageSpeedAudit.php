@@ -106,12 +106,13 @@ class PageSpeedAudit extends Command
                 elseif ($score < $target) { $warnings++; $cells[] = "$score warn"; }
                 else $cells[] = (string) $score;
             }
-            // Core Web Vitals targets apply to the mobile (Slow 4G) run
+            // Core Web Vitals limits differ per strategy (mobile = Slow 4G, desktop = fast connection)
+            $limits = PageSpeedService::targets($row['strategy']);
             foreach (['FCP', 'LCP', 'TBT', 'CLS', 'SI'] as $m) {
                 $v = $row['metrics'][$m]['value'] ?? null;
                 $disp = $row['metrics'][$m]['display'] ?? '-';
-                if ($v === null || $row['strategy'] !== 'mobile') { $cells[] = $disp; continue; }
-                if ($v > PageSpeedService::TARGETS[$m]) { $warnings++; $cells[] = "$disp !"; } else $cells[] = $disp;
+                if ($v === null) { $cells[] = $disp; continue; }
+                if ($v > $limits[$m]) { $warnings++; $cells[] = "$disp !"; } else $cells[] = $disp;
             }
             $table[] = array_merge([$row['path'], $row['strategy']], $cells, [count($row['failedAudits']) . ' audits']);
         }

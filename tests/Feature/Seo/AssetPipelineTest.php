@@ -100,7 +100,7 @@ class AssetPipelineTest extends TestCase
     public function test_no_layout_reads_while_the_scripts_start(): void
     {
         $shell = file_get_contents(public_path('assets/js/home-v2-shell.js'));
-        $this->assertStringContainsString('requestAnimationFrame(apply)', $shell);
+        $this->assertStringContainsString('new IntersectionObserver(function (en) { header.classList.toggle(\'is-scrolled\'', $shell, 'scrolled state without scroll events or scrollY reads');
         $this->assertDoesNotMatchRegularExpression('/var onScroll = function \(\) \{ header\.classList\.toggle\(\'is-scrolled\', window\.scrollY/', $shell, 'scrollY must not be read synchronously at start-up');
 
         $js = file_get_contents(public_path('assets/js/home-v2.js'));
@@ -129,9 +129,11 @@ class AssetPipelineTest extends TestCase
             $this->assertMatchesRegularExpression('#<script type="text/v2-delayed"[^>]*swiper-bundle#', $html, "$path loads Swiper before the first interaction");
         }
         $js = file_get_contents(public_path('assets/js/home-v2.js'));
-        $this->assertStringContainsString('new ResizeObserver(measureNow)', $js);
+        $this->assertStringContainsString('var remeasure = function (docH)', $js, 'page height comes from the ResizeObserver entry');
+        $this->assertStringContainsString('heroH = bs && bs[0]', $js);
+        $this->assertStringNotContainsString('window.innerHeight * 0.92', $js);
         $this->assertStringContainsString('f.el.__fxOn === true', $js, 'off-screen effects wait for the observer');
-        $this->assertStringNotContainsString('hero.offsetHeight', $js);
+        $this->assertStringNotContainsString('Math.max(1, hero.offsetHeight)', $js);
         $shell = file_get_contents(public_path('assets/js/home-v2-shell.js'));
         $this->assertStringContainsString('keep trying for up to 15 s', $shell, 'the reviews panel waits for the late Swiper');
     }

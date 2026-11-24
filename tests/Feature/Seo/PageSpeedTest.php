@@ -75,12 +75,14 @@ class PageSpeedTest extends TestCase
         }
     }
 
-    public function test_home_core_web_vitals_meet_the_mobile_targets(): void
+    public function test_home_core_web_vitals_meet_the_mobile_and_desktop_targets(): void
     {
-        $metrics = $this->report('/', 'mobile')['metrics'];
-        foreach (PageSpeedService::TARGETS as $name => $limit) {
-            $this->assertArrayHasKey($name, $metrics);
-            $this->assertLessThanOrEqual($limit, $metrics[$name]['value'], "home mobile $name (" . $metrics[$name]['display'] . ')');
+        foreach (['mobile', 'desktop'] as $strategy) {
+            $metrics = $this->report('/', $strategy)['metrics'];
+            foreach (PageSpeedService::targets($strategy) as $name => $limit) {
+                $this->assertArrayHasKey($name, $metrics);
+                $this->assertLessThanOrEqual($limit, $metrics[$name]['value'], "home $strategy $name (" . $metrics[$name]['display'] . ')');
+            }
         }
     }
 

@@ -72,22 +72,27 @@
 
   /* Page height and viewport are measured when the layout changes (resize, load, fonts, page height change), never per frame */
   var geo = { vh: window.innerHeight, max: 0 };
-  var remeasurePending = 0, heroH = 0;
-  var measureNow = function () {
+  var remeasurePending = 0, heroH = 0, lastDocH = -1;
+  var measureNow = function (docH) {
     geo.vh = window.innerHeight;
-    geo.max = Math.max(0, docEl.scrollHeight - geo.vh);
-    var h = document.getElementById('hv2-hero'); if (h) heroH = h.offsetHeight;
+    if (docH >= 0) geo.max = Math.max(0, docH - geo.vh);
     emitScroll();
   };
-  var remeasure = function () {
+  /* the page height comes from the ResizeObserver entry (no layout read at all); the callback is coalesced to one run per frame */
+  var remeasure = function (docH) {
+    if (typeof docH === 'number') lastDocH = docH;
     if (remeasurePending) return;
-    remeasurePending = requestAnimationFrame(function () { remeasurePending = 0; measureNow(); });
+    remeasurePending = requestAnimationFrame(function () {
+      remeasurePending = 0;
+      if (lastDocH < 0) lastDocH = docEl.scrollHeight;   /* no ResizeObserver yet (resize / load events): one read, in a frame that has not written styles */
+      measureNow(lastDocH);
+    });
   };
   onScroll(runFx);
-  window.addEventListener('resize', remeasure);
-  window.addEventListener('load', remeasure);
+  window.addEventListener('resize', function () { lastDocH = -1; remeasure(); });
+  window.addEventListener('load', function () { remeasure(); });
   /* a ResizeObserver callback runs right after layout, so reading the page height there is free (reading it later in a frame forced a layout) */
-  if (window.ResizeObserver) new ResizeObserver(measureNow).observe(document.body); else remeasure();
+  if (window.ResizeObserver) new ResizeObserver(function (en) { var bs = en[en.length - 1].borderBoxSize; remeasure(bs && bs[0] ? Math.round(bs[0].blockSize) : en[en.length - 1].contentRect.height); }).observe(document.body); else remeasure();
 
   /* == PAGE LOADER ======================================================== */
   /* The overlay is pure CSS (html.hv2-loading, set by an inline <head> script) so it
@@ -208,7 +213,7 @@
     if (!('IntersectionObserver' in window)) { splitLater = els; splitStart(); return; }
     var probe = new IntersectionObserver(function (entries) {
       probe.disconnect();
-      entries.forEach(function (en) { (en.isIntersecting || en.boundingClientRect.top < window.innerHeight * 1.2 ? splitNow : splitLater).push(en.target); });
+      entries.forEach(function (en) { (en.isIntersecting || en.boundingClientRect.top < geo.vh * 1.2 ? splitNow : splitLater).push(en.target); });
       splitStart();
     }, { rootMargin: '20% 0px 0px 0px' });
     els.forEach(function (el) { probe.observe(el); });
@@ -381,7 +386,7 @@
   });
 
   /* == IMAGE PLACEHOLDERS ================================================ */
-  $$('.hv2-media img').forEach(function (img) {
+  $$('.hv2-media:not(.hv2-media--logo) img').forEach(function (img) {
     var done = function () { img.parentNode.classList.add('is-loaded'); };
     if (img.complete && img.naturalWidth) done();
     else { img.addEventListener('load', done, { once: true }); img.addEventListener('error', done, { once: true }); }
@@ -443,6 +448,9 @@
   }
   if (hero && !reduceMotion) {
     var glass = hero.querySelector('.hv2-glass3d');
+    /* hero height from a ResizeObserver entry (never read from the DOM inside the scroll effects) */
+    if (window.ResizeObserver) new ResizeObserver(function (en) { var bs = en[en.length - 1].borderBoxSize; heroH = bs && bs[0] ? bs[0].blockSize : en[en.length - 1].contentRect.height; }).observe(hero);
+    else heroH = hero.offsetHeight;
     if (glass) addFx(
       function () { return clamp(scrollState.y / Math.max(1, heroH), 0, 1); },
       function (p) { setStyle(glass, 'transform', 'translate3d(0,' + (p * 160).toFixed(1) + 'px,0)'); },
@@ -625,7 +633,7 @@
     if (reduceMotion || !stackVis.length) return null;
     var tops = [];
     for (var i = 1; i < stackVis.length; i++) tops[i] = stackVis[i].getBoundingClientRect().top;
-    return { from: window.innerHeight * 0.92, tops: tops };
+    return { from: geo.vh * 0.92, tops: tops };
   };
   var writeStack = function (r) {
     if (!r) return;
@@ -722,7 +730,7 @@
     };
     /* progress = how far the block has travelled from "top at 75% of the viewport" to "bottom at 55%" */
     var readProcess = function () {
-      var r = steps.getBoundingClientRect(), vh = window.innerHeight;
+      var r = steps.getBoundingClientRect(), vh = geo.vh;
       return clamp((vh * 0.75 - r.top) / (vh * 0.2 + r.height), 0, 1);
     };
     if (reduceMotion) whenInView(steps, function () { setLine(1); }); else addFx(readProcess, setLine, steps);
@@ -754,7 +762,7 @@
   /* == CTA ZOOM · PARALLAX (live-position driven) ========================= */
   if (!reduceMotion) {
     var cta = document.getElementById('hv2-cta');
-    var travel = function (el) { var r = el.getBoundingClientRect(), vh = window.innerHeight; return clamp((vh - r.top) / (vh + r.height), 0, 1); };
+    var travel = function (el) { var r = el.getBoundingClientRect(), vh = geo.vh; return clamp((vh - r.top) / (vh + r.height), 0, 1); };
     /* CTA zoom: written straight on the image (a CSS variable on the whole section made every element in it recalculate) */
     var ctaImg = cta ? cta.querySelector('.hv2-cta-bg img') : null;
     if (ctaImg) addFx(
