@@ -86,12 +86,7 @@
 	<section class="hv2-section hv2-tint hv2-services svl-services" id="hv2-services">
 			<div class="svl-deco" aria-hidden="true"><img class="svl-3d svl-3d--s1" src="{{ $svl3d }}/taxi-480.webp" srcset="{{ $svl3d }}/taxi-240.webp 240w, {{ $svl3d }}/taxi-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="480" height="303" alt="" decoding="async" loading="lazy" data-svl-depth="0.08"><img class="svl-3d svl-3d--s2" src="{{ $svl3d }}/phone-480.webp" srcset="{{ $svl3d }}/phone-240.webp 240w, {{ $svl3d }}/phone-480.webp 480w" sizes="(max-width: 991px) 140px, 240px" width="323" height="480" alt="" decoding="async" loading="lazy" data-svl-depth="-0.08"></div>
 		<div class="hv2-container">
-			<div class="hv2-head">
-				<div>
-					<span class="hv2-eyebrow" data-reveal="up">Our Services</span>
-					<h2 class="hv2-display hv2-h2" data-split>Elevate Your Brand Visibility <span class="hv2-outline">and Boost Sales</span></h2>
-				</div>
-			</div>
+			{{-- (no section heading here: the hero above already says "Our Services - Elevate Your Brand Visibility and Boost Sales") --}}
 						<div class="svl-grid" id="svl-grid">
 				@foreach($services as $val)
 					<a href="{{ v2_url('/'.$val->slug) }}" class="svl-card" style="--i: {{ $loop->index % 3 }}" data-tilt data-tilt-max="5" data-reveal="up" data-delay="{{ ($loop->index % 3) + 1 }}">

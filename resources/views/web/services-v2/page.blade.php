@@ -274,7 +274,7 @@
 
 @section('addStyle')
 	{{-- the page's own legacy styles first (service.css + any page-specific CSS), then the v2 layers win --}}
-	{!! $sv2Area('head') !!}
+	{!! preg_replace("~(/assets/css/service\.css)([\"'])~", "$1?v=" . @filemtime(public_path("assets/css/service.css")) . "$2", $sv2Area("head")) !!}
 	<link href="{{ v2_asset('assets/css/home-v2.css') }}" rel="stylesheet">
 	<link href="{{ v2_asset('assets/css/service-v2.css') }}" rel="stylesheet">
 @endsection

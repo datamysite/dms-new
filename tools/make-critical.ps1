@@ -29,7 +29,7 @@ $collect = @'
   var pad = function (n, w) { n = String(n); while (n.length < w) n = '0' + n; return n; };
   /* hidden-until-used UI (mobile drawer, mega menu, popups, floating buttons) is always kept: its base "hidden" rules must exist
      at first paint, otherwise it shows up unstyled in the page flow until the full stylesheets arrive */
-  var KEEP = '.hs-header, .hs-scrim, .hs-drawer, .modal, .modal-backdrop, #ov, .whatsapp-chat, #dms-root, #dms-teaser, .hv2-top, .hv2-progress';
+  var KEEP = '.hub-guides, .hs-header, .hs-scrim, .hs-drawer, .modal, .modal-backdrop, #ov, .whatsapp-chat, #dms-root, #dms-teaser, .hv2-top, .hv2-progress';
   var visible = function (el) {
     var r = el.getBoundingClientRect();
     if (r.width > 0 && r.height > 0 && r.top < vh && r.bottom > 0 && r.left < vw && r.right > 0) return true;

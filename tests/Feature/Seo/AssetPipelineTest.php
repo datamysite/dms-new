@@ -162,7 +162,32 @@ class AssetPipelineTest extends TestCase
     public function test_hub_guides_decorative_image_is_hidden_on_phones(): void
     {
         $css = file_get_contents(public_path('assets/css/service.css'));
-        $this->assertMatchesRegularExpression('~@media \(max-width: 600px\) \{\s*\.hub-guides \{.*?\.hub-guides::after \{ display: none; \}~s', $css);
+        $this->assertStringContainsString("@media (max-width: 767px) {\n  .hub-guides::after { display: none; }", str_replace("\r", '', $css));
+        $this->assertStringContainsString("'.hub-guides, .hs-header", file_get_contents(base_path('tools/make-critical.ps1')), 'the critical generator always keeps the hub-guides rules (mobile hide rule included)');
+        $this->assertStringContainsString('service.css?v=', $this->get('/seo-services')->getContent(), 'the legacy service.css link is versioned so a stale browser cache cannot keep the old rules');
+    }
+
+    public function test_legacy_service_bullets_keep_their_left_padding(): void
+    {
+        // custom.css forces `.post-container li { padding-inline-start: 0 !important }`; without a matching !important the coral bullet overlaps the text
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('.sv2 .sv2-legacy ul:not(.nav) > li { position: relative; padding-left: 26px !important; padding-inline-start: 26px !important;', $css);
+    }
+
+    public function test_blog_detail_title_is_full_width_and_article_gap_matches_the_form_gap(): void
+    {
+        $css = file_get_contents(public_path('assets/css/blog-detail-v2.css'));
+        $this->assertStringContainsString('.bdv-hero-body, .bdv-hero-body h1 { max-width: none; }', $css);
+        $this->assertStringContainsString('.hv2 .bdv-article-sec { padding-top: clamp(28px, 3.5vw, 56px); }', $css);
+        $this->assertStringContainsString('column-gap: clamp(28px, 3.5vw, 56px)', $css, 'same gap between the article and the form');
+    }
+
+    public function test_blog_detail_hero_shows_the_read_time_from_the_database(): void
+    {
+        $view = file_get_contents(resource_path('views/web/blog-detail-v2.blade.php'));
+        preg_match('~<div class="bdv-hero-meta">.*?</div>~s', $view, $m);
+        $this->assertStringContainsString('$data->read_time', $m[0], 'read time (minutes, key read_time) sits next to author and date');
+        $this->assertStringContainsString('min read', $m[0]);
     }
 
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void

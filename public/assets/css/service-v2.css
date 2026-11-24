@@ -53,7 +53,8 @@
 .sv2 .sv2-legacy a:not(.btn):not([class*="btn"]):not(.see-all-btn) { color: var(--coral); font-weight: 700; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat; transition: background-size .35s var(--ease), color .25s; }
 .sv2 .sv2-legacy a:not(.btn):not([class*="btn"]):not(.see-all-btn):hover { background-size: 100% 2px; color: var(--green); }
 .sv2 .sv2-legacy ul:not(.nav) { list-style: none; padding-left: 0; margin: 0 0 var(--space-4); }
-.sv2 .sv2-legacy ul:not(.nav) > li { position: relative; padding-left: 26px; margin-bottom: 10px; }
+/* !important: legacy custom.css (.post-container li) forces padding-inline-start: 0 !important, which put the bullet on top of the first letters */
+.sv2 .sv2-legacy ul:not(.nav) > li { position: relative; padding-left: 26px !important; padding-inline-start: 26px !important; margin-bottom: 10px; }
 .sv2 .sv2-legacy ul:not(.nav) > li::before { content: ""; position: absolute; left: 4px; top: .72em; width: 9px; height: 9px; border-radius: 50%; background: var(--coral); box-shadow: 0 0 0 4px rgba(224, 74, 67, .14); }
 .sv2 .sv2-legacy ol { padding-left: 1.3em; }
 

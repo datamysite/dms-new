@@ -82,7 +82,7 @@
    WHITESPACE DECORATION — brand-colour 3D + motion that fills the empty areas
    (right of the section heading, page margins, clientele sides). Decorative only.
    ========================================================================== */
-.svl-services { position: relative; overflow: hidden; }
+.svl-services { position: relative; overflow: hidden; padding-top: clamp(44px, 5vw, 80px); }   /* no section heading any more (the hero already says it): the cards start right after a short gap */
 .svl-services > .hv2-container { position: relative; z-index: 2; }
 .svl-deco { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 .svl-deco > * { position: absolute; }
@@ -312,12 +312,12 @@
    ========================================================================== */
 .svl-deco * { animation-play-state: paused; }
 html.svl-ready .svl-deco * { animation-play-state: running; }
-.svl-services { content-visibility: auto; contain-intrinsic-size: auto 3540px; }
+.svl-services { content-visibility: auto; contain-intrinsic-size: auto 3123px; }
 .svl-clientele { content-visibility: auto; contain-intrinsic-size: auto 300px; }
 .svl-clients { content-visibility: auto; contain-intrinsic-size: auto 260px; }
-@media (max-width: 1199px) { .svl-services { contain-intrinsic-size: auto 4561px; } .svl-clientele { contain-intrinsic-size: auto 225px; } .svl-clients { contain-intrinsic-size: auto 184px; } }
-@media (max-width: 991px) { .svl-services { contain-intrinsic-size: auto 4077px; } }
-@media (max-width: 640px) { .svl-services { contain-intrinsic-size: auto 7752px; } .svl-clientele, .svl-clients { contain-intrinsic-size: auto 160px; } }
+@media (max-width: 1199px) { .svl-services { contain-intrinsic-size: auto 4422px; } .svl-clientele { contain-intrinsic-size: auto 225px; } .svl-clients { contain-intrinsic-size: auto 184px; } }
+@media (max-width: 991px) { .svl-services { contain-intrinsic-size: auto 3939px; } }
+@media (max-width: 640px) { .svl-services { contain-intrinsic-size: auto 7515px; } .svl-clientele, .svl-clients { contain-intrinsic-size: auto 160px; } }
 .svl-deco > * { backface-visibility: hidden; }
 .is-paused, .is-paused * { animation-play-state: paused !important; }
 .svl-stage2--k1 { left: auto; right: clamp(220px, 24vw, 420px); top: 4%; }

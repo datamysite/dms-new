@@ -295,3 +295,7 @@ html.bdv-ready .bdv-deco * { animation-play-state: running; }
 .bdv-hero-meta > *:first-child { padding-left: 0; border-left: 0; }
 .bdv-hero-meta i { color: var(--coral-s); }
 .bdv-hero-meta strong { color: #fff; font-weight: 800; }
+
+/* title spans the whole container; the article starts after the same gap that separates the article column from the form */
+.bdv-hero-body, .bdv-hero-body h1 { max-width: none; }
+.hv2 .bdv-article-sec { padding-top: clamp(28px, 3.5vw, 56px); }

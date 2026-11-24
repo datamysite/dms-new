@@ -95,6 +95,8 @@
 					<div class="bdv-hero-meta">
 						<span class="bdv-hero-author"><i class="bi bi-person" aria-hidden="true"></i> Author: <strong>{{ $data->author->name }}</strong></span>
 						<time datetime="{{ date('Y-m-d', strtotime($data->created_at)) }}"><i class="bi bi-calendar2-week" aria-hidden="true"></i> {{ date('F d, Y', strtotime($data->created_at)) }}</time>
+						@php $bdvRead = (int) preg_replace('/\D+/', '', (string) ($data->read_time ?? '')); @endphp
+						@if($bdvRead > 0)<span class="bdv-hero-read"><i class="bi bi-clock" aria-hidden="true"></i> {{ $bdvRead }} min read</span>@endif
 					</div>
 				</div>
 			</div>
