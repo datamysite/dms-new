@@ -132,6 +132,8 @@
     open = true;
     modal.classList.add('is-open'); modal.setAttribute('aria-hidden', 'false'); body.classList.add('hs-rv-open');
     init(); if (swiper) { swiper.update(); } sync();
+    /* Swiper is a delayed script: if it has not arrived yet, keep trying for up to 15 s */
+    if (!swiper) { var tries = 0, wait = setInterval(function () { init(); if (swiper) { swiper.update(); sync(); clearInterval(wait); } else if (++tries > 50) clearInterval(wait); }, 300); }
     panel.setAttribute('tabindex', '-1'); setTimeout(function () { panel.focus({ preventScroll: true }); }, 60);   /* focus the dialog itself: no stray ring on the close button */
   };
   var hide = function () {

@@ -31,7 +31,7 @@
     $html = preg_replace('#<img\b(?![^>]*\balt\s*=)#i', '<img alt=""', (string) $html);
     if (!$v2Lite) return $html;
     return preg_replace_callback('#<script\b([^>]*)>(.*?)</script>#is', function ($m) use ($v2Form, $v2Keep) {
-      if ($v2Keep && preg_match('#src\s*=\s*["\'][^"\']*swiper#i', $m[1])) return $m[0];
+      /* Swiper (38 KB, unused at first paint) is a delayed script like the rest; the home carousel loads it itself when it needs it */
       if (preg_match('#type\s*=\s*["\']?(application/(ld\+)?json|text/template|text/x-template)#i', $m[1])) return $m[0];
       /* the hero form only needs the phone LIBRARY at load (it is initialised by the page script);
          input.js only wires the hidden popup forms, so it waits for the first interaction like the other legacy scripts */

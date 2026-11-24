@@ -44,7 +44,7 @@
   var fx = [];
   var runFx = function () {
     var i, f;
-    for (i = 0; i < fx.length; i++) { f = fx[i]; f.on = !f.el || f.el.__fxOn !== false; if (f.on) f.v = f.read(); }
+    for (i = 0; i < fx.length; i++) { f = fx[i]; f.on = !f.el || !fxIO || f.el.__fxOn === true;   /* off-screen effects wait for the observer: no position reads for them at start-up */ if (f.on) f.v = f.read(); }
     for (i = 0; i < fx.length; i++) { f = fx[i]; if (f.on) f.write(f.v); }
   };
   var fxIO = ('IntersectionObserver' in window) ? new IntersectionObserver(function (entries) {
@@ -72,20 +72,22 @@
 
   /* Page height and viewport are measured when the layout changes (resize, load, fonts, page height change), never per frame */
   var geo = { vh: window.innerHeight, max: 0 };
-  var remeasurePending = 0;
+  var remeasurePending = 0, heroH = 0;
+  var measureNow = function () {
+    geo.vh = window.innerHeight;
+    geo.max = Math.max(0, docEl.scrollHeight - geo.vh);
+    var h = document.getElementById('hv2-hero'); if (h) heroH = h.offsetHeight;
+    emitScroll();
+  };
   var remeasure = function () {
     if (remeasurePending) return;
-    remeasurePending = requestAnimationFrame(function () {
-      remeasurePending = 0;
-      geo.vh = window.innerHeight;
-      geo.max = Math.max(0, docEl.scrollHeight - geo.vh);
-      emitScroll();
-    });
+    remeasurePending = requestAnimationFrame(function () { remeasurePending = 0; measureNow(); });
   };
   onScroll(runFx);
   window.addEventListener('resize', remeasure);
   window.addEventListener('load', remeasure);
-  if (window.ResizeObserver) new ResizeObserver(remeasure).observe(document.body); else remeasure();
+  /* a ResizeObserver callback runs right after layout, so reading the page height there is free (reading it later in a frame forced a layout) */
+  if (window.ResizeObserver) new ResizeObserver(measureNow).observe(document.body); else remeasure();
 
   /* == PAGE LOADER ======================================================== */
   /* The overlay is pure CSS (html.hv2-loading, set by an inline <head> script) so it
@@ -442,7 +444,7 @@
   if (hero && !reduceMotion) {
     var glass = hero.querySelector('.hv2-glass3d');
     if (glass) addFx(
-      function () { return clamp(scrollState.y / Math.max(1, hero.offsetHeight), 0, 1); },
+      function () { return clamp(scrollState.y / Math.max(1, heroH), 0, 1); },
       function (p) { setStyle(glass, 'transform', 'translate3d(0,' + (p * 160).toFixed(1) + 'px,0)'); },
       hero
     );

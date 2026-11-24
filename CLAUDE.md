@@ -8,6 +8,8 @@
 ## Performance rules
 Mobile (Slow 4G) PageSpeed/Lighthouse targets and implementation rules are in [`.claude/rules/performance.md`](.claude/rules/performance.md) — follow them for any change to views, CSS/JS or controllers.
 
+The proven method and lessons for checking/fixing any page are in [`.claude/rules/performance-playbook.md`](.claude/rules/performance-playbook.md) — read it before touching page speed.
+
 Project-specific notes for applying them (no Vite: use `defer` and the static-asset approach below):
 - Redesigned (V2) pages extend `web.home-v2.master`. A page opts in to the fast loading mode with `@section('v2lite', '1')` (third-party scripts wait for the first interaction), `@section('v2form', '1')` (keep the phone-input library eager) and `@section('v2keep', '1')` (keep Swiper eager).
 - Minified `*.min.css` / `*.min.js` are served through `v2_asset()` and are rebuilt after editing a source asset.
