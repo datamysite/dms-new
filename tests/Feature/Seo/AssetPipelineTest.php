@@ -159,6 +159,12 @@ class AssetPipelineTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('~\.bdv-main\s*\{[^}]*overflow~', $css);
     }
 
+    public function test_hub_guides_decorative_image_is_hidden_on_phones(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service.css'));
+        $this->assertMatchesRegularExpression('~@media \(max-width: 600px\) \{\s*\.hub-guides \{.*?\.hub-guides::after \{ display: none; \}~s', $css);
+    }
+
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));

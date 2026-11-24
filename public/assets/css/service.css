@@ -952,6 +952,9 @@
     margin: 1.25rem 1rem;
   }
 
+  /* the decorative image would sit on top of the links once the right padding is gone */
+  .hub-guides::after { display: none; }
+
   .hub-guides h2 {
     font-size: 1.25rem;
   }

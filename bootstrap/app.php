@@ -23,6 +23,8 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             \App\Http\Middleware\RedirectFirstPage::class,
         ]);
+        // outermost, so it also sees the redirects answered by HandleDbRedirects (staging: links/redirects follow APP_URL)
+        $middleware->prepend(\App\Http\Middleware\RewriteProductionUrls::class);
         $middleware->append(\App\Http\Middleware\HandleDbRedirects::class);
         $middleware->append(\App\Http\Middleware\StagingNoindex::class);
         $middleware->web(append: [\App\Http\Middleware\AttachLiteSpeedPurge::class]);

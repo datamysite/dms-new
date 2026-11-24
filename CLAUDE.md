@@ -23,6 +23,10 @@ Project-specific notes for applying them (no Vite: use `defer` and the static-as
 - Loading policy (do not change without re-measuring): third-party tags start on the first click/key/form focus or 8 s after load; the phone widget (+ its 300 KB library) is built 6 s after load or when the form is touched; Swiper at 8.5 s or when near view; no layout reads while scripts start (first effect run happens after the loader curtain).
 - Measured before/after on this PC (4x CPU throttle, home, mobile) is noisy; use `php artisan seo:pagespeed` against staging for real numbers.
 
+### Staging links
+- Never hard-code `https://datamysite.com` in Blade/PHP/JS: use `url()` / `v2_url()` / `seo_canonical()`. Page content stored in the database (service sections, blog posts, their JSON-LD) does contain absolute live-site links;
+  `App\Http\Middleware\RewriteProductionUrls` rewrites them (and redirect `Location` headers) to **`APP_URL`** when `APP_URL` is not the live site. So on staging set `APP_URL=https://staging.datamysite.com` in `.env` (then `php artisan config:clear`); production keeps `https://datamysite.com` and is never touched.
+
 ## Conventions
 - Redesigned page set: each page has its own view, CSS and JS (`<page>-v2.*`), shares the Home V2 design system (`home-v2.css`/`home-v2.js`), brand colours only, and keeps the original URLs and SEO text.
 - Do not change backend logic, routes or the database when the task is a frontend/performance task unless asked.
