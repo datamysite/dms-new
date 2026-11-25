@@ -23,35 +23,32 @@
     onScroll(); window.addEventListener('scroll', onScroll, { passive: true });
   }
 
-  /* mega menu */
-  var mega = header.querySelector('[data-hs-mega]');
-  if (mega) {
-    var btn = mega.querySelector('.hs-link--btn'), tabs = $$('[data-hs-tab]', mega), panes = $$('.hs-pane', mega), t = null;
-    var fine = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
-    var setOpen = function (on) { clearTimeout(t); mega.classList.toggle('is-open', on); btn.setAttribute('aria-expanded', on ? 'true' : 'false'); };
-    var show = function (id) {
-      tabs.forEach(function (a) { a.classList.toggle('is-on', a.getAttribute('data-hs-tab') === id); });
-      panes.forEach(function (p) { p.classList.toggle('is-on', p.id === id); });
+  /* service bar dropdowns (desktop): hover-intent open/close, focus opens, Esc closes; touch: first tap opens, second tap follows the link */
+  var svcs = $$('[data-hs-svc]', header);
+  if (svcs.length) {
+    var fine = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches, open = null, timer = null;
+    var bar = header.querySelector('.hs-subbar');
+    var setOpen = function (li, on) {
+      li.classList.toggle('is-open', on);
+      var a = li.querySelector('.hs-svc-link'); if (a && a.hasAttribute('aria-expanded')) a.setAttribute('aria-expanded', on ? 'true' : 'false');
+      if (on) open = li; else if (open === li) open = null;
     };
-    btn.addEventListener('click', function (e) {
-      var go = btn.getAttribute('data-hs-href');
-      /* mouse click on a hover-capable device opens the Services page; keyboard (detail 0) and touch keep toggling the menu */
-      if (go && fine && e.detail > 0) { window.location.href = go; return; }
-      setOpen(!mega.classList.contains('is-open'));
+    var closeAll = function () { clearTimeout(timer); svcs.forEach(function (li) { if (li.classList.contains('is-open')) setOpen(li, false); }); };
+    svcs.forEach(function (li) {
+      if (!li.querySelector('.hs-svc-drop')) return;
+      var a = li.querySelector('.hs-svc-link');
+      if (fine) {
+        li.addEventListener('mouseenter', function () { clearTimeout(timer); timer = setTimeout(function () { closeAll(); setOpen(li, true); }, open ? 0 : 80); });
+        li.addEventListener('mouseleave', function () { clearTimeout(timer); timer = setTimeout(function () { setOpen(li, false); }, 160); });
+      } else {
+        a.addEventListener('click', function (e) { if (!li.classList.contains('is-open')) { e.preventDefault(); closeAll(); setOpen(li, true); } });
+      }
+      li.addEventListener('focusin', function () { if (open !== li) { closeAll(); setOpen(li, true); } });
     });
-    if (fine) {
-      mega.addEventListener('mouseenter', function () { clearTimeout(t); t = setTimeout(function () { setOpen(true); }, 80); });
-      mega.addEventListener('mouseleave', function () { clearTimeout(t); t = setTimeout(function () { setOpen(false); }, 160); });
-    }
-    tabs.forEach(function (a) {
-      var id = a.getAttribute('data-hs-tab');
-      a.addEventListener('mouseenter', function () { show(id); });
-      a.addEventListener('focus', function () { show(id); });
-    });
-    doc.addEventListener('click', function (e) { if (!mega.contains(e.target)) setOpen(false); });
-    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && mega.classList.contains('is-open')) { setOpen(false); btn.focus(); } });
+    doc.addEventListener('click', function (e) { if (open && !open.contains(e.target)) closeAll(); });
+    doc.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) { var a = open.querySelector('.hs-svc-link'); closeAll(); if (a) a.focus(); } });
+    bar.addEventListener('focusout', function (e) { if (open && !bar.contains(e.relatedTarget)) closeAll(); });
   }
-
   /* mobile drawer */
   var burger = header.querySelector('.hs-burger'), drawer = doc.getElementById('hs-drawer');
   var toggle = function (on) {

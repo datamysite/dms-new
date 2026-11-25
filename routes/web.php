@@ -13,6 +13,9 @@ use App\Http\Controllers\ChatDashboardController;
 
 require __DIR__.'/redirects.php';
 
+// Local-only extra routes (git-ignored file, absent on staging/production).
+if (is_file(__DIR__.'/local-old-home.php')) { require __DIR__.'/local-old-home.php'; }
+
 //ChatBot
 
 Route::post('/api/chat', [ChatWidgetController::class, 'chat']);

@@ -1,5 +1,7 @@
 # DataMySite — project guide
 
+**Codebase map:** [`.claude/project-map.md`](.claude/project-map.md) — read it before exploring; update it when you add/move routes, controllers, views, assets, configs or tools.
+
 ## Stack
 - **Backend:** PHP ^8.2, Laravel ^11.31 (Blade views, Eloquent, database cache/session drivers). Served by Apache (WAMP) at `http://localhost/datamysite`, not `php artisan serve`.
 - **Frontend:** server-rendered Blade + static assets in `public/assets/{css,js,img,fonts,vendor}` (Bootstrap 5, bootstrap-icons, Swiper, intl-tel-input). **Vite is not used** (no view uses `@vite`, even though `package.json` lists it); pages link the static files directly, versioned with `?v=filemtime` (see `v2_asset()` in `resources/views/web/home-v2/helpers.php`). Ignore any Vite/`@vite` instructions.

@@ -30,46 +30,7 @@
 				<ul class="hs-nav-list">
 					<li><a href="{{ $hsLinks[0][2] }}" class="hs-link {{ $hsNav === 'home' ? 'is-active' : '' }}">{{ $hsLinks[0][1] }}</a></li>
 
-					<li class="hs-has-mega" data-hs-mega>
-						<button type="button" class="hs-link hs-link--btn {{ $hsNav === 'services' ? 'is-active' : '' }}" data-hs-href="{{ v2_url(route('services')) }}" aria-expanded="false" aria-controls="hs-mega" aria-haspopup="true">
-							Services <i class="bi bi-chevron-down" aria-hidden="true"></i>
-						</button>
-
-						<div class="hs-mega" id="hs-mega" role="region" aria-label="Services">
-							<div class="hs-mega-inner">
-								<ul class="hs-mega-tabs" role="list">
-									@foreach($header_services as $val)
-										<li>
-											<a href="{{ v2_url('/'.$val->slug) }}" class="hs-mega-tab {{ $loop->first ? 'is-on' : '' }}" data-hs-tab="hs-pane-{{ $val->id }}">
-												<span class="hs-mega-ico"><i class="{{ $val->icon }}" aria-hidden="true"></i></span>
-												<span class="hs-mega-name">{{ $val->name }}</span>
-												<i class="bi bi-arrow-right hs-mega-arrow" aria-hidden="true"></i>
-											</a>
-										</li>
-									@endforeach
-								</ul>
-
-								<div class="hs-mega-panes">
-									@foreach($header_services as $val)
-										<div class="hs-pane {{ $loop->first ? 'is-on' : '' }}" id="hs-pane-{{ $val->id }}">
-											<a href="{{ v2_url('/'.$val->slug) }}" class="hs-pane-head">
-												<strong>{{ $val->name }}</strong>
-												<span>{{ \Illuminate\Support\Str::limit($val->description, 130) }}</span>
-											</a>
-											@if(count($val->subServices))
-												<ul class="hs-pane-grid">
-													@foreach($val->subServices as $sub)
-														<li><a href="{{ v2_url('/'.$val->slug.'/'.$sub->slug) }}"><i class="bi bi-chevron-right" aria-hidden="true"></i>{{ $sub->name }}</a></li>
-													@endforeach
-												</ul>
-											@endif
-											<a href="{{ v2_url('/'.$val->slug) }}" class="hs-pane-all">Explore {{ $val->name }} <i class="bi bi-arrow-up-right" aria-hidden="true"></i></a>
-										</div>
-									@endforeach
-								</div>
-							</div>
-						</div>
-					</li>
+					<li><a href="{{ v2_url(route('services')) }}" class="hs-link {{ $hsNav === 'services' ? 'is-active' : '' }}">Services</a></li>
 
 					@foreach(array_slice($hsLinks, 1) as $l)
 						<li><a href="{{ $l[2] }}" class="hs-link {{ $hsNav === $l[0] ? 'is-active' : '' }}">{{ $l[1] }}</a></li>
@@ -85,6 +46,34 @@
 		</div>
 	</div>
 
+	{{-- desktop service bar: 10 short names (the `sudo` column), each opens its sub-services; the other 6 services are in the footer --}}
+	@php
+		$hsBarSlugs = ['digital-marketing', 'outdoor-advertising', 'digital-advertising', 'influencer-marketing', 'seo-services', 'transit-media', 'celebrity-marketing', 'public-relations-pr-coverage', 'lead-generation', 'radio-advertising'];
+		$hsSvcBy = $header_services->keyBy('slug');
+		$hsBar = collect($hsBarSlugs)->map(fn ($sl) => $hsSvcBy->get($sl))->filter()->values();
+	@endphp
+	<div class="hs-subbar" data-hs-svcbar>
+		<div class="hs-wrap">
+			<ul class="hs-svc-list" role="list" aria-label="Our services">
+				@foreach($hsBar as $val)
+					@php $hsLabel = trim($val->sudo ?? '') !== '' ? trim($val->sudo) : $val->name; $hsSubs = $val->subServices; @endphp
+					<li class="hs-svc {{ $loop->index >= 6 ? 'hs-svc--end' : '' }}" data-hs-svc>
+						<a href="{{ v2_url('/'.$val->slug) }}" class="hs-svc-link" @if(count($hsSubs)) aria-haspopup="true" aria-expanded="false" @endif>{{ $hsLabel }}@if(count($hsSubs)) <i class="bi bi-chevron-down" aria-hidden="true"></i>@endif</a>
+						@if(count($hsSubs))
+							<div class="hs-svc-drop {{ count($hsSubs) > 6 ? 'is-wide' : '' }}">
+								<a href="{{ v2_url('/'.$val->slug) }}" class="hs-svc-head"><strong>{{ $val->name }}</strong><span>View all <i class="bi bi-arrow-up-right" aria-hidden="true"></i></span></a>
+								<ul>
+									@foreach($hsSubs as $sub)
+										<li><a href="{{ v2_url('/'.$val->slug.'/'.$sub->slug) }}"><i class="bi bi-chevron-right" aria-hidden="true"></i>{{ $sub->name }}</a></li>
+									@endforeach
+								</ul>
+							</div>
+						@endif
+					</li>
+				@endforeach
+			</ul>
+		</div>
+	</div>
 	{{-- mobile / tablet drawer --}}
 	<div class="hs-scrim" data-hs-close></div>
 	<aside class="hs-drawer" id="hs-drawer" aria-label="Menu" aria-hidden="true">

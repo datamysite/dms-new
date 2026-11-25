@@ -34,3 +34,5 @@ yarn-error.log
 /fdms2
 /skin111
 /staging
+# local-only preview route of the old home page (/old-home)
+/routes/local-old-home.php

@@ -73,8 +73,8 @@
 			<div class="hv2-hero-copy">
 				@include('web.home-v2.breadcrumbs', ['crumbs' => [['Home', URL::to('/')], ['Services', null]]])
 				<div class="svl-hero-body">
-					<h1 data-reveal="up">Our Services</h1>
-					<h2 data-reveal="up" data-delay="1">Elevate Your Brand Visibility and Boost Sales</h2>
+					<p class="svl-eyebrow" data-reveal="up">Our Services</p>
+					<h1 data-reveal="up" data-delay="1">Elevate Your Brand Visibility and Boost Sales</h1>
 				</div>
 			</div>
 		</div>
@@ -107,7 +107,7 @@
 							<span class="svl-card-icon"><i class="{{ $val->icon }}"></i></span>
 						</span>
 						<span class="svl-card-body">
-							<h3>{{ $val->name }}</h3>
+							<h2>{{ $val->name }}</h2>
 							<p>{{ $val->description }}</p>
 							<span class="svl-card-more" aria-label="Explore {{ $val->name }}"><span>Explore</span><i class="bi bi-arrow-right"></i></span>
 						</span>
