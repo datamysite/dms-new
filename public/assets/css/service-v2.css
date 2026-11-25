@@ -549,7 +549,7 @@
 .sv2h-hs:nth-child(even) { animation-duration: 11s; animation-direction: alternate-reverse; }
 .sv2h-hs > .sv2h-sp { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%);  }
 @keyframes sv2h-tumble { from { rotate: 1 1 0 -10deg; } to { rotate: 1 1 0 10deg; } }
-.sv2h-hs--n1 { left: clamp(300px, 34vw, 560px); top: 12%; } .sv2h-hs--n2 { left: clamp(380px, 43vw, 700px); bottom: 8%; transform: scale(.9); }
+.sv2h-hs--n1 { left: clamp(300px, 34vw, 560px); top: 12%; } .sv2h-hs--n2 { left: clamp(-50px, -1.5vw, -10px); bottom: -3%; transform: scale(.62); }   /* far left (the margin beside the text) so the copy stays readable */
 @media (max-width: 1280px) { .sv2h-hs--n2 { display: none; } }
 @media (max-width: 991px) { .sv2h-deco { display: none; } }
 /* megaphone (advertising) */
@@ -626,3 +626,9 @@
 @media (max-width: 767px) {
   .sv2[data-sv2-group="global-marketing"] .sv2-legacy img[src*="/section-images/"] { display: none; }
 }
+
+/* Hero with class "sv2-hero-title-first" on the text column (set in the database): the h1 is the large headline (the size the h2 has
+   in the classic hero), the h2 is a sub line in the size of the classic h4; there is no h4. */
+.sv2 .sv2-hero .sv2-hero-body--title h1 { margin: 0 0 8px !important; max-width: 15ch; font: 800 clamp(34px, 3.9vw, 56px)/1.08 var(--font-heading) !important; color: #fff !important; letter-spacing: -.02em; }
+.sv2 .sv2-hero .sv2-hero-body--title h2 { margin: 0 0 8px !important; max-width: 34ch; font: 500 clamp(18px, 1.67vw, 24px)/1.2 var(--font-body) !important; color: #fff !important; letter-spacing: 0; }
+@media (max-width: 767px) { .sv2 .sv2-hero .sv2-hero-body--title h1 { max-width: none; } }

@@ -206,6 +206,22 @@ class AssetPipelineTest extends TestCase
         }
     }
 
+    public function test_service_hero_lower_3d_piece_sits_in_the_far_left_corner(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('.sv2h-hs--n2 { left: clamp(-50px, -1.5vw, -10px); bottom: -3%; transform: scale(.62); }', $css, 'the lower 3D piece stays out of the hero copy');
+    }
+
+    public function test_service_hero_title_first_variant_is_driven_by_a_database_class(): void
+    {
+        $view = file_get_contents(resource_path('views/web/services-v2/page.blade.php'));
+        $this->assertStringContainsString("sv2-hero-title-first", $view, 'marker class on the hero text column (database content)');
+        $this->assertStringContainsString("sv2-hero-body--title", $view);
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('.sv2 .sv2-hero .sv2-hero-body--title h1 {', $css, 'h1 = large headline');
+        $this->assertStringContainsString('.sv2 .sv2-hero .sv2-hero-body--title h2 {', $css, 'h2 = sub line in the classic h4 size');
+    }
+
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));

@@ -71,7 +71,7 @@
 	/* The hero's copy column is reused VERBATIM and in its original order — h1 (small coral label), h2 (big headline),
 	   h4 (supporting line), p (intro), CTA span — with its bold keywords and links. SEO copy and structure are untouched;
 	   service-v2.css keeps the live size hierarchy (16 / 56 / 24 / 18px on desktop). Each block only gets a reveal hook. */
-	$sv2Hero = ['body' => '', 'photo' => null, 'sparse' => true, 'form' => true];
+	$sv2Hero = ['body' => '', 'photo' => null, 'sparse' => true, 'form' => true, 'title1' => false];
 	$sv2HeroRow = $sv2All->first(fn ($s) => $s->area === 'main' && $s->type === 'hero');
 	if ($sv2HeroRow) {
 		[$d, $x] = $sv2Dom($sv2Render($sv2HeroRow));
@@ -91,6 +91,8 @@
 			/* "sparse" hero = only an h1 (+ breadcrumb), no headline / intro copy yet (e.g. website-development pages):
 			   the h1 is then shown as the big headline so the hero still reads well until copy is added */
 			$sv2Hero['sparse'] = $x->query('.//h2|.//h3|.//h4|.//h5|.//p', $col)->length === 0;
+			/* DB marker: class sv2-hero-title-first on the text column = the h1 is the large headline, the h2 a smaller sub line (no h4) */
+			$sv2Hero['title1'] = in_array('sv2-hero-title-first', preg_split('/\s+/', trim($col->getAttribute('class'))), true);
 			$sv2Hero['body'] = $sv2Inner($col);
 		}
 		/* the hero's own dedicated background image (from its inline style) */
@@ -340,7 +342,7 @@
 				@include('web.home-v2.breadcrumbs', ['crumbs' => $sv2Crumbs, 'crumbSchema' => $sv2CrumbSchema])
 				{{-- the live hero copy column, verbatim and in order (h1 label, h2 headline, h4, p, CTA line) --}}
 				@if($sv2Hero['body'])
-					<div class="sv2-hero-body{{ $sv2Hero['sparse'] ? ' sv2-hero-body--sparse' : '' }}">{!! v2_links($sv2Hero['body']) !!}</div>
+					<div class="sv2-hero-body{{ $sv2Hero['sparse'] ? ' sv2-hero-body--sparse' : '' }}{{ $sv2Hero['title1'] ? ' sv2-hero-body--title' : '' }}">{!! v2_links($sv2Hero['body']) !!}</div>
 				@else
 					<div class="sv2-hero-body sv2-hero-body--sparse"><h1 data-reveal="up">{{ $sv2Page->name }}</h1></div>
 				@endif
