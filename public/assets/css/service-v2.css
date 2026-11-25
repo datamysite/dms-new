@@ -632,3 +632,31 @@
 .sv2 .sv2-hero .sv2-hero-body--title h1 { margin: 0 0 8px !important; max-width: 15ch; font: 800 clamp(34px, 3.9vw, 56px)/1.08 var(--font-heading) !important; color: #fff !important; letter-spacing: -.02em; }
 .sv2 .sv2-hero .sv2-hero-body--title h2 { margin: 0 0 8px !important; max-width: 34ch; font: 500 clamp(18px, 1.67vw, 24px)/1.2 var(--font-body) !important; color: #fff !important; letter-spacing: 0; }
 @media (max-width: 767px) { .sv2 .sv2-hero .sv2-hero-body--title h1 { max-width: none; } }
+
+/* == Outdoor advertising page blocks that live in the database (Brands, Our Successful Projects, Explained) ==
+   markup: section content rows with classes sv2-brands / hv2-stats (home markup) / sv2-explain */
+.sv2 .sv2-legacy .sv2-projects { padding-block: clamp(56px, 7vw, 100px) !important; }
+
+.sv2 .sv2-legacy .sv2-explain { background: var(--green-d, #082e23); color: #fff; }
+.sv2-explain-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(28px, 4.5vw, 72px); align-items: start; }
+.sv2-explain-media { position: sticky; top: calc(var(--header-h) + 24px); margin: 0; border-radius: 26px; overflow: hidden; aspect-ratio: 4 / 5; box-shadow: 0 40px 70px -40px rgba(0, 0, 0, .7); }
+.sv2 .sv2-legacy .sv2-explain-media img { display: block; width: 100% !important; height: 100% !important; max-width: none !important; margin: 0 !important; border-radius: 0 !important; object-fit: cover; }
+.sv2 .sv2-legacy .sv2-explain h2 { margin: 0 0 var(--space-5) !important; color: #fff !important; }
+.sv2 .sv2-legacy .sv2-explain h3 { margin: var(--space-6) 0 var(--space-3) !important; color: var(--coral-s) !important; }
+.sv2 .sv2-legacy .sv2-explain p, .sv2 .sv2-legacy .sv2-explain li { color: rgba(255, 255, 255, .88) !important; }
+.sv2 .sv2-legacy .sv2-explain p { margin: 0 0 var(--space-4) !important; max-width: 68ch; }
+.sv2 .sv2-legacy .sv2-explain a { color: var(--coral-s); }
+.sv2 .sv2-legacy .sv2-explain a:hover { color: #fff; }
+@media (max-width: 991px) {
+  .sv2-explain-grid { grid-template-columns: minmax(0, 1fr); }
+  .sv2-explain-media { position: static; aspect-ratio: 16 / 9; }
+}
+.sv2 .sv2-legacy .sv2-projects h2::before { display: none; }
+/* the logo slider block (hv2-clients markup stored in a database section): keep the home look inside the legacy wrapper */
+.sv2 .sv2-legacy .hv2-watermark, .sv2 .sv2-legacy .sv2-on-dark span.hv2-watermark:not(.badge) { color: transparent !important; }
+.sv2 .sv2-legacy .hv2-outline, .sv2 .sv2-legacy .sv2-on-dark span.hv2-outline:not(.badge) { color: transparent !important; }
+.sv2 .sv2-legacy .hv2-clients h2::before { display: none; }
+.sv2 .sv2-legacy .hv2-clients h2.hv2-h2, .sv2 .sv2-legacy .sv2-projects h2.hv2-h2 { font-size: var(--fs-h2) !important; line-height: .98 !important; letter-spacing: -.035em; }
+/* split-text letters inside display headings keep the heading colour (the generic on-dark span colour would grey them / fill the outline) */
+.sv2 .sv2-legacy .sv2-on-dark .hv2-display span:not(.badge) { color: inherit !important; }
+.sv2 .sv2-legacy .sv2-on-dark .hv2-display .hv2-outline:not(.badge), .sv2 .sv2-legacy .sv2-on-dark .hv2-display .hv2-outline span:not(.badge) { color: transparent !important; }

@@ -222,6 +222,14 @@ class AssetPipelineTest extends TestCase
         $this->assertStringContainsString('.sv2 .sv2-hero .sv2-hero-body--title h2 {', $css, 'h2 = sub line in the classic h4 size');
     }
 
+    public function test_database_section_blocks_for_the_outdoor_page_are_styled(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        foreach (['.sv2-explain-grid', '.sv2-explain-media', '.sv2-projects', '.hv2-clients h2::before'] as $sel) {
+            $this->assertStringContainsString($sel, $css, "$sel styles the database section markup");
+        }
+    }
+
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));
