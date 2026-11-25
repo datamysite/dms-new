@@ -230,6 +230,59 @@ class AssetPipelineTest extends TestCase
         }
     }
 
+    public function test_agency_section_styles_exist_for_the_database_block(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        foreach (['.sv2-agency-grid', '.sv2-agency-media', '.sv2-agency-quote'] as $sel) {
+            $this->assertStringContainsString($sel, $css, "$sel styles the agency database section");
+        }
+    }
+
+    public function test_formats_carousel_styles_and_script_exist(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        foreach (['.sv2-car-viewport', '.sv2-car-track', '.sv2-format-card', '.sv2-car-nav button'] as $sel) {
+            $this->assertStringContainsString($sel, $css, "$sel styles the formats carousel");
+        }
+        $this->assertStringContainsString('grid-auto-columns: calc((100% - 2 * var(--gap)) / 3)', $css, '3 cards per view on desktop');
+        $this->assertStringContainsString('scroll-padding-inline: var(--peek)', $css, 'a sliver of the next and previous card shows on desktop too');
+        $this->assertStringContainsString('scroll-padding-inline: 44px 20px', $css, 'phones keep a sliver of the previous card on the left too');
+        $js = file_get_contents(public_path('assets/js/service-v2.js'));
+        $this->assertStringContainsString('[data-sv2-carousel]', $js);
+        $this->assertStringContainsString("getComputedStyle(track).columnGap", $js, 'step uses the resolved gap, not the unresolved custom property');
+    }
+
+    public function test_locations_map_styles_and_script_exist(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        foreach (['.sv2-loc-grid', '.sv2-loc-map', '.sv2-loc-mk', '.sv2-loc-card[hidden]', '.sv2-loc-map .leaflet-container'] as $sel) {
+            $this->assertStringContainsString($sel, $css, "$sel styles the locations map section");
+        }
+        $js = file_get_contents(public_path('assets/js/service-v2.js'));
+        $this->assertStringContainsString('[data-sv2-locations]', $js);
+        $this->assertStringContainsString("c.hidden = c.getAttribute('data-loc') !== id", $js, 'one card follows the selected marker');
+        $this->assertStringContainsString("new IntersectionObserver", $js);
+        $this->assertStringContainsString("rootMargin: '400px 0px'", $js, 'Leaflet and the map tiles load only when the map box nears the viewport');
+        foreach (['leaflet.js', 'leaflet.css'] as $v) {
+            $this->assertFileExists(public_path("assets/vendor/leaflet/$v"), "vendored $v");
+        }
+        $this->assertSame('puJW3E/qXDqYp9IfhAI54BJEaWIfloJ7JWs7OeD5i6ruC9JZL1gERT1wjtwXFlh7CjE7ZJ+/vcRZRkIYIb6p4g==', base64_encode(hash_file('sha512', public_path('assets/vendor/leaflet/leaflet.js'), true)), 'leaflet.js is the unmodified cdnjs 1.9.4 build');
+    }
+
+    public function test_prices_table_styles_exist_for_the_database_section(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('.sv2-price-table', $css);
+        $this->assertStringContainsString('@media (max-width: 575px) {' . "\n" . '  .sv2 .sv2-legacy .sv2-price-table th', str_replace("\r", '', $css), 'price table is tightened on phones');
+    }
+
+    public function test_process_timeline_block_keeps_its_home_look_inside_service_pages(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('.sv2 .sv2-legacy .sv2-on-dark .hv2-step-badge span:not(.badge) { color: var(--green) !important; }', $css, 'step number stays readable on its white badge');
+        $this->assertStringContainsString('.sv2 .sv2-legacy .hv2-process h2::before { display: none; }', $css);
+    }
+
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void
     {
         $master = file_get_contents(resource_path('views/web/home-v2/master.blade.php'));

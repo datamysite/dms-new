@@ -408,3 +408,120 @@
     }
   }
 })();
+
+/* == Card carousels stored in database sections: [data-sv2-carousel] with .sv2-car-viewport / -prev / -next ==
+   scroll-snap does the work; the arrows scroll one view at a time. Layout is only read on a click or a scroll frame (never at start-up). */
+(function () {
+  'use strict';
+  var root = document.getElementById('hv2');
+  if (!root || !root.classList.contains('sv2')) return;
+  Array.prototype.slice.call(root.querySelectorAll('[data-sv2-carousel]')).forEach(function (box) {
+    var vp = box.querySelector('.sv2-car-viewport'), prev = box.querySelector('.sv2-car-prev'), next = box.querySelector('.sv2-car-next');
+    if (!vp || !prev || !next) return;
+    var raf = 0;
+    var sync = function () {
+      raf = 0;
+      prev.disabled = vp.scrollLeft <= 2;
+      next.disabled = vp.scrollLeft + vp.clientWidth >= vp.scrollWidth - 2;
+    };
+    var queue = function () { if (!raf) raf = requestAnimationFrame(sync); };
+    var go = function (dir) {
+      var card = vp.querySelector('.sv2-format-card, .sv2-car-track > *');
+      var track = vp.firstElementChild, gap = track ? parseFloat(getComputedStyle(track).columnGap) || 0 : 0;
+      var step = card ? card.getBoundingClientRect().width + gap : vp.clientWidth;
+      var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      vp.scrollBy({ left: dir * step, behavior: reduce ? 'auto' : 'smooth' });
+    };
+    prev.addEventListener('click', function () { go(-1); });
+    next.addEventListener('click', function () { go(1); });
+    vp.addEventListener('scroll', queue, { passive: true });
+    vp.addEventListener('keydown', function (e) { if (e.key === 'ArrowRight') { e.preventDefault(); go(1); } else if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); } });
+    prev.disabled = true;   /* starts at the first card; the first scroll frame corrects both buttons */
+  });
+})();
+
+/* == Location map stored in a database section: [data-sv2-locations] with a .sv2-loc-map box and .sv2-loc-card cards ==
+   Real map = Leaflet (vendored in assets/vendor/leaflet) + OpenStreetMap tiles. Nothing is fetched or run until the map box is within
+   ~400px of the viewport (third-party-light page policy); until then, and without JavaScript, the cards are a plain list.
+   Each card carries its marker position in data-lat / data-lng; one card at a time follows the selected marker. */
+(function () {
+  'use strict';
+  var root = document.getElementById('hv2');
+  if (!root || !root.classList.contains('sv2')) return;
+  Array.prototype.slice.call(root.querySelectorAll('[data-sv2-locations]')).forEach(function (box) {
+    var mapEl = box.querySelector('.sv2-loc-map');
+    var cards = Array.prototype.slice.call(box.querySelectorAll('.sv2-loc-card'));
+    if (!mapEl || !cards.length) return;
+    var markers = {};
+    var show = function (id) {
+      cards.forEach(function (c) { c.hidden = c.getAttribute('data-loc') !== id; });
+      Object.keys(markers).forEach(function (k) {
+        var el = markers[k].getElement && markers[k].getElement();
+        if (el) el.classList.toggle('is-on', k === id);
+        markers[k].setZIndexOffset(k === id ? 1000 : 0);
+      });
+    };
+    var first = cards[0].getAttribute('data-loc');
+    show(first);
+
+    var asset = function (tag, url, done) {
+      var el = document.createElement(tag);
+      if (tag === 'link') { el.rel = 'stylesheet'; el.href = url; } else { el.src = url; el.async = true; }
+      el.onload = done;
+      document.head.appendChild(el);
+    };
+    var build = function () {
+      if (!window.L) return;
+      var c = (mapEl.getAttribute('data-center') || '25.18,55.27').split(',').map(parseFloat);
+      var map = L.map(mapEl, {
+        center: c, zoom: parseInt(mapEl.getAttribute('data-zoom'), 10) || 11,
+        scrollWheelZoom: false, dragging: !L.Browser.mobile, tap: false, worldCopyJump: false
+      });
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      /* wheel zoom only after a click on the map, so the page keeps scrolling normally */
+      map.on('click', function () { map.scrollWheelZoom.enable(); });
+      mapEl.addEventListener('mouseleave', function () { map.scrollWheelZoom.disable(); });
+      cards.forEach(function (card) {
+        var id = card.getAttribute('data-loc'), name = (card.querySelector('h3') || {}).textContent || id;
+        var html = document.createElement('div'); html.className = 'sv2-loc-wrap';
+        var dot = document.createElement('span'); dot.className = 'sv2-loc-dot'; dot.setAttribute('aria-hidden', 'true');
+        var tip = document.createElement('span'); tip.className = 'sv2-loc-tip'; tip.textContent = name;
+        html.appendChild(dot); html.appendChild(tip);
+        var m = L.marker([parseFloat(card.getAttribute('data-lat')), parseFloat(card.getAttribute('data-lng'))], {
+          icon: L.divIcon({ className: 'sv2-loc-mk', html: html, iconSize: [44, 44], iconAnchor: [22, 22] }),
+          title: name, alt: name, keyboard: true
+        }).addTo(map);
+        m.on('click', function () {
+          show(id);
+          /* stacked layout (phones / tablets): bring the card under the map into view */
+          if (window.matchMedia && matchMedia('(max-width: 991px)').matches) {
+            var open = box.querySelector('.sv2-loc-card:not([hidden])');
+            if (open && open.scrollIntoView) open.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }
+        });
+        markers[id] = m;
+      });
+      var loading = mapEl.querySelector('.sv2-loc-loading'); if (loading) loading.remove();
+      show(first);
+      mapEl.setAttribute('data-ready', '1');
+    };
+    var started = false;
+    var start = function () {
+      if (started) return; started = true;
+      var css = mapEl.getAttribute('data-leaflet-css'), js = mapEl.getAttribute('data-leaflet-js');
+      if (!js) return;
+      if (css) asset('link', css, function () {});
+      asset('script', js, build);
+    };
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (en) {
+        if (en.some(function (e) { return e.isIntersecting; })) { io.disconnect(); start(); }
+      }, { rootMargin: '400px 0px' });
+      io.observe(mapEl);
+    } else {
+      window.addEventListener('load', function () { setTimeout(start, 3000); });
+    }
+  });
+})();
