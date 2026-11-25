@@ -30,6 +30,10 @@ Project-specific notes for applying them (no Vite: use `defer` and the static-as
   `App\Http\Middleware\RewriteProductionUrls` rewrites them (and redirect `Location` headers) to **`APP_URL`** when `APP_URL` is not the live site. So on staging set `APP_URL=https://staging.datamysite.com` in `.env` (then `php artisan config:clear`); production keeps `https://datamysite.com` and is never touched.
 - **Local XAMPP** is served from a sub-folder: set `APP_URL=http://localhost/datamysite` in the local `.env`. The same middleware then also prefixes root-relative links (`href="/influencer-marketing"` -> `/datamysite/influencer-marketing`, ~200 per page come from templates and stored content), otherwise they jump to `http://localhost/...`. A path in `APP_URL` is the only switch; staging/production (no path) are never touched.
 
+## gstack
+- Use the `/browse` skill from gstack for all web browsing (opening pages, reading them, clicking through flows, screenshots, console errors).
+- Never use the `mcp__claude-in-chrome__*` tools.
+
 ## Conventions
 - Redesigned page set: each page has its own view, CSS and JS (`<page>-v2.*`), shares the Home V2 design system (`home-v2.css`/`home-v2.js`), brand colours only, and keeps the original URLs and SEO text.
 - Do not change backend logic, routes or the database when the task is a frontend/performance task unless asked.
