@@ -89,3 +89,8 @@ Rewritten pages = `config/v2.php` `fast_pages`; `tests/Feature/Seo/RewrittenPage
 ### Building wraps (2026-11-26, mobile 94-96)
 - Five runs on identical code: SI 3.3 / 3.4 / 3.5 / 3.6 / 5.0 s, LCP 2.4-2.6 s, TBT 0-190 ms, CLS 0. The filmstrip showed the whole first screen in one paint at ~1.9 s; only the hero light streaks and the WhatsApp button changed later.
 - Real fix was bytes: hero w960 118 -> 83 KB, al-khail w720 57 -> 39 KB, hub location photos 128-272 -> 63-133 KB.
+
+### Hoarding (2026-11-26, a UI run said mobile SI 4.0)
+- Seven API runs on identical code: perf 97-99 six times and 77 once; SI 2.9-3.2 s five times, 3.8 and 4.7 s twice; FCP 1.4, LCP 2.0-2.1, CLS 0; server response 120-130 ms.
+- Filmstrips of four of them: the two good ones paint the finished hero once at ~1.7 s; in the two slow ones nothing is painted until ~2.5-2.6 s, and in the worst (also TBT 810 ms) that first paint is the loader curtain. The curtain was not changed (design decision).
+- Only change: al-khail road photo w720 40 -> 32 KB, w960 89 -> 73 KB (shared with Building Wraps).
