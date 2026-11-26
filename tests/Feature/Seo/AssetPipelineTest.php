@@ -486,8 +486,9 @@ class AssetPipelineTest extends TestCase
     {
         $css = file_get_contents(public_path('assets/css/service-v2.css'));
         $this->assertStringContainsString('rgba(8, 46, 35, .86) 0%, rgba(8, 46, 35, .9) 50%, rgba(8, 46, 35, .95) 100%', $css, 'phone hero keeps the dark green tint behind the copy');
-        $this->assertStringContainsString('.sv2 .sv2-process .hv2-step { display: grid; grid-template-columns: 60px minmax(0, 1fr)', $css);
-        $this->assertStringContainsString('.sv2 .sv2-cta .hv2-cta-bg, .sv2 .sv2-cta .hv2-globe { display: none; }', $css);
+        $home = file_get_contents(public_path('assets/css/home-v2.css'));   // shared by the home page and the service pages
+        $this->assertStringContainsString('.hv2-process .hv2-step { display: grid; grid-template-columns: 60px minmax(0, 1fr)', $home);
+        $this->assertStringContainsString('.hv2-cta .hv2-cta-bg, .hv2-cta .hv2-globe { display: none; }', $home);
         $this->assertStringContainsString('.hs-foot-grid { grid-template-columns: repeat(2, minmax(0, 1fr))', file_get_contents(public_path('assets/css/home-v2-shell.css')));
     }
 }
