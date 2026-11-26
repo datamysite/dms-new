@@ -205,7 +205,7 @@
 		/* also the empty .aside-block column that the site's aside.js fills with a form via AJAX */
 		if (stripos($html, '<form') === false && stripos($html, 'aside-block') === false) return $html;
 		[$d, $x] = $sv2Dom($html);
-		$hits = $x->query('//*[contains(concat(" ", normalize-space(@class), " "), " aside-form ")] | //*[contains(concat(" ", normalize-space(@class), " "), " aside-block ")] | //form');
+		$hits = $x->query('//*[contains(concat(" ", normalize-space(@class), " "), " aside-form ")] | //*[contains(concat(" ", normalize-space(@class), " "), " aside-block ")] | //form[not(contains(concat(" ", normalize-space(@class), " "), " sv2-lead-form "))]');
 		if (!$hits->length) return $html;
 		foreach (iterator_to_array($hits) as $node) {
 			if (!$node->parentNode) continue;                  /* already removed with an ancestor */
@@ -500,8 +500,10 @@
 		@elseif($sec->type === 'faq')
 			@php $sv2FaqHtml = $sv2Render($sec); $sv2Faqs = $sv2FaqParse($sv2FaqHtml); $sv2FaqH = $sv2FaqTitle($sv2FaqHtml); @endphp
 			@if(count($sv2Faqs))
-			@if($sv2FaqSchema){!! v2_faq_schema($sv2Faqs) !!}@endif
-			<section class="hv2-section hv2-tint sv2-faq" id="sv2-faq">
+			{{-- one FAQPage block per page, even when two FAQ rows exist (the new one and the old one the editor has not removed yet); ids carry the row id so they stay unique --}}
+			@if($sv2FaqSchema && empty($sv2FaqSchemaDone)){!! v2_faq_schema($sv2Faqs) !!}@php $sv2FaqSchemaDone = true; @endphp@endif
+			<section class="hv2-section hv2-tint sv2-faq" id="sv2-faq{{ empty($sv2FaqSeen) ? '' : '-' . $sec->id }}">
+			@php $sv2FaqSeen = true; @endphp
 				<div class="hv2-container sv2-faq-grid">
 					<div class="sv2-faq-side">
 						{{-- same heading tag + text as the live FAQ block --}}
@@ -517,13 +519,13 @@
 						@foreach($sv2Faqs as $k => $f)
 							<div class="hv2-faq-item {{ $k === 0 ? 'is-open' : '' }}" data-reveal="up" data-delay="{{ min($k, 4) }}">
 								<h3 class="hv2-faq-h">
-									<button type="button" class="hv2-faq-q" id="sv2-faq-q{{ $k }}" aria-expanded="{{ $k === 0 ? 'true' : 'false' }}" aria-controls="sv2-faq-a{{ $k }}">
+									<button type="button" class="hv2-faq-q" id="sv2-faq{{ $sec->id }}-q{{ $k }}" aria-expanded="{{ $k === 0 ? 'true' : 'false' }}" aria-controls="sv2-faq{{ $sec->id }}-a{{ $k }}">
 										<span class="hv2-faq-num" data-num="{{ str_pad($k + 1, 2, '0', STR_PAD_LEFT) }}" aria-hidden="true"></span>
 										<span class="hv2-faq-text">{{ $f[0] }}</span>
 										<span class="hv2-faq-tog" aria-hidden="true"></span>
 									</button>
 								</h3>
-								<div class="hv2-faq-a" id="sv2-faq-a{{ $k }}" role="region" aria-labelledby="sv2-faq-q{{ $k }}">
+								<div class="hv2-faq-a" id="sv2-faq{{ $sec->id }}-a{{ $k }}" role="region" aria-labelledby="sv2-faq{{ $sec->id }}-q{{ $k }}">
 									<div>{!! $f[1] !!}</div>
 								</div>
 							</div>

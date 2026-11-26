@@ -1,4 +1,4 @@
-# DataMySite — codebase map (as of 2026-11-25, last commit b5623e1)
+# DataMySite — codebase map (as of 2026-11-26, last commit 9ea5b48 + uncommitted service-v2 work)
 
 Read this before exploring. Stack, performance rules, asset build and staging links are in `CLAUDE.md` (not repeated here).
 **Update this file** when you add/move routes, controllers, views, assets, configs, tools or tests.
@@ -23,6 +23,7 @@ Read this before exploring. Stack, performance rules, asset build and staging li
 | ~100 service URLs (`/outdoor-advertising/...`, `/transit-media/...`, `/seo-services/...`, `/radio-advertising/...` etc.) | `ServiceController@<camelName>` → `web.services-new.master-service` |
 | `/v2/*`, `/*-new`, `/blogs-new/*`, `/home-new` | 301 to the original URL (old previews) |
 | POST `/enquiry`, `/enquiryHelp`, `/enquiryLite` | `EnquiryController` |
+| POST `/enquiry/planner` (`throttle:10,1`) | `EnquiryController@planner` + `EnquiryPlannerRequest` (extends `EnquiryRequest`): lead form of the service sections (adds budget and `dates` → `preferred_dates`; no file upload). `service` is fixed server-side ("Outdoor Advertising"). The DB section form gets its URL from `{{ route('enquiry.planner.submit') }}` + `@csrf` (marked `form.sv2-lead-form`, the only form the service template keeps). JSON answer: `{success, message, reference (enquiry id), emailed (visitor confirmation mail sent)}`. |
 | POST `/subscribe`, GET `/unsubscribe` | `NewsletterController` |
 | `/get-google-reviews` | `ReviewController` (`Services/GooglePlaces`) |
 | `/get-aside` | `WebController@getAside` → `web.includes.elements.aside` |
@@ -44,6 +45,9 @@ Legacy (non-`New`) methods in `WebController`/`BlogController` and `ServiceContr
 - Section HTML is Blade stored in the DB (edit via MCP/API, revisions kept). Old per-service views remain in `web/services-new/<category>/`.
 - `renderService()` (→ `web.services-new.db-page`) is used by one method only; that view file does not exist.
 
+- **DB sections that reuse home blocks** (all inside `.sv2-legacy`, so `service-v2.css` re-applies the home sizes): `what-our-clients-say` (testimonial slider, same `.hv2-q-*` markup driven by `home-v2.js`), `outdoor-advertising-dubai-faqs` (type `faq`: cards `h5.faq-title` + `.card-body`; the template renders H2 + H3 accordion, one FAQPage schema per page, ids carry the row id), `outdoor-advertising-quote-cta` (home "Schedule Your Appointment Today" block, `#hv2-cta`, button `data-sv2-open` opens the quote modal). The same 10 outdoor FAQs are also rows of the home FAQ array (topic `outdoor`).
+- **Quote modal** (DB section `speak-with-our-planning-team`): the section is centered copy + a `[data-sv2-open="sv2-quote-modal"]` button; the compact form (2 fields per row, placeholders, hero-form styling via `.hv2-field`) sits in `.sv2-modal`. `service-v2.js` moves the modal to the end of `#hv2` (out of the legacy wrapper), traps focus, closes on Esc/backdrop/`[data-sv2-close]`; after a successful send the modal switches to `.is-sent` (thank-you state with reference). Any DB section can reuse the modal pattern.
+
 ## Views (`resources/views`)
 - `web/home-v2/`: `master.blade.php` (layout; sections `v2lite`, `v2crit`, `v2form`, `v2keep`, `metaAddition`, `addStyle`, `content`, `addScript`), `header`, `footer`, `popups`, `schema` (JSON-LD), `breadcrumbs`, `clients-marquee`, `contact-cards`, `helpers.php`.
 - Pages: `web/{home,about,faq,contact,privacy,terms,case-studies,services-landing,blogs,blogs-categories,blog-detail}-v2.blade.php`.
@@ -51,7 +55,7 @@ Legacy (non-`New`) methods in `WebController`/`BlogController` and `ServiceContr
 - Legacy, unused by routes: `web/index*.blade.php`, `web/{about,faq,contact,services,terms,privacy-policy,case-studies}.blade.php`, `web/includes/*` (old master/header/footer), `web/blogs/*`, `datamysite-revamp 5.html`.
 
 ## Helpers (`resources/views/web/home-v2/helpers.php`)
-`v2_url` (internal link → local URL), `v2_links` (rewrite links in stored HTML), `v2_blog_url`, `v2_asset` (serves `.min` via md5 `public/assets/min-manifest.json`, adds `?v=`), `v2_img` (WebP + width/height + srcset + `?v=`), `v2_clients`, `seo_canonical`, `v2_faq_schema`, `v2_snippet_has` (avoid duplicate snippet schema), `v2_biz` (reads `config/business.php`), `v2_wa_url` (WhatsApp link), `v2_case_studies`.
+`v2_url` (internal link → local URL), `v2_links` (rewrite links in stored HTML), `v2_blog_url`, `v2_asset` (serves `.min` via md5 `public/assets/min-manifest.json`, adds `?v=`), `v2_img` (WebP + width/height + srcset + `?v=`), `v2_clients`, `seo_canonical`, `v2_faq_schema`, `v2_snippet_has` (avoid duplicate snippet schema), `v2_biz` (reads `config/business.php`), `v2_wa_url` (WhatsApp link), `v2_case_studies`, `v2_reviews` (client reviews shared by the home slider and the service "What Our Clients Say" section), `v2_google_score` (rating/total/stars from the cached Google data, never calls Google).
 
 ## Assets (`public/assets`)
 - Per page: `css/<page>-v2.css` + `js/<page>-v2.js` and `.min` siblings (pages: about, blog-detail, blogs, blogs-categories, case-studies, contact, faq, privacy, service, services-landing, terms).
@@ -60,12 +64,12 @@ Legacy (non-`New`) methods in `WebController`/`BlogController` and `ServiceContr
 - Images: `img/` (WebP siblings `-w480/960/1440`), `vendor/` (Bootstrap, Swiper, intl-tel-input).
 
 ## Data (models in `app/Models` → table)
-`Services`→services, `ServiceSection`→service_sections, `ServiceSectionRevision`, `Blogs`→blogs, `Author`→authors, `Categories`, `BlogTags`→blogs_tags, `TagData`→blog_tags_data, `MetaTags`→meta_tags, `SnippetCode`→snippet_code, `Redirect`/`RedirectRevision`, `DmsAdminRevision`, `Enquiry`→enquiries, `Newsletter`, `Publications`→media_publications, `ChatEvent`, `Admin`, `User`. (`Blogs-old.php` is dead.)
+`Services`→services, `ServiceSection`→service_sections, `ServiceSectionRevision`, `Blogs`→blogs, `Author`→authors, `Categories`, `BlogTags`→blogs_tags, `TagData`→blog_tags_data, `MetaTags`→meta_tags, `SnippetCode`→snippet_code, `Redirect`/`RedirectRevision`, `DmsAdminRevision`, `Enquiry`→enquiries (columns beyond the migration, added directly in the DB: `website_link`, `budget`, `preferred_dates`; `photo_path` exists but is unused), `Newsletter`, `Publications`→media_publications, `ChatEvent`, `Admin`, `User`. (`Blogs-old.php` is dead.)
 
 ## Backend services
 - `app/Services/PageSpeedService.php` (PSI client, `TARGETS_MOBILE/DESKTOP`), `GooglePlaces.php` (reviews, cached).
 - `app/Services/DmsAdmin/`: `IndexNow`, `LiteSpeedPurge`, `PageInspector`, `SitemapBuilder`, `TemplateGuard`.
-- `app/Support/Redirects/`: `RedirectMap`, `RedirectRules`. `app/Helpers/Mailer.php`. `app/Observers/DmsAdminPublishObserver.php`.
+- `app/Support/Redirects/`: `RedirectMap`, `RedirectRules`. `app/Helpers/Mailer.php` (`sendMail(subject, to, name, view, data, attachments = [])`, never throws). `app/Observers/DmsAdminPublishObserver.php`.
 - `app/Mcp/ApiBridge.php` + `WebsiteTools.php`: the 47 tools of the "DMS - Connector" MCP (meta, services/sections, blogs, redirects, templates, file redirects, cache, IndexNow, sitemap, inspect).
 - Commands: `app:generate-sitemap`, `seo:pagespeed` (`--base=staging --strategy=both --path=/ --fresh`).
 
@@ -88,5 +92,20 @@ Run: `D:\xampp\php\php.exe artisan test` (PHP is not on PATH).
 ## Gotchas
 - `git` is not on the PowerShell PATH: use the Bash tool (Git Bash).
 - Stored DB content has absolute `https://datamysite.com` links; the middleware rewrites them — don't "fix" the data.
+- **No migration files for schema changes**: tables are altered directly in the DB (local and production), so `database/migrations` is out of date (e.g. `enquiries`). Give the SQL to the user; deploy code only after the columns exist.
+- Local `.env` uses the real SMTP: a valid enquiry submit emails the actual team. Test with `Mail::fake()` (feature tests) or send invalid input.
 - New web routes must go above the `/{blog_slug}` catch-all.
 - After any CSS/JS edit: run `tools/build-assets.ps1` (else the manifest serves the old `.min`).
+
+## Release flow
+Work locally → commit on branch `staging` → push `origin staging` (staging server pulls it, `APP_URL=https://staging.datamysite.com`) → user verifies → user merges/pushes to `main` (production). Never push `main` without the user's go-ahead. **Database content (service sections, meta tags, blogs) is NOT in git**: it is changed locally through the local API (`/api/v1`, bearer `BLOG_API_TOKEN` from `.env`, never print it) and on production/staging through the "DMS - Connector" MCP tools (`update_service_section`, `create_service_section`, `purge_cache`, `inspect_page`). Order for a release that needs new DB structure: SQL on the server DB → deploy code → create/update DB sections → `purge_cache` → test.
+
+## Structural changes log (newest first; read this when setting up a new session or machine)
+**2026-11 · /outdoor-advertising redesign (DB-driven page) + quote form**
+- **Page = DB rows of service 1** (`service_sections`, ordered by `sort_order`, Blade stored in the DB). Visible order: `hero`(20) → brands-we-work-with(22) → our-successful-projects(24, 4 stat boxes) → dubai-outdoor-advertising-explained(26) → your-outdoor-advertising-agency-in-dubai(28) → outdoor-advertising-formats-in-dubai(30, carousel) → prime-outdoor-advertising-locations-in-dubai(32, Leaflet map) → latest-ooh-campaigns(34, home case-study slider) → outdoor-advertising-dubai-prices-2026(36, table) → how-we-run-your-outdoor-campaign(38, home process) → speak-with-our-planning-team(39, CTA + quote modal) → what-our-clients-say(40, home testimonials) → outdoor-advertising-dubai-faqs(41, type `faq`) → outdoor-advertising-quote-cta(42, home "Schedule Your Appointment Today"). Old rows kept but hidden (`is_active=false`): why-outdoor-advertising-works-in-dubai, practice, clients, case-studies, our-outdoor-advertising-services, prime-locations-we-cover, blogs, old faq. `styles`(1) and `scripts`(11) stay active.
+- **Template** `web/services-v2/page.blade.php`: hero flag class `sv2-hero-title-first`; keeps ONE extra form (`form.sv2-lead-form`, all other forms in DB content are stripped); FAQ rows: unique ids per row (`sv2-faq<rowId>-q<k>`), one FAQPage schema per page; legacy `service.css` is versioned.
+- **Reusable blocks in DB sections** (`.sv2-legacy` wrapper re-skinned by scoped rules in `service-v2.css`): carousel `[data-sv2-carousel]`, locations map (vendored Leaflet 1.9.4 in `public/assets/vendor/leaflet/`, lazy init), price table, home slider/process/stat/testimonial/CTA markup reused as-is so `home-v2.js` drives them, modal `.sv2-modal` opened by `[data-sv2-open="<id>"]` (focus trap, Esc, page behind `inert`, z-index 10090). New helpers: `v2_reviews()`, `v2_google_score()` (`web/home-v2/helpers.php`; home now reads reviews from there).
+- **Quote form**: `POST /enquiry/planner` → `EnquiryController@planner` + `EnquiryPlannerRequest`; saves `enquiries` (+ `budget`, `preferred_dates`, set by hand in the DB; `photo_path` exists but unused, the photo upload was dropped), mails visitor + team (`web/emails/enquiry.blade.php` shows budget/dates), JSON `{success,message,reference,emailed}`, throttled 10/min. Production SQL: `ALTER TABLE enquiries ADD COLUMN budget VARCHAR(60) NULL, ADD COLUMN preferred_dates VARCHAR(120) NULL;`.
+- **Home FAQ**: the 10 outdoor FAQs are also rows of the home FAQ array (topic `outdoor`) — keep both copies in sync.
+- Earlier in the same stretch: blogs listing/detail redesign (sticky consultation form), chatbot hidden by default (`CHATBOT_ENABLED`), global-marketing images hidden on phones, hub-guides pseudo-element hidden on mobile, bullets fix in legacy sections.
+- Tests: `AssetPipelineTest` pins every one of these (modal, carousels, map, FAQ ids, shared helpers); `EnquiryValidationTest` covers `/enquiry/planner`; `LinksTest` exempts `/outdoor-advertising` from the "See All Blogs" rule.

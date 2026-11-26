@@ -74,6 +74,12 @@
                 @if(!empty($service))
                     <strong>Service: </strong>{{$service}}<br>
                 @endif
+                @if(!empty($budget))
+                    <strong>Budget: </strong>{{$budget}}<br>
+                @endif
+                @if(!empty($dates))
+                    <strong>Preferred dates: </strong>{{$dates}}<br>
+                @endif
                 @if(!empty($description))
                     <strong>Message:</strong><br>
                     {{$description}}

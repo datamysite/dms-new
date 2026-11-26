@@ -24,7 +24,10 @@ class LinksTest extends TestCase
     {
         // the stored section text links to one category (/blogs/pr-and-media-relations); the page must send visitors to /blogs
         $paths = array_merge(self::SERVICE_PAGES, ['/transit-media', '/digital-advertising/dooh-advertising', '/celebrity-marketing', '/public-relations-pr-coverage']);
+        /* pages whose blog row was deliberately taken out of the layout (the redesigned /outdoor-advertising ends with the final CTA) */
+        $withoutBlogs = ['/outdoor-advertising'];
         foreach ($paths as $path) {
+            if (in_array($path, $withoutBlogs, true)) continue;
             $html = $this->html($path);
             if (!preg_match('#<a\b([^>]*)><span>See All Blogs#', $html, $m)) {
                 $this->fail("$path has no \"See All Blogs\" link");

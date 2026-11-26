@@ -9,6 +9,7 @@ use App\Helpers\Mailer;
 use App\Http\Requests\EnquiryRequest;
 use App\Http\Requests\EnquiryLiteRequest;
 use App\Http\Requests\HelpRequest;
+use App\Http\Requests\EnquiryPlannerRequest;
 
 class EnquiryController extends Controller
 {
@@ -66,6 +67,35 @@ class EnquiryController extends Controller
 
 
         return response()->json($response, 200);
+    }
+
+    /** Lead form of the service pages (outdoor advertising planner): enquiry + budget and preferred dates. */
+    public function planner(EnquiryPlannerRequest $request){
+        $data = $request->validated();
+        $data['service'] = empty($data['service']) ? 'Outdoor Advertising' : $data['service'];
+        $data['budget'] = $data['budget'] ?? '';
+        $data['dates'] = $data['dates'] ?? '';
+
+        $n = new Enquiry;
+        $n->name = $data['name'];
+        $n->email = $data['email'];
+        $n->phone = $data['phone'];
+        $n->service = $data['service'];
+        $n->description = $data['description'];
+        $n->budget = $data['budget'] === '' ? null : $data['budget'];
+        $n->preferred_dates = $data['dates'] === '' ? null : $data['dates'];
+        $n->save();
+
+        $confirmed = Mailer::sendMail('Thank You for Contacting Us | DMS', array($data['email']), 'DMS', 'web.emails.response', $data);
+        Mailer::sendMail('#'.$n->id.' - New Inquiry Received! | DMS', ['waseem@datamysite.com', 'pooja.u@datamysite.com', 'abhishek@datamysite.com'], 'DMS', 'web.emails.enquiry', $data);
+
+        // reference + whether the visitor's confirmation email really went out: the thank-you popup shows both
+        return response()->json([
+            'success' => 'success',
+            'reference' => $n->id,
+            'emailed' => $confirmed,
+            'message' => 'Thank you. A planner will reply within 60 minutes with available sites and prices.',
+        ], 200);
     }
 
     public function enquiryHelp(HelpRequest $request){

@@ -82,8 +82,7 @@
   });
 
   /* == 3 · Page FAQ (V2 accordion, one open at a time) ===================== */
-  var faq = root.querySelector('[data-sv2-faq]');
-  if (faq) {
+  $$('[data-sv2-faq]').forEach(function (faq) {   /* every FAQ list of the page (a new FAQ row and an old one can coexist) */
     var items = $$('.hv2-faq-item', faq);
     faq.addEventListener('click', function (e) {
       var q = e.target.closest('.hv2-faq-q'); if (!q) return;
@@ -97,7 +96,7 @@
       var qs = items.map(function (it) { return it.querySelector('.hv2-faq-q'); }), i = qs.indexOf(q), n = qs.length;
       qs[e.key === 'Home' ? 0 : e.key === 'End' ? n - 1 : (i + (e.key === 'ArrowDown' ? 1 : -1) + n) % n].focus();
     });
-  }
+  });
 
   /* == 3b · "See More" strips (publications, uni strips): the site's main.js expands them; here we
         (a) hide the strip when the list already fits (nothing hidden), (b) make sure it disappears once expanded */
@@ -523,5 +522,151 @@
     } else {
       window.addEventListener('load', function () { setTimeout(start, 3000); });
     }
+  });
+})();
+
+/* == Lead form stored in a database section: form[data-sv2-lead] ==
+   Same country-code phone widget as the hero form (built when the visitor touches the form), inline validation.
+   Submission goes to data-endpoint (set in the database content; POST /enquiry/planner). With an empty endpoint the form validates and says nothing was sent.
+   The JSON answer ({success, message, reference, emailed}) switches the quote modal to its thank-you state. */
+(function () {
+  'use strict';
+  var root = document.getElementById('hv2');
+  if (!root || !root.classList.contains('sv2')) return;
+  Array.prototype.slice.call(root.querySelectorAll('form[data-sv2-lead]')).forEach(function (form) {
+    var phone = form.querySelector('input[type="tel"]'), full = form.querySelector('input[name="phone"]');
+    var status = form.querySelector('.sv2-lead-status');
+    var iti = null, tries = 0, building = false;
+
+    var initPhone = function () {
+      if (iti || !phone) return;
+      if (!window.intlTelInput) { if (tries++ < 100) setTimeout(initPhone, 400); return; }   /* the library arrives with the page's delayed scripts */
+      if (building) return; building = true;
+      var build = function () {
+        iti = window.intlTelInput(phone, { initialCountry: 'ae', separateDialCode: true });
+        var sync = function () { full.value = iti.getNumber(); };
+        ['keyup', 'change', 'countrychange'].forEach(function (ev) { phone.addEventListener(ev, sync); });
+      };
+      if (window.v2IntlCss) window.v2IntlCss(build); else build();
+    };
+    /* the visitor touched the form: fetch the phone library now instead of waiting for the delayed-script queue */
+    form.addEventListener('focusin', function () {
+      if (!window.intlTelInput) {
+        var tag = document.querySelector('script[src*="intlTelInputWithUtils"]');
+        if (tag) { var s = document.createElement('script'); s.src = tag.getAttribute('src'); s.async = true; document.head.appendChild(s); }
+      }
+      if (window.v2IntlCss) window.v2IntlCss();
+      initPhone();
+    }, { once: true });
+
+    var fieldOf = function (el) { return el && el.closest('.sv2-field'); };
+    var setErr = function (el, msg) {
+      var f = fieldOf(el), out = f && f.querySelector('.sv2-field-err');
+      el.classList.toggle('is-invalid', !!msg);
+      if (out) out.textContent = msg || '';
+      return !msg;
+    };
+    var validate = function () {
+      var bad = null, mark = function (el, msg) { if (!setErr(el, msg) && !bad) bad = el; };
+      var name = form.elements.name, email = form.elements.email, msg = form.elements.description;
+      mark(name, /^[A-Za-z\s]{3,50}$/.test((name.value || '').trim()) ? '' : 'Please enter your name (letters only, at least 3).');
+      mark(email, /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test((email.value || '').trim()) ? '' : 'Please enter a valid email address.');
+      full.value = iti ? iti.getNumber() : (phone.value || '').trim();
+      mark(phone, /^\+[0-9]{7,14}$/.test(full.value) ? '' : 'Please enter a valid phone number with its country code.');
+      mark(msg, (msg.value || '').trim().length >= 5 ? '' : 'Please tell us a little about what you need.');
+      return bad;
+    };
+    var say = function (cls, text) { status.className = 'sv2-lead-status' + (cls ? ' ' + cls : ''); status.textContent = text || ''; };
+    ['input', 'change'].forEach(function (ev) { form.addEventListener(ev, function (e) { if (e.target.classList && e.target.classList.contains('is-invalid')) setErr(e.target, ''); }); });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      say('', '');
+      var bad = validate();
+      if (bad) { bad.focus(); return; }
+      var endpoint = form.getAttribute('data-endpoint');
+      if (!endpoint) { say('is-err', 'Thank you. This form is not connected to our enquiry system yet, so nothing was sent. Please use the WhatsApp number above.'); return; }
+      var btn = form.querySelector('button[type="submit"]'); if (btn) btn.disabled = true;
+      fetch(endpoint, { method: 'POST', body: new FormData(form), credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest', 'Accept': 'application/json' } })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+          data = data || {};
+          if (data.success === 'success') {
+            form.reset();
+            var modal = form.closest('.sv2-modal'), thanks = modal && modal.querySelector('.sv2-thanks');
+            if (thanks) {   /* in the quote modal: the form is replaced by the thank-you state (reference number, email note) */
+              var q = function (s) { return thanks.querySelector(s); };
+              if (data.message) q('.sv2-thanks-msg').textContent = data.message;
+              q('.sv2-thanks-ref').hidden = !data.reference; if (data.reference) q('.sv2-thanks-ref b').textContent = '#' + data.reference;
+              q('.sv2-thanks-mail').hidden = !data.emailed;
+              modal.classList.add('is-sent'); thanks.focus();
+            } else say('is-ok', data.message || 'Thank you. A planner will reply within 60 minutes.');
+          }
+          else {
+            var m = data.message; if (data.errors) { var k = Object.keys(data.errors)[0]; if (k) m = data.errors[k][0]; }
+            say('is-err', m || 'Something went wrong. Please try again.');
+          }
+        })
+        .catch(function () { say('is-err', 'Something went wrong. Please try again.'); })
+        .then(function () { if (btn) btn.disabled = false; });
+    });
+  });
+})();
+
+/* == Modal (.sv2-modal, opened by [data-sv2-open="<id>"], closed by [data-sv2-close], Esc or a click on the backdrop) ==
+   Used by the quote form of the planning section. The modal is moved to the end of #hv2 so no legacy wrapper style or reveal transform reaches it
+   (the design tokens live on .hv2). Nothing here reads layout at start-up: it only wires events. Focus is trapped while open and returned on close. */
+(function () {
+  'use strict';
+  var root = document.getElementById('hv2');
+  if (!root || !root.classList.contains('sv2')) return;
+  var modals = Array.prototype.slice.call(root.querySelectorAll('.sv2-modal'));
+  if (!modals.length) return;
+  modals.forEach(function (m) { root.appendChild(m); });
+  var current = null, opener = null, frozen = [];
+
+  /* everything outside the modal (header, footer, floating buttons, page) becomes inert: no click, no Tab, no screen-reader access while it is open */
+  var freeze = function (m) {
+    frozen = [];
+    for (var node = m; node && node !== document.documentElement; node = node.parentNode) {
+      Array.prototype.forEach.call(node.parentNode.children, function (sib) {
+        if (sib !== node && sib.nodeName !== 'SCRIPT' && sib.nodeName !== 'STYLE' && !sib.inert) { sib.inert = true; frozen.push(sib); }
+      });
+    }
+  };
+  var thaw = function () { frozen.forEach(function (el) { el.inert = false; }); frozen = []; };
+
+  var focusables = function (m) {
+    return Array.prototype.filter.call(m.querySelectorAll('a[href], button:not([disabled]), input:not([type="hidden"]):not([disabled]), select, textarea, [tabindex]:not([tabindex="-1"])'),
+      function (el) { return el.offsetParent !== null || el === document.activeElement; });
+  };
+  var close = function () {
+    if (!current) return;
+    current.hidden = true; current.classList.remove('is-sent');
+    document.documentElement.classList.remove('sv2-modal-open'); thaw();
+    var back = opener; current = null; opener = null;
+    if (back && back.focus) back.focus();
+  };
+  var open = function (m, trigger) {
+    if (current) return;
+    current = m; opener = trigger || null; m.hidden = false; freeze(m);
+    document.documentElement.classList.add('sv2-modal-open');
+    var first = m.querySelector('input:not([type="hidden"])') || m.querySelector('.sv2-modal-x');
+    if (first) first.focus();   /* a focus inside the form also starts loading the phone library */
+  };
+
+  document.addEventListener('click', function (e) {
+    var o = e.target.closest && e.target.closest('[data-sv2-open]');
+    if (o) { var m = document.getElementById(o.getAttribute('data-sv2-open')); if (m) { e.preventDefault(); open(m, o); } return; }
+    if (current && (e.target === current || (e.target.closest && e.target.closest('[data-sv2-close]')))) close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!current) return;
+    if (e.key === 'Escape') { close(); return; }
+    if (e.key !== 'Tab') return;
+    var f = focusables(current); if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && (document.activeElement === first || !current.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   });
 })();

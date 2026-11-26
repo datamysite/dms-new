@@ -755,4 +755,82 @@
 .sv2 .sv2-legacy .hv2-process h2::before { display: none; }
 .sv2 .sv2-legacy .sv2-on-dark .hv2-step-badge span:not(.badge) { color: var(--green) !important; }
 .sv2 .sv2-legacy .sv2-on-dark span.hv2-step-no:not(.badge) { color: transparent !important; }
-.sv2 .sv2-legacy .hv2-process h2.hv2-h2 { font-size: clamp(32px, 3.9vw, 58px) !important; line-height: .98 !important; letter-spacing: -.035em; }
+.sv2 .sv2-legacy .hv2-process h2.hv2-h2 { font-size: var(--fs-h2) !important; line-height: .98 !important; letter-spacing: -.035em; }
+/* process step text: the legacy wrapper's heading / paragraph sizes would make the steps bigger than on the home page */
+.sv2 .sv2-legacy .hv2-step h3 { font-size: var(--fs-h3) !important; line-height: 1.15 !important; font-weight: 800; letter-spacing: -.02em; margin: var(--space-5) 0 var(--space-2) !important; padding: 0; }
+.sv2 .sv2-legacy .hv2-step h3::before { display: none; }
+.sv2 .sv2-legacy .hv2-step p { font-size: 15px !important; line-height: 1.7 !important; margin: 0 !important; }
+
+
+/* "Speak With Our Planning Team" (database section): centered call to action; the lead form opens in a modal (.sv2-modal, moved out of the legacy wrapper by service-v2.js) */
+.sv2 .sv2-legacy .sv2-planner { background: var(--green-d, #082e23); }
+.sv2-planner--cta .sv2-planner-copy { max-width: 780px; margin: 0 auto; text-align: center; }
+.sv2 .sv2-legacy .sv2-planner-copy h2 { margin: 0 0 var(--space-4) !important; color: #fff !important; }
+.sv2 .sv2-legacy .sv2-planner-copy p { margin: 0 auto var(--space-5) !important; color: rgba(255, 255, 255, .88) !important; max-width: 62ch; }
+
+html.sv2-modal-open { overflow: hidden; }
+.sv2-modal { position: fixed; inset: 0; z-index: 10090; display: flex; padding: 16px; background: rgba(4, 20, 15, .74); overflow-y: auto; overscroll-behavior: contain; }
+.sv2-modal[hidden] { display: none; }
+.sv2-modal-panel { position: relative; width: min(660px, 100%); margin: auto; padding: clamp(22px, 3vw, 34px); border-radius: 24px; color: #fff;
+  background: linear-gradient(160deg, #0d4f3d, #082e23); border: 1px solid rgba(255, 255, 255, .22); box-shadow: 0 40px 90px -30px rgba(0, 0, 0, .85); }
+.sv2-modal-panel::after { content: ""; position: absolute; left: 24px; right: 24px; bottom: 0; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--green), var(--coral)); }
+.sv2-modal-x { position: absolute; top: 12px; right: 12px; width: 38px; height: 38px; border: 0; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .12); color: #fff; font-size: 15px; cursor: pointer; transition: background .2s; }
+.sv2-modal-x:hover, .sv2-modal-x:focus-visible { background: rgba(255, 255, 255, .24); outline: 0; }
+.sv2-modal-kicker { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px; font: 800 12px/1 var(--font-body); letter-spacing: .1em; text-transform: uppercase; color: var(--coral-s, #ff8a82); }
+.sv2-modal-title { margin: 0 0 16px; font: 800 clamp(26px, 3vw, 34px)/1.05 var(--font-heading); letter-spacing: -.03em; color: #fff; }  /* a div, not a heading: the page keeps one clean outline */
+.sv2-modal-title span { color: var(--coral-s, #ff8a82); }
+
+/* fields: same look as the hero form (white pill on the dark card, coral focus ring), real placeholders instead of labels */
+.sv2-lead-form .sv2-field-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 12px; }
+.sv2-modal .hv2-field { position: relative; display: block; min-width: 0; margin-bottom: 10px; }
+.sv2-modal .hv2-field input[type="text"], .sv2-modal .hv2-field input[type="email"], .sv2-modal .hv2-field input[type="tel"], .sv2-modal .hv2-field select, .sv2-modal .hv2-field textarea {
+  display: block; width: 100%; min-height: 48px; padding: 12px 16px; border: 1px solid transparent; border-radius: 12px; background-color: rgba(255, 255, 255, .94);
+  font: 600 15px/1.4 var(--font-body); color: var(--heading-c, #1b2f45); outline: 0; box-shadow: none; transition: border-color .25s, box-shadow .25s; }
+.sv2-modal .hv2-field textarea { min-height: 72px; resize: vertical; }
+.sv2-modal .hv2-field input::placeholder, .sv2-modal .hv2-field textarea::placeholder { color: rgba(27, 47, 69, .6); opacity: 1; font-weight: 500; }
+.sv2-modal .hv2-field select { appearance: none; -webkit-appearance: none; padding-right: 38px; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='none' stroke='%231b2f45' stroke-width='2' d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 15px center; }
+.sv2-modal .hv2-field select:has(option[value=""]:checked) { color: rgba(27, 47, 69, .6); font-weight: 500; }
+.sv2-modal .hv2-field input:focus, .sv2-modal .hv2-field select:focus, .sv2-modal .hv2-field textarea:focus { border-color: var(--coral); box-shadow: 0 0 0 4px rgba(224, 74, 67, .25); }
+.sv2-modal .hv2-field input.is-invalid, .sv2-modal .hv2-field select.is-invalid, .sv2-modal .hv2-field textarea.is-invalid { border-color: #ff8a82; box-shadow: 0 0 0 3px rgba(255, 138, 130, .25); }
+.sv2-modal .iti { display: block; width: 100%; }
+.sv2-modal .hv2-field--tel input[type="tel"] { padding-top: 12px; padding-bottom: 12px; }
+.sv2-modal .sv2-field-err { display: block; margin: 4px 0 0 4px; font: 700 12.5px/1.3 var(--font-body); color: #ffb4ae; }
+.sv2-modal .sv2-field-err:empty { display: none; }
+.sv2-modal .sv2-lead-form .hv2-btn { margin-top: 4px; }
+.sv2-modal p.sv2-lead-status { margin: 10px 0 0; font-size: 14px; line-height: 1.5; color: rgba(255, 255, 255, .85); }
+.sv2-modal p.sv2-lead-status:empty { display: none; }
+.sv2-modal p.sv2-lead-status.is-ok { color: #9ff0c9; font-weight: 700; }
+.sv2-modal p.sv2-lead-status.is-err { color: #ffb4ae; font-weight: 700; }
+
+/* thank-you state (after the mail is sent) replaces the form inside the same modal */
+.sv2-thanks { display: none; padding: 12px 0 4px; text-align: center; }
+.sv2-thanks:focus { outline: 0; }
+.sv2-modal.is-sent .sv2-modal-form { display: none; }
+.sv2-modal.is-sent .sv2-thanks { display: block; }
+.sv2-thanks-ico { display: inline-grid; place-items: center; margin-bottom: 12px; font-size: 64px; line-height: 1; color: #5fe0a8; animation: sv2-pop .5s cubic-bezier(.2, .9, .3, 1.3) both; }
+.sv2-thanks p { margin: 0 auto 10px; max-width: 44ch; color: rgba(255, 255, 255, .88); font-size: 16px; line-height: 1.55; }
+.sv2-thanks p[hidden] { display: none; }
+.sv2-thanks-ref b { color: #fff; letter-spacing: .04em; }
+.sv2-thanks .hv2-btn { margin-top: 10px; }
+@keyframes sv2-pop { from { opacity: 0; transform: scale(.4); } to { opacity: 1; transform: scale(1); } }
+@media (prefers-reduced-motion: reduce) { .sv2-thanks-ico { animation: none; } }
+@media (max-width: 575px) {
+  .sv2-modal { padding: 10px; }
+  .sv2-modal-panel { padding: 22px 16px; border-radius: 20px; }
+  .sv2-lead-form .sv2-field-row { grid-template-columns: minmax(0, 1fr); }
+}
+.sv2 .sv2-legacy .sv2-planner-copy h2::before { display: none !important; }   /* legacy heading bar: the heading is centered here */
+.sv2-modal .hv2-form-trust { margin-top: 12px; }
+
+/* "What Our Clients Say" (database section) = the home testimonial slider: home heading size, no legacy heading bar, intro paragraph under the heading */
+.sv2 .sv2-legacy .sv2-testi h2::before { display: none; }
+.sv2 .sv2-legacy .sv2-testi h2.hv2-h2 { font-size: var(--fs-h2) !important; line-height: .98 !important; letter-spacing: -.035em; margin: 0 0 var(--space-4) !important; }
+.sv2 .sv2-legacy .sv2-testi p.sv2-testi-intro { margin: 0 !important; max-width: 46ch; font-size: var(--fs-lead) !important; line-height: 1.6 !important; color: rgba(255, 255, 255, .86) !important; }
+
+/* Final CTA (database section) = the home "Schedule Your Appointment Today" block; the title is longer than on the home page, so it is smaller there */
+.sv2 .sv2-legacy .sv2-cta h2::before { display: none; }
+.sv2 .sv2-legacy .sv2-cta h2.hv2-cta-title { font-size: clamp(36px, 4.6vw, 68px) !important; line-height: 1 !important; letter-spacing: -.035em; margin: var(--space-4) 0 0 !important; color: #fff !important; }
+.sv2 .sv2-legacy .sv2-cta .hv2-cta-copy > p { max-width: 54ch; margin: var(--space-6) 0 var(--space-7) !important; font-size: var(--fs-lead) !important; line-height: 1.65 !important; color: rgba(255, 255, 255, .86) !important; }
+.sv2 .sv2-legacy .sv2-cta .hv2-cta-btns .hv2-btn span { color: inherit !important; }

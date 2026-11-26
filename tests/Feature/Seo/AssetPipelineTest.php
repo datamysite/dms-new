@@ -281,6 +281,57 @@ class AssetPipelineTest extends TestCase
         $css = file_get_contents(public_path('assets/css/service-v2.css'));
         $this->assertStringContainsString('.sv2 .sv2-legacy .sv2-on-dark .hv2-step-badge span:not(.badge) { color: var(--green) !important; }', $css, 'step number stays readable on its white badge');
         $this->assertStringContainsString('.sv2 .sv2-legacy .hv2-process h2::before { display: none; }', $css);
+        $this->assertStringContainsString('.sv2 .sv2-legacy .hv2-step p { font-size: 15px !important;', $css, 'step text keeps the home page size');
+    }
+
+    public function test_lead_form_block_is_kept_by_the_service_template_and_not_yet_connected(): void
+    {
+        $view = file_get_contents(resource_path('views/web/services-v2/page.blade.php'));
+        $this->assertStringContainsString('//form[not(contains(concat(" ", normalize-space(@class), " "), " sv2-lead-form "))]', $view, 'the marked lead form is the one extra form the template keeps');
+        $js = file_get_contents(public_path('assets/js/service-v2.js'));
+        $this->assertStringContainsString("form[data-sv2-lead]", $js);
+        $this->assertStringContainsString("var endpoint = form.getAttribute('data-endpoint');", $js, 'submission target comes from the database content; empty = not connected yet');
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        foreach (['.sv2-lead-form', '.sv2-planner--cta', '.sv2-field-err'] as $sel) { $this->assertStringContainsString($sel, $css); }
+    }
+
+    public function test_reviews_come_from_one_helper_and_the_outdoor_faqs_are_on_the_home_page_too(): void
+    {
+        require_once resource_path('views/web/home-v2/helpers.php');
+        $reviews = v2_reviews();
+        $this->assertCount(9, $reviews);
+        $this->assertCount(4, $reviews[0], 'name, time, colour, text');
+        $score = v2_google_score();
+        $this->assertSame(['rating', 'total', 'url', 'stars'], array_keys($score));
+        $this->assertStringContainsString('<svg', $score['stars']);
+        $home = file_get_contents(resource_path('views/web/home-v2.blade.php'));
+        $this->assertStringContainsString('$hv2Reviews = v2_reviews();', $home, 'the home page and the service sections share the review data');
+        $this->assertStringContainsString("'How much does outdoor advertising cost in Dubai?'", $home, 'outdoor FAQs are stored in the home FAQ topic "outdoor" too');
+        $this->assertStringContainsString("'How do you measure results?'", $home);
+    }
+
+    public function test_service_faq_rows_have_unique_ids_one_schema_and_every_list_works(): void
+    {
+        $view = file_get_contents(resource_path('views/web/services-v2/page.blade.php'));
+        $this->assertStringContainsString('id="sv2-faq{{ $sec->id }}-q{{ $k }}"', $view, 'question ids carry the row id: two FAQ rows must not share ids');
+        $this->assertStringContainsString('empty($sv2FaqSchemaDone)', $view, 'one FAQPage block per page');
+        $js = file_get_contents(public_path('assets/js/service-v2.js'));
+        $this->assertStringContainsString("\$\$('[data-sv2-faq]').forEach(function (faq) {", $js, 'every FAQ list on the page is interactive');
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        foreach (['.sv2-testi h2.hv2-h2', '.sv2-testi p.sv2-testi-intro', '.sv2-cta h2.hv2-cta-title'] as $sel) { $this->assertStringContainsString($sel, $css, 'reused home blocks keep the home look inside the legacy wrapper'); }
+    }
+
+    public function test_quote_modal_and_thank_you_state(): void
+    {
+        $js = file_get_contents(public_path('assets/js/service-v2.js'));
+        $this->assertStringContainsString("[data-sv2-open]", $js, 'any button with data-sv2-open="<id>" opens the modal with that id');
+        $this->assertStringContainsString("root.appendChild(m)", $js, 'the modal leaves the legacy wrapper (its styles and reveal transforms) but stays inside .hv2 (design tokens)');
+        $this->assertStringContainsString("e.key === 'Escape'", $js);
+        $this->assertStringContainsString("sib.inert = true", $js, 'header, footer and the page are inert while the modal is open');
+        $this->assertStringContainsString("modal.classList.add('is-sent')", $js, 'a sent request switches the modal to the thank-you state');
+        $this->assertStringContainsString("data.reference", $js, 'the thank-you state shows the reference number of the saved enquiry');
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        foreach (['.sv2-modal[hidden]', 'z-index: 10090', '.sv2-modal.is-sent .sv2-modal-form', '.sv2-modal .hv2-field input[type="text"]', 'html.sv2-modal-open'] as $sel) { $this->assertStringContainsString($sel, $css); }
     }
 
     public function test_third_party_tags_wait_for_an_interaction_or_8_seconds(): void

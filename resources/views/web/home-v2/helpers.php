@@ -246,3 +246,40 @@ if (!function_exists('v2_case_studies')) {
 		return $out;
 	}
 }
+
+if (!function_exists('v2_reviews')) {
+	/* Client reviews shown by the testimonial slider (home page and the service pages' "What Our Clients Say" section).
+	   Each item: [name, "x months ago", avatar colour, text]. */
+	function v2_reviews()
+	{
+		return [
+			['Ahmed Al Mansoori', '2 months ago', '#4285f4', 'DataMySite team delivered an outstanding campaign for our real estate project. The billboard placements on Sheikh Zayed Road were perfectly targeted and the results exceeded our expectations. Highly professional and responsive team!'],
+			['Sara Hassan', '3 months ago', '#ea4335', 'We worked with DataMySite for influencer marketing across the GCC and the reach was incredible. They have a massive network and know exactly which influencers to pair with each brand. Our product sold out within weeks of the campaign going live.'],
+			['Mohammed Tariq', '4 months ago', '#34a853', 'Got our brand featured in Gulf News and Forbes Middle East through DataMySite. The PR team was very professional — they handled the full content writing and editorial relationship. Excellent ROI and the backlinks have boosted our SEO rankings significantly.'],
+			['Riya Sharma', '5 months ago', '#ff7043', 'We hired DataMySite for transit media across Dubai Metro and taxi fleet. The campaign ran across 5 key stations and the brand visibility was phenomenal. Within 3 weeks we saw a 40% spike in website traffic from Dubai. Very impressed!'],
+			['Khalid Al Rashid', '6 months ago', '#7c4dff', 'DataMySite helped us with a full 360 campaign — digital, OOH and influencer marketing for our automotive launch in UAE. The coordination across all channels was seamless and results were beyond expectations. Will definitely work with them again.'],
+			['Nadia Al Farsi', '7 months ago', '#00897b', 'We needed a strong SEO strategy for our e-commerce brand in Dubai. DataMySite delivered a detailed audit, fixed all technical issues and built quality backlinks. We went from page 4 to page 1 on Google in less than 3 months. Highly recommend!'],
+			['Faisal Mahmood', '8 months ago', '#d81b60', 'Best advertising agency in Dubai, hands down. DataMySite managed our full campaign from concept to execution across billboards, metro, and social media. Communication was excellent throughout and delivery was always on time. 100% recommend.'],
+			['Layla Benali', '9 months ago', '#0288d1', 'The team at DataMySite is incredibly knowledgeable about the UAE market. They recommended the perfect mix of transit and digital channels for our hospitality brand and managed everything professionally. A truly full-service agency.'],
+			['Omar Qureshi', '10 months ago', '#f57c00', 'Exceptional service from start to finish. DataMySite\'s expertise in outdoor advertising is unmatched in Dubai. They secured prime billboard spots that were exactly what our campaign needed, and the creative production quality was top notch.'],
+		];
+	}
+}
+
+if (!function_exists('v2_google_score')) {
+	/* Score badge of the testimonial section: live values from the cached Google data (the home page fills the cache), otherwise the config fallbacks.
+	   Never calls Google itself. Returns ['rating', 'total', 'url', 'stars' (inline-SVG stars, safe HTML)]. */
+	function v2_google_score()
+	{
+		$g = \Illuminate\Support\Facades\Cache::get('home_v2_google_reviews');
+		$rating = !empty($g['rating']) ? (float) $g['rating'] : (float) config('business.reviews.fallback_score', 5.0);
+		$total = !empty($g['total']) ? (int) $g['total'] : (int) config('business.reviews.fallback_total');
+		$star = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
+		return [
+			'rating' => $rating,
+			'total'  => $total,
+			'url'    => config('business.reviews.url'),
+			'stars'  => str_repeat($star, max(1, (int) round($rating))),
+		];
+	}
+}

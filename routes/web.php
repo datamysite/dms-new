@@ -327,6 +327,7 @@ Route::namespace('App\Http\Controllers\web')->group(function(){
     Route::post('/enquiry', 'EnquiryController@enquiry')->name('enquiry.submit');
     Route::post('/enquiryHelp', 'EnquiryController@enquiryHelp')->name('enquiry.help.submit');
     Route::post('/enquiryLite', 'EnquiryController@enquiryLite')->name('enquiry.lite.submit');
+    Route::post('/enquiry/planner', 'EnquiryController@planner')->middleware('throttle:10,1')->name('enquiry.planner.submit');
 
     //Aside
     Route::get('/get-aside', 'WebController@getAside');

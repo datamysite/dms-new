@@ -96,6 +96,67 @@ class EnquiryValidationTest extends TestCase
         $this->assertSame($before, Enquiry::count(), 'nothing saved');
     }
 
+    private function plannerPayload(array $over = []): array
+    {
+        return $over + [
+            'name' => 'Test Visitor', 'email' => 'visitor.test@gmail.com', 'phone' => '+971500000000',
+            'description' => 'We want unipole sites on Sheikh Zayed Road for March',
+            'budget' => 'AED 50,000 - 100,000', 'dates' => '1 to 30 March',
+        ];
+    }
+
+    public function test_the_planner_form_saves_budget_and_dates(): void
+    {
+        if (!checkdnsrr('gmail.com', 'MX')) $this->markTestSkipped('needs DNS: the email rule checks the domain');
+        Mail::fake();
+        $before = Enquiry::count();
+
+        $response = $this->postJson('https://datamysite.com/enquiry/planner', $this->plannerPayload());
+
+        $response->assertOk()->assertJson(['success' => 'success']);
+        $this->assertSame($before + 1, Enquiry::count());
+        $row = Enquiry::latest('id')->first();
+        $this->assertSame($row->id, $response->json('reference'), 'the thank-you popup shows this reference');
+        $this->assertIsBool($response->json('emailed'));
+        $this->assertSame('Outdoor Advertising', $row->service, 'service is fixed by the server, not taken from the form');
+        $this->assertSame('AED 50,000 - 100,000', $row->budget);
+        $this->assertSame('1 to 30 March', $row->preferred_dates);
+    }
+
+    public function test_the_planner_form_works_without_budget_and_dates(): void
+    {
+        if (!checkdnsrr('gmail.com', 'MX')) $this->markTestSkipped('needs DNS: the email rule checks the domain');
+        Mail::fake();
+
+        $this->postJson('https://datamysite.com/enquiry/planner', $this->plannerPayload(['budget' => '', 'dates' => '']))
+            ->assertOk();
+        $row = Enquiry::latest('id')->first();
+        $this->assertNull($row->budget);
+    }
+
+    public function test_the_planner_form_rejects_bad_input(): void
+    {
+        if (!checkdnsrr('gmail.com', 'MX')) $this->markTestSkipped('needs DNS: the email rule checks the domain');
+        Mail::fake();
+        $before = Enquiry::count();
+
+        $this->postJson('https://datamysite.com/enquiry/planner', $this->plannerPayload(['description' => 'I am looking for a loan']))
+            ->assertStatus(422)->assertJsonValidationErrors(['description']);
+        $this->postJson('https://datamysite.com/enquiry/planner', $this->plannerPayload(['budget' => 'a million']))
+            ->assertStatus(422)->assertJsonValidationErrors(['budget']);
+
+        $this->assertSame($before, Enquiry::count(), 'nothing saved');
+    }
+
+    public function test_the_planner_team_mail_shows_budget_and_dates(): void
+    {
+        $html = view('web.emails.enquiry', ['name' => 'A', 'phone' => '+971500000000', 'email' => 'a@b.co', 'budget' => 'Under AED 20,000', 'dates' => '1 to 30 March', 'description' => 'x'])->render();
+        $this->assertStringContainsString('Budget: </strong>Under AED 20,000', $html);
+        $this->assertStringContainsString('Preferred dates: </strong>1 to 30 March', $html);
+        $plain = view('web.emails.enquiry', ['name' => 'A', 'phone' => '+971500000000', 'email' => 'a@b.co', 'description' => 'x'])->render();
+        $this->assertStringNotContainsString('Budget:', $plain, 'the other forms are unchanged');
+    }
+
     public function test_the_help_popup_saves_the_service_and_no_longer_says_newsletter(): void
     {
         if (!checkdnsrr('gmail.com', 'MX')) $this->markTestSkipped('needs DNS: the email rule checks the domain');
