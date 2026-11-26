@@ -72,3 +72,8 @@ Trimmed Bootstrap for non-service pages (26 KiB unused), Swiper JS size, client-
 - A new image file only helps once the DB rows that use it are updated on that environment: deploy the files first, then PATCH the rows, then clear the cache.
 - Client logos (replaces the older "not worth it" note): `clients-final/<n>-w200.webp` made from the PNG with `tools/png-to-webp.ps1 -Width 200 -Quality 0.8` and kept only when <= 85% of the 300 px WebP (21 of 41; the 21 together 124 -> 91 KB). `v2_clients()` adds `srcset` when the file exists; high-DPR screens still load 300 px. Re-make or delete a variant when its logo changes.
 - Left on purpose: al-khail road photo (quality 0.5 saves only ~9 KB on a lazy below-the-fold image).
+
+## Speed Index vs. endless animations (2026-11-26, billboards: UI "Style & Layout 772 ms", script only 46 ms)
+- Trace (4x CPU, 412 px): ~30 endless CSS animations, almost all off screen, did 500-700 ms of style/layerize work EVERY second forever. Total main-thread layout/draw 5.4 s; with off-screen sections paused 2.4-2.7 s and idle after ~5 s. Even compositor-friendly transforms cost this on a ~2,400-element page without a GPU (as in PageSpeed).
+- Fix: `home-v2.js` puts `.hv2-asleep` on off-screen sections (IntersectionObserver); new animated sections get it automatically (`section` inside `.hv2`, and the footer). content-visibility added little on top.
+- Lesson: when SI swings and the filmstrip looks complete early, look at ONGOING main-thread work in a trace (per-second Layout/style/layerize), not only at the filmstrip.

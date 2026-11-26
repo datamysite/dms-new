@@ -958,3 +958,18 @@
 
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(remeasure);
 })();
+
+/* == Off-screen sections do not animate (PageSpeed Speed Index) ===========================================================
+   Dozens of endless CSS animations (process rings, marquee, ripples, drifting shapes) kept the browser re-styling and re-compositing
+   the whole long page every frame, even though nobody could see them. A section far from the screen gets .hv2-asleep (home-v2.css pauses
+   everything inside it); it wakes before it scrolls into view. IntersectionObserver only: no layout reads, no scroll listener. */
+(function () {
+  'use strict';
+  if (!('IntersectionObserver' in window)) return;
+  var parts = document.querySelectorAll('.hv2 section, .hs-footer');
+  if (!parts.length) return;
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { e.target.classList.toggle('hv2-asleep', !e.isIntersecting); });
+  }, { rootMargin: '150px 0px' });
+  Array.prototype.forEach.call(parts, function (el) { io.observe(el); });
+})();

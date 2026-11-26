@@ -51,3 +51,4 @@ A page's rows depend on code: never put rows on a database whose site runs older
 |---|---|---|---|
 | `/outdoor-advertising` (service 1) | redesigned rows 1344–1356 | same | **old rows** (redesign not live) |
 | `/outdoor-advertising/billboards-advertising` (16) | new rows 1357–1368, hero 13, old rows hidden, name "Billboard Advertising", new meta description; snippet #63 deleted, #24 name updated | same rows/meta (2026-11-26); **name still "Billboards Advertising" (needs SQL)** | **old rows**; snippets #24 (Service+LocalBusiness, keep, rename "Billboard Advertising Dubai") and #63 (old FAQPage, remove) |
+| `.../billboards-advertising/building-wraps` (48) | new rows (13 new keys + hero 25 rewritten), rows 26–35 hidden (35 = old FAQPage), new meta title/description | **old rows** | **old rows**; needs the hub + Billboards code first; check snippets for this URL with `inspect_page` |

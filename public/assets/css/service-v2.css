@@ -626,6 +626,8 @@
 .sv2 .sv2-hero .sv2-hero-body--title h1 { margin: 0 0 8px !important; max-width: 15ch; font: 800 clamp(34px, 3.9vw, 56px)/1.08 var(--font-heading) !important; color: #fff !important; letter-spacing: -.02em; }
 .sv2 .sv2-hero .sv2-hero-body--title h2 { margin: 0 0 8px !important; max-width: 34ch; font: 500 clamp(18px, 1.67vw, 24px)/1.2 var(--font-body) !important; color: #fff !important; letter-spacing: 0; }
 @media (max-width: 767px) { .sv2 .sv2-hero .sv2-hero-body--title h1 { max-width: none; } }
+/* the same sub line written as a paragraph, for pages whose brief does not make it a heading (building wraps) */
+.sv2 .sv2-hero .sv2-hero-body--title p.sv2-hero-sub { margin: 0 0 8px !important; max-width: 34ch; font: 500 clamp(18px, 1.67vw, 24px)/1.2 var(--font-body) !important; color: #fff !important; }
 
 /* Hero buttons + trust chips stored in the hero row (/outdoor-advertising/billboards-advertising): a button row and small pills under the intro.
    The generic hero rules turn links coral/underlined and every child div into a block, so these selectors are one class stronger. */
@@ -714,6 +716,18 @@
 }
 @media (prefers-reduced-motion: reduce) { .sv2-car-viewport { scroll-behavior: auto; } }
 .sv2 .sv2-legacy .sv2-format-body h3::before { display: none; }
+
+/* "Building Wrap Formats" (database section): text-only cards (no format photos yet), 4 / 2 / 1 per row, same card look as the format carousel */
+.sv2-wrap-head { max-width: 780px; margin-bottom: clamp(24px, 3vw, 40px); }
+.sv2 .sv2-legacy .sv2-wrap-head h2 { margin: 0 0 var(--space-3) !important; }
+.sv2 .sv2-legacy .sv2-wrap-head p { margin: 0 !important; }
+.sv2-wrap-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(16px, 2vw, 28px); }
+.sv2-wrap-card { padding: 26px 24px 28px; border-radius: 24px; background: #fff; border: 1px solid rgba(11, 61, 46, .08); border-top: 5px solid var(--coral); box-shadow: 0 18px 40px -26px rgba(11, 61, 46, .4); }
+.sv2 .sv2-legacy .sv2-wrap-card h3 { margin: 0 0 10px !important; padding: 0 !important; font-size: clamp(20px, 1.7vw, 24px) !important; line-height: 1.2 !important; }
+.sv2 .sv2-legacy .sv2-wrap-card h3::before { display: none; }
+.sv2 .sv2-legacy .sv2-wrap-card p { margin: 0 !important; font-size: 15.5px !important; line-height: 1.65 !important; color: #52625d !important; }
+@media (max-width: 1199px) { .sv2-wrap-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 575px) { .sv2-wrap-grid { grid-template-columns: minmax(0, 1fr); } }
 
 /* "Prime Outdoor Advertising Locations in Dubai" (database section): illustrated SVG map + markers, the chosen location's card on the right */
 .sv2-loc-head { max-width: 780px; margin-bottom: clamp(24px, 3vw, 40px); }

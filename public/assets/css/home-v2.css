@@ -1359,3 +1359,6 @@ html.hv2-loading.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > s
   .hv2-cta .hv2-cta-bg, .hv2-cta .hv2-globe { display: none; }
   .hv2 .hv2-cta { padding-top: 72px; padding-bottom: 96px; }
 }
+
+/* == Sections far from the screen do not animate (class set by home-v2.js) ============================================== */
+.hv2-asleep, .hv2-asleep::before, .hv2-asleep::after, .hv2-asleep *, .hv2-asleep *::before, .hv2-asleep *::after { animation-play-state: paused !important; }

@@ -504,6 +504,15 @@ class AssetPipelineTest extends TestCase
         $this->assertStringContainsString('sizes="(max-width: 767px) 108px', $this->html('/about-us'));
     }
 
+    /** PageSpeed Speed Index: endless animations in off-screen sections kept the page restyling every frame (layout/draw work 5.4 s -> 2.5 s) */
+    public function test_off_screen_sections_do_not_animate(): void
+    {
+        $js = file_get_contents(public_path('assets/js/home-v2.js'));
+        $this->assertStringContainsString("e.target.classList.toggle('hv2-asleep', !e.isIntersecting);", $js);
+        $this->assertStringContainsString("document.querySelectorAll('.hv2 section, .hs-footer')", $js);
+        $this->assertStringContainsString('.hv2-asleep *::after { animation-play-state: paused !important; }', file_get_contents(public_path('assets/css/home-v2.css')));
+    }
+
     /** phone layout of the shared service blocks: dark hero tint, row-style process cards, plain CTA, two-column footer menus */
     public function test_service_phone_layout_rules(): void
     {

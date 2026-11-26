@@ -38,6 +38,7 @@
 		collect($blogs ?? [])->map(fn ($b) => [$b->id, (string) $b->updated_at])->values(),
 		collect($subservices ?? [])->map(fn ($s) => [$s->id, (string) $s->updated_at])->values(),
 		isset($publications) ? [count($publications), (string) collect($publications)->max('updated_at')] : null,
+		config('case_studies'), /* rows with the case-study slider print the cover file names */
 	]));
 	$sv2Memo = [];
 	$sv2Render = function ($sec) use ($sv2Vars, $sv2Sig, &$sv2Memo) {
