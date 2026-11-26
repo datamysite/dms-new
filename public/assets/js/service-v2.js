@@ -22,16 +22,23 @@
     if (l === null && cs.backgroundImage && cs.backgroundImage !== 'none') { var g = cs.backgroundImage.match(/rgba?\([^)]+\)/); if (g) l = lum(g[0]); }
     return l;
   };
+  /* ALL style reads first, ALL class writes after them: adding a class between two getComputedStyle calls made the browser recalculate
+     the styles again before the next read (PageSpeed "forced reflow", 67 ms on phones) */
+  var reset = [], dark = [], marked = new Set();
+  var inDark = function (el) { for (; el && el !== root; el = el.parentElement) { if (marked.has(el) || el.classList.contains('sv2-on-dark')) return true; } return false; };
+  var markDark = function (el) { marked.add(el); dark.push(el); };
   $$('[data-sv2-legacy]').forEach(function (block) {
     $$(':scope > section, :scope > .section, :scope > section .section', block).forEach(function (sec) {
       var l = bgLum(sec);
-      if (l === null || l > 0.6) sec.classList.add('sv2-bg-reset'); else if (l < 0.2) sec.classList.add('sv2-on-dark');
+      if (l === null || l > 0.6) reset.push(sec); else if (l < 0.2) markDark(sec);
     });
     $$('div, section, aside, article, a, li', block).forEach(function (el) {
-      if (el.closest('.sv2-on-dark')) return;
-      var l = bgLum(el); if (l !== null && l < 0.2) el.classList.add('sv2-on-dark');
+      if (inDark(el)) return;
+      var l = bgLum(el); if (l !== null && l < 0.2) markDark(el);
     });
   });
+  reset.forEach(function (el) { el.classList.add('sv2-bg-reset'); });
+  dark.forEach(function (el) { el.classList.add('sv2-on-dark'); });
 
   /* == 1 · Motion tags for the legacy sections ============================ */
   $$('[data-sv2-legacy]').forEach(function (block) {

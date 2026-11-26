@@ -481,6 +481,15 @@ class AssetPipelineTest extends TestCase
         $this->assertStringNotContainsString('.hs-footer { padding-bottom: 78px; }', $css, 'the old empty strip under the bar is gone');
     }
 
+    /** PageSpeed "forced reflow" in service-v2.js: all background reads happen before the first class is added */
+    public function test_service_background_pass_reads_everything_before_writing(): void
+    {
+        $js = file_get_contents(public_path('assets/js/service-v2.js'));
+        $this->assertStringContainsString("reset.forEach(function (el) { el.classList.add('sv2-bg-reset'); });", $js);
+        $this->assertStringNotContainsString("sec.classList.add('sv2-bg-reset')", $js, 'no class write inside the read loop');
+        $this->assertStringNotContainsString("el.classList.add('sv2-on-dark'); });\n  });", $js);
+    }
+
     /** phone layout of the shared service blocks: dark hero tint, row-style process cards, plain CTA, two-column footer menus */
     public function test_service_phone_layout_rules(): void
     {
