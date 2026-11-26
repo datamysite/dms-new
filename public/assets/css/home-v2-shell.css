@@ -170,7 +170,9 @@ body.hs-menu-open { overflow: hidden; }
 .hs-foot-bar p { margin: 0; } .hs-foot-bar a { color: #fff; }
 @media (max-width: 1099px) { .hs-foot-grid { grid-template-columns: 1fr 1fr; } .hs-foot-brand { grid-column: 1 / -1; } .hs-foot-brand p { max-width: 60ch; } }
 @media (max-width: 575px) { .hs-foot-grid { grid-template-columns: 1fr; } .hs-foot-bar .hs-wrap { flex-direction: column; text-align: center; } }
-@media (max-width: 767px) { .hs-footer { padding-bottom: 78px; } }
+/* phones: room for the floating back-to-top / WhatsApp buttons (44-52 px, fixed ~38 px from the bottom) lives INSIDE the copyright bar,
+   so its background runs to the bottom edge and the buttons sit on it (it used to be an empty strip under the bar, over the watermark) */
+@media (max-width: 767px) { .hs-foot-bar { padding-bottom: calc(18px + 78px + env(safe-area-inset-bottom)); } }
 @media (prefers-reduced-motion: reduce) { .hs-header *, .hs-drawer, .hs-scrim, .hs-footer * { transition-duration: .01ms !important; animation-duration: .01ms !important; } }
 
 /* ==========================================================================
