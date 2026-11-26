@@ -321,6 +321,16 @@ class AssetPipelineTest extends TestCase
         foreach (['.sv2-testi h2.hv2-h2', '.sv2-testi p.sv2-testi-intro', '.sv2-cta h2.hv2-cta-title'] as $sel) { $this->assertStringContainsString($sel, $css, 'reused home blocks keep the home look inside the legacy wrapper'); }
     }
 
+    public function test_image_hover_zoom_is_transform_only_and_respects_reduced_motion(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('@media (hover: hover) and (prefers-reduced-motion: no-preference) {', $css, 'mouse devices only, off for reduced motion');
+        $this->assertStringContainsString('.sv2-format-card:hover .sv2-format-media img', $css);
+        $this->assertStringContainsString('transform: scale(1.07); }', $css, 'the zoom is a transform (no layout work)');
+        $block = substr($css, strpos($css, '/* image hover:'));
+        $this->assertStringNotContainsString('filter:', $block, 'no blur/filter layers on hover');
+    }
+
     public function test_quote_modal_and_thank_you_state(): void
     {
         $js = file_get_contents(public_path('assets/js/service-v2.js'));

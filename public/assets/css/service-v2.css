@@ -834,3 +834,15 @@ html.sv2-modal-open { overflow: hidden; }
 .sv2 .sv2-legacy .sv2-cta h2.hv2-cta-title { font-size: clamp(36px, 4.6vw, 68px) !important; line-height: 1 !important; letter-spacing: -.035em; margin: var(--space-4) 0 0 !important; color: #fff !important; }
 .sv2 .sv2-legacy .sv2-cta .hv2-cta-copy > p { max-width: 54ch; margin: var(--space-6) 0 var(--space-7) !important; font-size: var(--fs-lead) !important; line-height: 1.65 !important; color: rgba(255, 255, 255, .86) !important; }
 .sv2 .sv2-legacy .sv2-cta .hv2-cta-btns .hv2-btn span { color: inherit !important; }
+
+/* the live-campaign photo has its billboard on the left: keep it in the portrait crop */
+.sv2 .sv2-legacy .sv2-agency-media img[src*="live-campaign"] { object-position: 18% 50% !important; }
+
+/* image hover: a slow zoom inside the frame (transform only: no layout, no blur). Mouse devices only, off for reduced motion. Client logos and the case-study slider keep their own behaviour. */
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .sv2 .sv2-legacy .sv2-explain-media img, .sv2 .sv2-legacy .sv2-agency-media img, .sv2 .sv2-legacy .sv2-format-media img, .sv2 .sv2-legacy .sv2-loc-photo img { transition: transform .9s var(--ease, cubic-bezier(.2, .7, .2, 1)); }
+  .sv2 .sv2-legacy .sv2-explain-media:hover img, .sv2 .sv2-legacy .sv2-agency-media:hover img,
+  .sv2 .sv2-legacy .sv2-format-card:hover .sv2-format-media img, .sv2 .sv2-legacy .sv2-loc-card:hover .sv2-loc-photo img { transform: scale(1.07); }
+  .sv2-explain-media, .sv2-agency-media, .sv2-format-card, .sv2-loc-card { transition: box-shadow .5s; }
+  .sv2-explain-media:hover, .sv2-agency-media:hover, .sv2-format-card:hover, .sv2-loc-card:hover { box-shadow: 0 46px 80px -38px rgba(11, 61, 46, .62); }
+}
