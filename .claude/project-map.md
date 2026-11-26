@@ -39,6 +39,7 @@ Legacy (non-`New`) methods in `WebController`/`BlogController` and `ServiceContr
 - `routes/dms_admin.php` (token `DMS_ADMIN_API_TOKEN`, controllers `Api/DmsAdmin/{Template,FileRedirect,Ops}Controller`): template read/edit/revisions (allow-list in `config/dms_admin.php`), file redirects, cache purge (LiteSpeed), IndexNow, sitemap audit/rebuild, page inspect, duplicate meta, blogs hidden by redirect.
 
 ## Service pages (most of the site)
+**Content workflow, environments, API access, snippets and per-page state: [`.claude/service-pages-db.md`](service-pages-db.md)** — read it before changing any service page content.
 - `ServiceController`: one method per URL; loads `Services` by slug (`mainservice`/`service`/`subservice` + `subservices`) and 3 `Blogs`, returns `web.services-new.master-service`.
 - That name resolves to `resources/views/_v2-overrides/web/services-new/master-service.blade.php` → `@include('web.services-v2.page')`.
 - `web/services-v2/page.blade.php` (~560 lines) renders the DB rows `service_sections` (active, `sort_order`) inside the V2 design; sets `v2lite/v2crit/v2form/v2keep`.

@@ -87,6 +87,30 @@ class BillboardsPageTest extends TestCase
         $this->assertSame(0, $x->query('//*[@data-sv2-locations]')->length, 'no map block on this page');
     }
 
+    /** PageSpeed "improve image delivery": phones must not download the 1000-1600 px originals */
+    public function test_section_images_serve_small_responsive_files(): void
+    {
+        $x = $this->xpath($this->html(self::PATH));
+        $imgs = $x->query('//section[contains(@class,"sv2-explain") or contains(@class,"sv2-bb-locations")]//img');
+        $this->assertSame(6, $imgs->length, 'road photo + 5 location cards');
+        foreach ($imgs as $img) {
+            $files = [$img->getAttribute('src')];
+            foreach (array_filter(explode(',', $img->getAttribute('srcset'))) as $c) $files[] = trim(explode(' ', trim($c))[0]);
+            foreach ($files as $u) {
+                $this->assertMatchesRegularExpression('#-w(480|720|960)\.webp$#', $u);
+                $file = public_path(preg_replace('#^.*?/public/#', '', $u));
+                $this->assertFileExists($file);
+                $this->assertLessThan(150 * 1024, filesize($file), basename($file));
+            }
+        }
+    }
+
+    public function test_quote_author_has_enough_contrast_on_the_dark_band(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('.sv2-planner-quote cite { color: #f29c90; }', $css);
+    }
+
     public function test_fast_page_uses_only_subset_icons(): void
     {
         $this->assertContains('billboards-advertising', config('v2.fast_pages'));

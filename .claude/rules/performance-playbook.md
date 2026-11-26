@@ -61,3 +61,9 @@ Trimmed Bootstrap for non-service pages (26 KiB unused), Swiper JS size, client-
   library is fetched immediately (widget in ~0.5 s) instead of waiting for the delayed-script queue; the loader logo is a 8.7 KB WebP.
 - Local Speed Index meter: `speedindex.ps1` (Slow-4G + CPU throttle + screencast) is only useful for before/after on the same machine; it shows the home page is
   visually complete at first paint (SI = FCP) with the hero fix.
+
+## Billboards page (2026-11-26: mobile 96-98, SI 3.2-4.0 across 3 API runs of the same code)
+- A single UI report with SI 4.3 was noise again; FCP 1.4 / LCP 2.3 / TBT 0-50 stayed stable. In Git Bash prefix `MSYS_NO_PATHCONV=1` before `seo:pagespeed --path=/...`.
+- New service-page images need `-w480/-w720/-w960` WebP + `srcset`/`sizes` in the DB row (the "4/5 + object-fit: cover" explain box needs more width than its `vw` suggests). Make them with `tools/png-to-webp.ps1` (also reads JPG/WebP), new file names (images are cached for a year).
+- Coral text on dark panels: `--coral-s` (#e8776a) is ~4.3:1 on the tinted quote box; use #f29c90 for small text.
+- Left on purpose: client logos 300 px, unused Bootstrap CSS, render-blocking CSS (critical-CSS mode scored worse).

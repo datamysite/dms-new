@@ -647,7 +647,7 @@
 /* Expert quote inside the dark "Speak With Our Planning Team" band (same block as the agency quote, light text) */
 .sv2 .sv2-legacy .sv2-planner-quote { max-width: 680px; margin: 0 auto var(--space-5); text-align: left; background: rgba(255, 255, 255, .06); }
 .sv2 .sv2-legacy .sv2-planner .sv2-planner-quote blockquote p { color: #fff !important; }   /* one class stronger than the light .sv2-agency-quote text rule further down */
-.sv2 .sv2-legacy .sv2-planner-quote cite { color: var(--coral-s); }
+.sv2 .sv2-legacy .sv2-planner-quote cite { color: #f29c90; }   /* lighter coral: --coral-s is only ~4.3:1 on this box (15 px text needs 4.5:1) */
 
 /* == Outdoor advertising page blocks that live in the database (Brands, Our Successful Projects, Explained) ==
    markup: section content rows with classes sv2-brands / hv2-stats (home markup) / sv2-explain */
