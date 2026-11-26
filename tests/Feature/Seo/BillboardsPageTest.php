@@ -77,14 +77,15 @@ class BillboardsPageTest extends TestCase
         }
     }
 
-    public function test_locations_use_the_hub_formats_carousel_with_five_cards(): void
+    public function test_locations_use_the_hub_map_block_with_five_cards(): void
     {
         $x = $this->xpath($this->html(self::PATH));
-        $sec = $x->query('//section[contains(@class,"sv2-bb-locations") and @data-sv2-carousel]');
-        $this->assertSame(1, $sec->length, 'locations use the same carousel block as "Outdoor Advertising Formats in Dubai"');
-        $titles = array_map(fn ($n) => trim($n->textContent), iterator_to_array($x->query('.//article[contains(@class,"sv2-format-card")]//h3', $sec->item(0))));
+        $sec = $x->query('//section[contains(@class,"sv2-bb-locations") and @data-sv2-locations]');
+        $this->assertSame(1, $sec->length, 'locations use the same map block as /outdoor-advertising');
+        $this->assertSame(1, $x->query('.//div[contains(@class,"sv2-loc-map") and @data-leaflet-js]', $sec->item(0))->length);
+        $cards = iterator_to_array($x->query('.//article[contains(@class,"sv2-loc-card") and @data-lat and @data-lng and @data-loc]', $sec->item(0)));
+        $titles = array_map(fn ($n) => trim($x->query('.//h3', $n)->item(0)->textContent), $cards);
         $this->assertSame(['Sheikh Zayed Road', 'Downtown Dubai', 'Business Bay', 'Airport Road and DXB', 'Dubai Marina Rooftops'], $titles);
-        $this->assertSame(0, $x->query('//*[@data-sv2-locations]')->length, 'no map block on this page');
     }
 
     /** PageSpeed "improve image delivery": phones must not download the 1000-1600 px originals */

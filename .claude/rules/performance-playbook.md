@@ -67,3 +67,6 @@ Trimmed Bootstrap for non-service pages (26 KiB unused), Swiper JS size, client-
 - New service-page images need `-w480/-w720/-w960` WebP + `srcset`/`sizes` in the DB row (the "4/5 + object-fit: cover" explain box needs more width than its `vw` suggests). Make them with `tools/png-to-webp.ps1` (also reads JPG/WebP), new file names (images are cached for a year).
 - Coral text on dark panels: `--coral-s` (#e8776a) is ~4.3:1 on the tinted quote box; use #f29c90 for small text.
 - Left on purpose: client logos 300 px, unused Bootstrap CSS, render-blocking CSS (critical-CSS mode scored worse).
+- Follow-up (same day): UI said SI 4.1; API runs after the new images went live gave 4.2 / 3.3 / 4.8 / 3.1 / 3.0 s on identical code. The PSI filmstrip (`PageSpeedService::run()['filmstrip']`) showed the hero complete in one paint at ~1.7 s, so no page change was made for SI. Check the filmstrip before chasing SI.
+- Never alternate `getComputedStyle` and `classList.add` in a loop (service-v2.js background pass: forced reflow 67 ms): read everything, then write. Prove it tags the same elements (compare before/after on several pages).
+- A new image file only helps once the DB rows that use it are updated on that environment: deploy the files first, then PATCH the rows, then clear the cache.

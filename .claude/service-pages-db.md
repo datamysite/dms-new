@@ -23,7 +23,7 @@ Code lives in git; **page content does not**. Each environment has its own datab
 ## 3. Reusable section blocks (copy the markup of an existing row, change the text)
 Hub `/outdoor-advertising` (service 1) is the reference. Row keys → block:
 `brands-we-work-with` (client marquee) · `our-successful-projects` (4 stat boxes) · `dubai-outdoor-advertising-explained` (`.sv2-explain`, dark, image + text) · `your-outdoor-advertising-agency-in-dubai` (`.sv2-agency`, text + image, optional `.sv2-agency-quote`) · `outdoor-advertising-formats-in-dubai` (`.sv2-formats [data-sv2-carousel]` card carousel) · `prime-outdoor-advertising-locations-in-dubai` (`[data-sv2-locations]` Leaflet map + cards) · `latest-ooh-campaigns` (case-study slider) · `outdoor-advertising-dubai-prices-2026` (`.sv2-price-table`) · `how-we-run-your-outdoor-campaign` (4-step process) · `speak-with-our-planning-team` (CTA + quote modal `#sv2-quote-modal`) · `what-our-clients-say` (reviews slider + Google score) · `outdoor-advertising-dubai-faqs` (`type=faq`) · `outdoor-advertising-quote-cta` (final CTA band, opens the modal).
-Billboards page (service 16) = the same blocks; locations use the formats carousel (`.sv2-bb-locations`), hero has `.sv2-hero-ctas` buttons + `.sv2-hero-chips`.
+Billboards page (service 16) = the same blocks; locations use the map block (`.sv2-bb-locations`; changed from the carousel on 2026-11-26), hero has `.sv2-hero-ctas` buttons + `.sv2-hero-chips`.
 
 ## 4. Environments and access
 | | Site | Database | Write path |
