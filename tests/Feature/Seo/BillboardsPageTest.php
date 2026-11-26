@@ -98,8 +98,8 @@ class BillboardsPageTest extends TestCase
             $files = [$img->getAttribute('src')];
             foreach (array_filter(explode(',', $img->getAttribute('srcset'))) as $c) $files[] = trim(explode(' ', trim($c))[0]);
             foreach ($files as $u) {
-                $this->assertMatchesRegularExpression('#-w(480|720|960)\.webp$#', $u);
-                $file = public_path(preg_replace('#^.*?/public/#', '', $u));
+                $this->assertMatchesRegularExpression('#-w(480|720|960)\.webp\?v=\d+$#', $u);
+                $file = public_path(preg_replace('#^.*?/public/|\?.*$#', '', $u));
                 $this->assertFileExists($file);
                 $this->assertLessThan(150 * 1024, filesize($file), basename($file));
             }

@@ -102,11 +102,16 @@ Run: `D:\xampp\php\php.exe artisan test` (PHP is not on PATH).
 Work locally → commit on branch `staging` → push `origin staging` (staging server pulls it, `APP_URL=https://staging.datamysite.com`) → user verifies → user merges/pushes to `main` (production). Never push `main` without the user's go-ahead. **Database content (service sections, meta tags, blogs) is NOT in git**: it is changed locally through the local API (`/api/v1`, bearer `BLOG_API_TOKEN` from `.env`, never print it) and on production/staging through the "DMS - Connector" MCP tools (`update_service_section`, `create_service_section`, `purge_cache`, `inspect_page`). Order for a release that needs new DB structure: SQL on the server DB → deploy code → create/update DB sections → `purge_cache` → test.
 
 ## Structural changes log (newest first; read this when setting up a new session or machine)
+**2026-11-26 · /outdoor-advertising/billboards-advertising/hoarding rebuilt in the hub design (LOCAL DB only)**
+- Service 49 (`hoarding`, name stays "Hoarding"). Rows cloned from the Building Wraps rows; no new CSS or template change (`.sv2-wrap-types` reused for the 4 types). `fast_pages` += hoarding; test `tests/Feature/Seo/HoardingPageTest.php`; LinksTest `$withoutBlogs`; also listed in `RewrittenPagesPerfTest`.
+- User decisions: logo marquee has no case-study links; the slider shows all case studies; cost guide link = `/how-much-does-hoarding-advertising-cost-in-dubai-in-2026` (post exists on live, not in the local DB). Stats: "2010" has no `data-count` (the counter would print "2,010").
+- Photos are stand-ins; the Dubai Media City location card has no photo. Testimonials = `v2_reviews()` until the DMS team supplies three.
+
 **2026-11-26 · redesigned case-study covers** (list: `config/case_studies.php`)
 - `public/case-studies/v2/cover/`: per cover `{name}.jpg` + `{name}.webp` (1080x605) + `{name}-w480.webp` + `{name}-w960.webp`; both widths are needed because `v2_img()` builds the `srcset` from them. Lenskart KSA and UAE share `lenskart`. The `*-dms-cover*.png` files there are the 1920x1080 design sources, not used by any page; old covers are in `v2/cover-old/`.
 - New cover: centre-crop the 1920x1080 source to the 1080x605 ratio, export the four files, add the line in the config (`CaseStudiesTest` checks them).
 
-**2026-11-26 · /outdoor-advertising/billboards-advertising/building-wraps rebuilt in the hub design (LOCAL DB only)**
+**2026-11-26 · /outdoor-advertising/billboards-advertising/building-wraps rebuilt in the hub design (local + staging DB)**
 - Service 48. Rows cloned from the Billboards rows (see `service-pages-db.md` §6). New block `.sv2-wrap-types` (4 text-only format cards) and hero `p.sv2-hero-sub` in `service-v2.css`; `fast_pages` += building-wraps; test `tests/Feature/Seo/BuildingWrapsPageTest.php`; LinksTest `$withoutBlogs`.
 - Photos are stand-ins (area views, a billboard photo in the agency block): no real wrap photos yet. Case-study slider shows all case studies (user's choice); testimonials = `v2_reviews()`.
 

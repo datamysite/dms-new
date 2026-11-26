@@ -77,3 +77,15 @@ Trimmed Bootstrap for non-service pages (26 KiB unused), Swiper JS size, client-
 - Trace (4x CPU, 412 px): ~30 endless CSS animations, almost all off screen, did 500-700 ms of style/layerize work EVERY second forever. Total main-thread layout/draw 5.4 s; with off-screen sections paused 2.4-2.7 s and idle after ~5 s. Even compositor-friendly transforms cost this on a ~2,400-element page without a GPU (as in PageSpeed).
 - Fix: `home-v2.js` puts `.hv2-asleep` on off-screen sections (IntersectionObserver); new animated sections get it automatically (`section` inside `.hv2`, and the footer). content-visibility added little on top.
 - Lesson: when SI swings and the filmstrip looks complete early, look at ONGOING main-thread work in a trace (per-second Layout/style/layerize), not only at the filmstrip.
+
+## Checklist for every rewritten page (apply while building it, before handing it over)
+Rewritten pages = `config/v2.php` `fast_pages`; `tests/Feature/Seo/RewrittenPagesPerfTest.php` enforces the first three points (add the new path to its PAGES list).
+1. **Hero photo** has a `-w960.webp` sibling under 90 KB (it is the phone LCP image and only a faded backdrop: quality 0.4-0.55 from the original JPG/PNG).
+2. **Section images** are WebP, lazy, with width/height, and `-w480/-w720/-w960` + `srcset`/`sizes` for new ones; never link a full-size original in a card. Budget: under 150 KB per file (175 KB at 1440 px+). Aim for 0.05-0.12 bytes per pixel; over 0.15 PageSpeed reports "Improve image delivery" (detailed aerial photos: quality 0.5-0.6).
+3. **Cache version:** the service template adds `?v=<filemtime>` to every local WebP in database rows, so re-compress in place (no row edits). Encode to a temporary file first with `tools/png-to-webp.ps1` and replace only if it is clearly smaller (15%+); look at the result.
+4. **Measure** on staging after the deploy: `seo:pagespeed --base=staging --strategy=both --path=/x --fresh`, 3+ runs about 70 s apart; for Speed Index read the filmstrip (`PageSpeedService::run()` returns `[status, report]`).
+5. Left on purpose (do not "fix" without measuring): render-blocking CSS, unused Bootstrap/home-v2 CSS.
+
+### Building wraps (2026-11-26, mobile 94-96)
+- Five runs on identical code: SI 3.3 / 3.4 / 3.5 / 3.6 / 5.0 s, LCP 2.4-2.6 s, TBT 0-190 ms, CLS 0. The filmstrip showed the whole first screen in one paint at ~1.9 s; only the hero light streaks and the WhatsApp button changed later.
+- Real fix was bytes: hero w960 118 -> 83 KB, al-khail w720 57 -> 39 KB, hub location photos 128-272 -> 63-133 KB.

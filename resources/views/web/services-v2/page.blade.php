@@ -200,6 +200,9 @@
 				$altFile = preg_match('#([^/"\'?\s]+?)(?:-w\d+)?\.(?:jpe?g|png|webp|gif|svg)(?:\?[^"\']*)?["\']#i', $tag, $af) ? trim(preg_replace('#[-_\s]+#', ' ', $af[1])) : '';
 				$tag = preg_replace('#^<img\b#i', '<img alt="' . e($altFile !== '' ? ucfirst($altFile) : 'DataMySite') . '"', $tag);
 			}
+			/* images are cached for a year under the same URL (browser + CDN) and database rows link them without a version: add ?v=<file time>
+			   to every local WebP in src / srcset, so a recompressed file reaches visitors without editing any row */
+			$tag = preg_replace_callback('#/public/(assets/[^"\'\s,?]+\.webp)(?=["\'\s,])#i', fn ($v) => is_file(public_path($v[1])) ? $v[0] . '?v=' . filemtime(public_path($v[1])) : $v[0], $tag);
 			if (!preg_match('#\sloading\s*=#i', $tag)) $tag = preg_replace('#^<img\b#i', '<img loading="lazy"', $tag);
 			if (!preg_match('#\sdecoding\s*=#i', $tag)) $tag = preg_replace('#^<img\b#i', '<img decoding="async"', $tag);
 			return $tag;
