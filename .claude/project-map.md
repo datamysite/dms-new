@@ -87,7 +87,7 @@ Run: `D:\xampp\php\php.exe artisan test` (PHP is not on PATH).
 
 ## Other top-level items
 - `beta/`: a separate older copy of the Laravel app (not used by the main site). `clients/`: static client microsites (`dgnova`, `wholefoods`). `perf-report/pages.txt`: page list for perf runs.
-- Root: `index.php` + `.htaccess` (Apache serves from the project root), `sitemap.xml`, `robots.txt`/`robots-staging.txt`, `LLMs.txt`, `llms-full.txt`, `indexnow_submit.php`.
+- Root: `index.php` + `.htaccess` (Apache serves from the project root), `sitemap.xml`, `robots.txt`/`robots-staging.txt`, `llms.txt` (must stay lowercase: Linux hosting is case-sensitive; `/LLMs.txt` is rewritten to it in `.htaccess`; `LlmsTxtTest`), `llms-full.txt`, `indexnow_submit.php`.
 - Ignore: `*-old.php`, `error_log`, `bash.exe.stackdump`, `.phpunit.result.cache`, README (Laravel stock).
 
 ## Gotchas
@@ -102,6 +102,12 @@ Run: `D:\xampp\php\php.exe artisan test` (PHP is not on PATH).
 Work locally → commit on branch `staging` → push `origin staging` (staging server pulls it, `APP_URL=https://staging.datamysite.com`) → user verifies → user merges/pushes to `main` (production). Never push `main` without the user's go-ahead. **Database content (service sections, meta tags, blogs) is NOT in git**: it is changed locally through the local API (`/api/v1`, bearer `BLOG_API_TOKEN` from `.env`, never print it) and on production/staging through the "DMS - Connector" MCP tools (`update_service_section`, `create_service_section`, `purge_cache`, `inspect_page`). Order for a release that needs new DB structure: SQL on the server DB → deploy code → create/update DB sections → `purge_cache` → test.
 
 ## Structural changes log (newest first; read this when setting up a new session or machine)
+**2026-11-26 · /outdoor-advertising/billboards-advertising/wallscapes rebuilt in the hub design (LOCAL DB only so far)**
+- Service 50 (name stays "Wallscapes", URL/canonical unchanged: the page ranked first before the rebuild). Rows cloned from the Building Wraps rows; hero 49 rewritten, rows 50–59 hidden; new meta title/description. Building Wraps row `building-wrap-formats`: the "Facade Banner" card links to this page.
+- New CSS in `service-v2.css`: `.sv2-wrap-grid--3`, `.sv2-wrap-card--link` + `.sv2-wrap-more` (whole card clickable; the legacy h3 must be `position: static`), `.sv2-compare` / `.sv2-compare-table` (comparison table). `fast_pages` += wallscapes; hero WebP re-encoded; test `tests/Feature/Seo/WallscapesPageTest.php`; LinksTest `$withoutBlogs`; `RewrittenPagesPerfTest`.
+- Commit `44fca4d` holds only the first part (early CSS + `fast_pages`); the CSS fixes, tests and photos came after it.
+- User decisions: testimonials = the shared review slider (`v2_reviews()`) until the DMS team supplies three; case-study slider shows all case studies with the brief's "walls we have put brands on" sentence (DMS team to confirm). Stand-in photos; 3 of the 4 location cards have none.
+
 **2026-11-26 · /outdoor-advertising/billboards-advertising/hoarding rebuilt in the hub design (local + staging DB; code `ee3db48`)**
 - Service 49 (`hoarding`, name stays "Hoarding"). Rows cloned from the Building Wraps rows; no new CSS or template change (`.sv2-wrap-types` reused for the 4 types). `fast_pages` += hoarding; test `tests/Feature/Seo/HoardingPageTest.php`; LinksTest `$withoutBlogs`; also listed in `RewrittenPagesPerfTest`.
 - User decisions: logo marquee has no case-study links; the slider shows all case studies; cost guide link = `/how-much-does-hoarding-advertising-cost-in-dubai-in-2026` (post exists on live, not in the local DB). Stats: "2010" has no `data-count` (the counter would print "2,010").

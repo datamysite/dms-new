@@ -18,6 +18,10 @@
     # RewriteCond %{HTTP_HOST} !^(www\.)?datamysite\.com$ [NC]
     # RewriteRule ^robots\.txt$ robots-staging.txt [L]
 
+    # The file for AI agents is llms.txt (lowercase: Linux hosting is case-sensitive and audits ask for exactly that name).
+    # Its old address /LLMs.txt keeps answering.
+    RewriteRule ^LLMs\.txt$ llms.txt [L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

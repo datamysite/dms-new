@@ -69,6 +69,14 @@ class BuildingWrapsPageTest extends TestCase
         $this->assertSame(1, $x->query('//a[contains(@href,"thenationalnews.com") and @target="_blank" and contains(@rel,"noopener")]')->length);
     }
 
+    public function test_facade_banner_card_links_to_the_wallscapes_page(): void
+    {
+        $x = $this->xpath($this->html(self::PATH));
+        $a = $x->query('//article[contains(@class,"sv2-wrap-card--link")]/h3/a[normalize-space(.)="Facade Banner"]');
+        $this->assertSame(1, $a->length);
+        $this->assertStringEndsWith('/outdoor-advertising/billboards-advertising/wallscapes', $a->item(0)->getAttribute('href'));
+    }
+
     public function test_images_below_the_hero_are_lazy_webp_with_size_and_alt(): void
     {
         $x = $this->xpath($this->html(self::PATH));
