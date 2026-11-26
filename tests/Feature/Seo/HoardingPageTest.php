@@ -78,7 +78,7 @@ class HoardingPageTest extends TestCase
     {
         $x = $this->xpath($this->html(self::PATH));
         $imgs = $x->query('//main//section[contains(@class,"sv2-explain") or contains(@class,"sv2-agency") or contains(@class,"sv2-bb-locations")]//img');
-        $this->assertSame(6, $imgs->length, 'explainer + agency photo + 4 location cards (no Media City photo yet)');
+        $this->assertSame(7, $imgs->length, 'explainer + agency photo + 5 location cards');
         foreach ($imgs as $img) {
             $src = $img->getAttribute('src');
             $this->assertStringContainsString('.webp', $src, "WebP: $src");

@@ -87,7 +87,7 @@ class WallscapesPageTest extends TestCase
     {
         $x = $this->xpath($this->html(self::PATH));
         $imgs = $x->query('//main//section[contains(@class,"sv2-agency") or contains(@class,"sv2-bb-locations")]//img');
-        $this->assertSame(2, $imgs->length, 'agency photo + the Downtown card (no photos of the other three areas yet)');
+        $this->assertSame(5, $imgs->length, 'agency photo + 4 location cards');
         foreach ($imgs as $img) {
             $src = $img->getAttribute('src');
             $this->assertStringContainsString('.webp', $src, "WebP: $src");
