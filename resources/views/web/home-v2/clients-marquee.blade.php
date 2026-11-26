@@ -22,7 +22,7 @@
 					@foreach($row as $i => $brand)
 						<div class="hv2-brand hv2-brand--lg" style="--n: {{ $loop->index }}" @if($dup) aria-hidden="true" @endif>
 							<div class="hv2-brand-logo hv2-media hv2-media--logo">
-								<img src="{{ $brand['src'] }}" alt="{{ $brand['alt'] }}" loading="lazy" width="300" height="300">
+								<img src="{{ $brand['src'] }}" alt="{{ $brand['alt'] }}"@if($brand['srcset']) srcset="{{ $brand['srcset'] }}" sizes="(max-width: 767px) 108px, (max-width: 1199px) 128px, 161px"@endif loading="lazy" width="300" height="300">
 							</div>
 						</div>
 					@endforeach

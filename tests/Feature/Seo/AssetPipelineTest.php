@@ -490,6 +490,20 @@ class AssetPipelineTest extends TestCase
         $this->assertStringNotContainsString("el.classList.add('sv2-on-dark'); });\n  });", $js);
     }
 
+    /** PageSpeed "properly size images": logos with a clearly smaller 200 px file offer it; dense screens still get the 300 px one */
+    public function test_client_logos_offer_a_200px_version(): void
+    {
+        require_once resource_path('views/web/home-v2/helpers.php');
+        $small = glob(public_path('assets/img/clients-final/*-w200.webp'));
+        $this->assertNotEmpty($small);
+        foreach ($small as $f) {
+            $no = (int) basename($f);
+            $this->assertLessThanOrEqual(filesize(public_path("assets/img/clients-final/$no.webp")) * 0.85, filesize($f), "logo $no: keep the 200 px file only when clearly smaller (re-make it when the logo changes)");
+            $this->assertMatchesRegularExpression("#/$no-w200\.webp\?v=\d+ 200w, .*/$no\.webp\?v=\d+ 300w$#", v2_clients()[$no]['srcset']);
+        }
+        $this->assertStringContainsString('sizes="(max-width: 767px) 108px', $this->html('/about-us'));
+    }
+
     /** phone layout of the shared service blocks: dark hero tint, row-style process cards, plain CTA, two-column footer menus */
     public function test_service_phone_layout_rules(): void
     {

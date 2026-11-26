@@ -150,10 +150,15 @@ if (!function_exists('v2_clients')) {
 		$list = [];
 		foreach ((array) config('clients', []) as $no => $name) {
 			if (!isset($ext[$no])) $ext[$no] = is_file(public_path('assets/img/clients-final/' . $no . '.webp')) ? 'webp' : 'png';
+			/* a 200 px version (only made where it is clearly smaller than the 300 px file): phones and 1x screens pick it, dense screens keep 300 */
+			$small = 'assets/img/clients-final/' . $no . '-w200.webp';
+			$full = 'assets/img/clients-final/' . $no . '.' . $ext[$no];
+			$url = fn ($file) => \Illuminate\Support\Facades\URL::to('/public/' . $file) . '?v=' . (int) @filemtime(public_path($file));
 			$list[$no] = [
 				'name' => $name,
-				'src'  => \Illuminate\Support\Facades\URL::to('/public/assets/img/clients-final/' . $no . '.' . $ext[$no]) . '?v=' . (int) @filemtime(public_path('assets/img/clients-final/' . $no . '.' . $ext[$no])),
+				'src'  => $url($full),
 				'alt'  => $name . ' logo – DataMySite client',
+				'srcset' => is_file(public_path($small)) ? $url($small) . ' 200w, ' . $url($full) . ' 300w' : null,
 			];
 		}
 		return $list;
