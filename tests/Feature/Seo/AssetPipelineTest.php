@@ -472,4 +472,12 @@ class AssetPipelineTest extends TestCase
         $this->assertMatchesRegularExpression('#assets/css/custom\.min\.css\?v=\d+#', $html);
         $this->assertMatchesRegularExpression('#assets/input-master/css/intlTelInput\.min\.css#', $html);
     }
+
+    /** phones: the room for the floating back-to-top / WhatsApp buttons is inside the copyright bar (its background reaches the bottom edge), not an empty strip under it */
+    public function test_mobile_footer_reserves_button_room_inside_the_copyright_bar(): void
+    {
+        $css = file_get_contents(public_path('assets/css/home-v2-shell.css'));
+        $this->assertStringContainsString('.hs-foot-bar { padding-bottom: calc(18px + 78px + env(safe-area-inset-bottom)); }', $css);
+        $this->assertStringNotContainsString('.hs-footer { padding-bottom: 78px; }', $css, 'the old empty strip under the bar is gone');
+    }
 }
