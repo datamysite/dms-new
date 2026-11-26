@@ -321,6 +321,34 @@ class AssetPipelineTest extends TestCase
         foreach (['.sv2-testi h2.hv2-h2', '.sv2-testi p.sv2-testi-intro', '.sv2-cta h2.hv2-cta-title'] as $sel) { $this->assertStringContainsString($sel, $css, 'reused home blocks keep the home look inside the legacy wrapper'); }
     }
 
+    public function test_outdoor_advertising_page_speed_fixes(): void
+    {
+        $view = file_get_contents(resource_path('views/web/services-v2/page.blade.php'));
+        $this->assertStringContainsString("(jpe?g|png|webp)$#i", $view, 'a hero stored as .webp still finds its -w960 sibling for phones');
+        $this->assertStringContainsString("'?v=' . filemtime(public_path(\$m[1]))", $view, 'the hero URL changes when the file is re-encoded (images are cached for a year)');
+        $hero = 'assets/img/outdoor-advertisement-banner-unipole-Sheikh-Zayed-Road-SZR';
+        $this->assertFileExists(public_path($hero . '-w960.webp'));
+        $this->assertLessThan(120 * 1024, filesize(public_path($hero . '-w960.webp')), 'phones download under 120 KB for the LCP photo');
+        $this->assertLessThan(185 * 1024, filesize(public_path($hero . '.webp')), 'desktop hero photo');
+        $this->assertContains('outdoor-advertising', config('v2.fast_pages'));
+
+        $html = $this->get('https://datamysite.com/outdoor-advertising')->assertOk()->getContent();
+        $this->assertStringContainsString('id="v2-icons"', $html, 'icon subset inlined instead of the 128 KB icon font');
+        $this->assertStringNotContainsString('bootstrap-icons/bootstrap-icons.css', $html);
+        preg_match_all('/\bbi-[a-z0-9-]+/', $html, $m);
+        $have = [];
+        preg_match_all('/\.(bi-[a-z0-9-]+)/', file_get_contents(public_path('assets/vendor/bootstrap-icons/bi-v2.css')), $mm);
+        $have = array_unique($mm[1]);
+        $used = array_diff(array_unique($m[0]), ['bi-v2', 'bi-subset', 'bi-v2-icons']);
+        $this->assertSame([], array_values(array_diff($used, $have, ['bi-v2', 'bi-subset'])), 'every icon on a fast page must be in the subset (bi-v2.css); pick another icon or rebuild the subset');
+        $this->assertMatchesRegularExpression('#custom\.min\.css[^>]*media="print" onload="v2cs\(this\)"#', $html, 'custom/responsive CSS do not block the first paint');
+        $this->assertMatchesRegularExpression('#hv2-cta-bg"[^>]*><img[^>]*width="1536" height="1024"#', $html, 'CTA background has explicit size (CLS)');
+
+        $js = file_get_contents(public_path('assets/js/service-v2.js'));
+        $this->assertStringContainsString('var build = function () { if (armed) buildNow(); };', $js, 'the layout-measuring decoration pass waits for the first interaction or 8 s');
+        $this->assertStringContainsString('setTimeout(arm, 8000)', $js);
+    }
+
     public function test_image_hover_zoom_is_transform_only_and_respects_reduced_motion(): void
     {
         $css = file_get_contents(public_path('assets/css/service-v2.css'));

@@ -305,7 +305,7 @@
       });
     };
 
-    var build = function () {
+    var buildNow = function () {
       anchors = []; marks = []; total = 0;
       /* measure the FINAL layout: elements still waiting to slide/rise in are offset by their reveal transform,
          so switch those transforms off while measuring (no transition, so nothing visibly jumps) */
@@ -388,7 +388,16 @@
     /* don't wait for window.load (YouTube / chat embeds can delay it a lot): build when fonts are ready,
        then refresh once everything has loaded (images may have changed the layout) */
     var fontsReady = document.fonts && document.fonts.ready ? document.fonts.ready : Promise.resolve();
-    fontsReady.then(function () { setTimeout(build, 60); });
+    /* The measuring pass forces layout (66 ms in PageSpeed) and the decorations are only seen after scrolling, so the FIRST pass waits for the
+       first scroll / touch / key / click, or 8 s after the fonts (same rule as the third-party tags). Later rebuilds (resize, late images) go through build() as before. */
+    var armed = false;
+    var build = function () { if (armed) buildNow(); };
+    var arm = function () {
+      if (armed) return; armed = true;
+      if (window.requestIdleCallback) requestIdleCallback(buildNow, { timeout: 1000 }); else setTimeout(buildNow, 0);
+    };
+    ['scroll', 'wheel', 'touchstart', 'pointerdown', 'keydown'].forEach(function (ev) { window.addEventListener(ev, arm, { passive: true, once: true }); });
+    fontsReady.then(function () { setTimeout(arm, 8000); });
     if (document.readyState !== 'complete') window.addEventListener('load', rebuild);
     var lastW = window.innerWidth;
     window.addEventListener('resize', function () { if (window.innerWidth !== lastW) { lastW = window.innerWidth; rebuild(); } });

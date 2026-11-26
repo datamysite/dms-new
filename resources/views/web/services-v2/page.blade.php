@@ -123,12 +123,19 @@
 		}
 	}
 	/* the hero photo is the LCP element: serve its WebP sibling (e.g. digital-marketing.png 1.6 MB -> .webp 56 KB) when one exists */
-	if ($sv2Photo && preg_match('#/public/(.+)\.(jpe?g|png)$#i', parse_url($sv2Photo, PHP_URL_PATH) ?? '', $sv2Pm)) {
+	/* (the stored hero may already point at the .webp: its -w960 sibling is found the same way) */
+	if ($sv2Photo && preg_match('#/public/(.+)\.(jpe?g|png|webp)$#i', parse_url($sv2Photo, PHP_URL_PATH) ?? '', $sv2Pm)) {
 		if (is_file(public_path($sv2Pm[1] . '.webp'))) $sv2Photo = URL::to('/public/' . $sv2Pm[1] . '.webp');
 		/* phones get the 960 px version (the photo is a faded backdrop there) */
 		if (is_file(public_path($sv2Pm[1] . '-w960.webp'))) $sv2PhotoSm = URL::to('/public/' . $sv2Pm[1] . '-w960.webp');
 	}
 	$sv2PhotoSm = $sv2PhotoSm ?? null;
+	/* images are cached for a year under the same URL (browser + CDN): a re-encoded hero must change URL, so add ?v=<file time> */
+	$sv2Ver = function ($u) {
+		if (!$u || !preg_match('#/public/(.+)$#', (string) parse_url($u, PHP_URL_PATH), $m) || !is_file(public_path($m[1]))) return $u;
+		return $u . '?v=' . filemtime(public_path($m[1]));
+	};
+	$sv2Photo = $sv2Ver($sv2Photo); $sv2PhotoSm = $sv2Ver($sv2PhotoSm);
 
 	/* ---------- FAQ rows -> question/answer pairs ---------- */
 	$sv2FaqParse = function ($html) use ($sv2Dom, $sv2Text, $sv2Inner) {
@@ -256,6 +263,12 @@
 @section('v2crit', 'assets/css/service.critical.css')
 @section('v2form', '1')
 @section('v2keep', '1')
+{{-- pages listed in config/v2.php (fast_pages) also use the icon subset (no 128 KB icon font) and load custom/responsive CSS without blocking the first paint;
+     a test checks that every icon on those pages is in the subset --}}
+@if(in_array($sv2Page->slug, (array) config('v2.fast_pages', []), true))
+@section('v2icons', '1')
+@section('v2cssasync', '1')
+@endif
 
 @section('metaAddition')
 	<script>(function(){var d=document.documentElement;try{if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}d.classList.add('hv2-loading');setTimeout(function(){d.classList.remove('hv2-loading','hv2-leaving');},500);})();</script>

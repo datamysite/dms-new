@@ -9,4 +9,10 @@ return [
      * Turn on only to experiment: V2_CRITICAL_CSS=true in .env, and re-measure with PageSpeed before keeping it.
      */
     'critical_css' => (bool) env('V2_CRITICAL_CSS', false),
+
+    /*
+     * Service pages (by slug) that use the bootstrap-icons SUBSET and non-blocking custom.css/responsive.css (see @section v2icons / v2cssasync in master).
+     * Only add a page after checking its icons against assets/vendor/bootstrap-icons/bi-v2.css: tests/Feature/Seo/AssetPipelineTest does it for every page listed here.
+     */
+    'fast_pages' => ['outdoor-advertising'],
 ];

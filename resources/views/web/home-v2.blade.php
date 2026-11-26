@@ -710,7 +710,7 @@
 	     14 · FINAL CTA — copy on the left, big animated 3D globe on the right
 	==================================================================== --}}
 	<section class="hv2-cta hv2-green" id="hv2-cta">
-		<div class="hv2-cta-bg" aria-hidden="true"><img src="{{ $hv2Img }}/background/call-to.webp" alt="" loading="lazy"></div>
+		<div class="hv2-cta-bg" aria-hidden="true"><img src="{{ $hv2Img }}/background/call-to.webp" alt="" width="1536" height="1024" loading="lazy"></div>
 		<div class="hv2-container hv2-cta-grid">
 			<div class="hv2-cta-copy">
 				<span class="hv2-eyebrow hv2-eyebrow--white" data-reveal="up">Schedule Your Appointment Today</span>
