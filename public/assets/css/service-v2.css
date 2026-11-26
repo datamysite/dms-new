@@ -633,6 +633,22 @@
 .sv2 .sv2-hero .sv2-hero-body--title h2 { margin: 0 0 8px !important; max-width: 34ch; font: 500 clamp(18px, 1.67vw, 24px)/1.2 var(--font-body) !important; color: #fff !important; letter-spacing: 0; }
 @media (max-width: 767px) { .sv2 .sv2-hero .sv2-hero-body--title h1 { max-width: none; } }
 
+/* Hero buttons + trust chips stored in the hero row (/outdoor-advertising/billboards-advertising): a button row and small pills under the intro.
+   The generic hero rules turn links coral/underlined and every child div into a block, so these selectors are one class stronger. */
+.sv2 .sv2-hero .sv2-hero-body > .sv2-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: var(--space-5); }
+.sv2 .sv2-hero .sv2-hero-body .sv2-hero-ctas a.hv2-btn { color: var(--fgc); font-weight: 700; text-decoration: none; }
+.sv2 .sv2-hero .sv2-hero-body .sv2-hero-ctas .hv2-btn--outline { --fgc: #fff; --edge: rgba(255, 255, 255, .85); --wipe: #fff; --wipe-fg: var(--green-d, #082e23); }
+.sv2 .sv2-hero .sv2-hero-body > .sv2-hero-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: var(--space-4) 0 0; padding: 0; list-style: none; }
+.sv2 .sv2-hero .sv2-hero-chips li { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid rgba(255, 255, 255, .28); border-radius: 999px;
+  background: rgba(8, 46, 35, .55); font: 600 13px/1.2 var(--font-body); color: #fff; }
+.sv2 .sv2-hero .sv2-hero-chips i { color: var(--coral-s); font-size: 14px; }
+@media (max-width: 575px) { .sv2 .sv2-hero .sv2-hero-body .sv2-hero-ctas .hv2-btn { flex: 1 1 100%; justify-content: center; } }
+
+/* Expert quote inside the dark "Speak With Our Planning Team" band (same block as the agency quote, light text) */
+.sv2 .sv2-legacy .sv2-planner-quote { max-width: 680px; margin: 0 auto var(--space-5); text-align: left; background: rgba(255, 255, 255, .06); }
+.sv2 .sv2-legacy .sv2-planner .sv2-planner-quote blockquote p { color: #fff !important; }   /* one class stronger than the light .sv2-agency-quote text rule further down */
+.sv2 .sv2-legacy .sv2-planner-quote cite { color: var(--coral-s); }
+
 /* == Outdoor advertising page blocks that live in the database (Brands, Our Successful Projects, Explained) ==
    markup: section content rows with classes sv2-brands / hv2-stats (home markup) / sv2-explain */
 .sv2 .sv2-legacy .sv2-projects { padding-block: clamp(56px, 7vw, 100px) !important; }
