@@ -1343,3 +1343,19 @@ html.hv2-loading.hv2-js .hv2 .hv2-hero--fast [data-split]:not(.is-in) .hv2-w > s
 @media (prefers-reduced-motion: reduce) {
   .hs-body .whatsapp-chat, .hs-body .whatsapp-icon-position:before, .hs-body .whatsapp-icon-position:after, .hs-body .whatsapp-icon-position img { animation: none; }
 }
+
+/* == Phones: "process" cards and final CTA (home page and the service pages that reuse these blocks) ===================== */
+@media (max-width: 767px) {
+  /* each step is a row: icon on the left, title + text on the right */
+  .hv2-process .hv2-steps { row-gap: var(--space-4); }
+  .hv2-process .hv2-step { display: grid; grid-template-columns: 60px minmax(0, 1fr); grid-template-rows: auto 1fr; column-gap: 18px; align-content: start; padding: 22px 18px; text-align: left; }
+  .hv2-process .hv2-step-badge { grid-column: 1; grid-row: 1 / span 2; align-self: start; width: 60px; height: 60px; margin: 0; border-radius: 18px; }
+  .hv2-process .hv2-step-badge i { font-size: 24px; }
+  .hv2-process .hv2-step h3 { grid-column: 2; grid-row: 1; margin: 0 0 6px !important; text-align: left; }
+  .hv2-process .hv2-step p { grid-column: 2; grid-row: 2; margin: 0; text-align: left; }
+  .hv2-process .hv2-step-no { right: auto; left: 18px; bottom: 12px; width: 60px; text-align: center; font-size: 34px; }
+
+  /* final CTA: plain brand green, no photo and no globe (display:none also stops the lazy photo from downloading) */
+  .hv2-cta .hv2-cta-bg, .hv2-cta .hv2-globe { display: none; }
+  .hv2 .hv2-cta { padding-top: 72px; padding-bottom: 96px; }
+}

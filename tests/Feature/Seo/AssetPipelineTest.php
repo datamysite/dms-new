@@ -480,4 +480,14 @@ class AssetPipelineTest extends TestCase
         $this->assertStringContainsString('.hs-foot-bar { padding-bottom: calc(18px + 78px + env(safe-area-inset-bottom)); }', $css);
         $this->assertStringNotContainsString('.hs-footer { padding-bottom: 78px; }', $css, 'the old empty strip under the bar is gone');
     }
+
+    /** phone layout of the shared service blocks: dark hero tint, row-style process cards, plain CTA, two-column footer menus */
+    public function test_service_phone_layout_rules(): void
+    {
+        $css = file_get_contents(public_path('assets/css/service-v2.css'));
+        $this->assertStringContainsString('rgba(8, 46, 35, .86) 0%, rgba(8, 46, 35, .9) 50%, rgba(8, 46, 35, .95) 100%', $css, 'phone hero keeps the dark green tint behind the copy');
+        $this->assertStringContainsString('.sv2 .sv2-process .hv2-step { display: grid; grid-template-columns: 60px minmax(0, 1fr)', $css);
+        $this->assertStringContainsString('.sv2 .sv2-cta .hv2-cta-bg, .sv2 .sv2-cta .hv2-globe { display: none; }', $css);
+        $this->assertStringContainsString('.hs-foot-grid { grid-template-columns: repeat(2, minmax(0, 1fr))', file_get_contents(public_path('assets/css/home-v2-shell.css')));
+    }
 }
