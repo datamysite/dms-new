@@ -367,7 +367,7 @@ Already identical on production (leave as is): `styles`.
 
 ## 10. Unipoles: `/outdoor-advertising/unipoles`
 
-Service 51 (`unipoles`). URL, canonical and `services.name` ("Unipoles") unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`. **Local DB only so far (2026-11-27); the code is not committed.** For staging, take the rows from local.
+Service 51 (`unipoles`). URL, canonical and `services.name` ("Unipoles") unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`. **Rows are in the local DB only (2026-11-27); code `4d6e904` is committed and on `origin/staging`.** For staging, take the rows from local.
 
 **Meta title:** Unipole Advertising in Dubai | Static and Digital Unipoles
 **Meta description:** Book static and digital unipole advertising in Dubai on Sheikh Zayed Road and the main highways. We check the site, print, install and send proof photos.
