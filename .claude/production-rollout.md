@@ -18,7 +18,7 @@ How rows are rendered and the API: [`service-pages-db.md`](service-pages-db.md).
 | 6 | [`/outdoor-advertising/bridge-banners`](https://datamysite.com/outdoor-advertising/bridge-banners) | 126 / `bridge-banners` | Done | Done | **Pending** |
 | 7 | [`/outdoor-advertising/flyers-distribution`](https://datamysite.com/outdoor-advertising/flyers-distribution) | 17 / `flyers-distribution` | Done | Done (blog image files + post 759 alt text still missing) | **Pending** |
 | 8 | [`/outdoor-advertising/human-billboards`](https://datamysite.com/outdoor-advertising/human-billboards) | 18 / `human-billboards` | Done | Done (4 blog WebP files still missing) | **Pending** |
-| 9 | [`/outdoor-advertising/lamp-post`](https://datamysite.com/outdoor-advertising/lamp-post) | 52 / `lamp-post` | Done | **Pending** | **Pending** |
+| 9 | [`/outdoor-advertising/lamp-post`](https://datamysite.com/outdoor-advertising/lamp-post) | 52 / `lamp-post` | Done | Done | **Pending** |
 
 State read from the three environments' APIs on 2026-11-27: the active rows and the meta title/description of pages 1-7 are identical on local and staging; page 8 was applied to staging later that day from the same row files and checked there; production still has the old rows.
 
@@ -325,7 +325,7 @@ Already identical on production (leave as is): `styles`.
 
 ## 9. Lamp Post: `/outdoor-advertising/lamp-post`
 
-Service 52 (`lamp-post`). URL, canonical and `services.name` ("Lamp Post") unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-10T13:42:10+00:00`. **Local only so far (2026-11-27); code not committed.** Until staging has the rows, the source for them is the local database.
+Service 52 (`lamp-post`). URL, canonical and `services.name` ("Lamp Post") unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-10T13:42:10+00:00`. **Local and staging DB have the same rows and meta (2026-11-27); code `674add3` is live on staging.** Staging page checked: one H1, one FAQPage with 7 questions, one Service for the United Arab Emirates, no sideways scroll at 1440 px. PageSpeed not measured yet.
 
 **Meta title:** Lamppost Advertising in Dubai | Routes, Permits and Cost
 **Meta description:** Book lamppost advertising in Dubai on the roads your customers use. We plan the route, handle the permit, print, install and check every pole.
@@ -355,7 +355,7 @@ Already identical on production (leave as is): `styles`.
 **Hide** (`is_active=false`): `schema` (old FAQPage), `mobile-hero-clamp`, `what-is-lamp-post-advertising`, `clients`, `case-studies`, `why-choose-lamp-post-advertising-in-dubai`, `types-of-lamp-post-advertising-in-dubai`, `our-lamp-post-advertising-services-in-dubai`, `cost-of-lamp-post-advertising-in-dubai`, `advantages-of-choosing-datamysite`, `light-up-dubai-with-your-brand`, `blogs`, `faq`.
 
 **Page notes**
-- **Code it depends on:** the hub, Bridge Banners and Flyer Distribution code, plus this page's `.sv2-route-plan` CSS and `fast_pages` entry.
+- **Code it depends on:** the hub, Bridge Banners and Flyer Distribution code, plus commit `674add3` (`.sv2-route-plan` CSS, `fast_pages`).
 - No snippet found locally; check with `inspect_page`: after release the page needs one Service (United Arab Emirates) and one FAQPage with 7 questions.
 - The brief has no testimonials or blog block, so neither is on the page.
 - **Must fix before release, the blogs contradict the page's prices:** post 921 (the linked guide) says AED 15,000-50,000 per route package plus AED 5,000-12,000+ permits; post 942 says AED 300-800 per unit and RTA approval (the page says AED 2,000 / 3,500 / 10,000 per pole and a municipal permit). Both have their own FAQPage with these figures.

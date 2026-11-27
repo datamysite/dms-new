@@ -104,7 +104,7 @@ Run: `D:\xampp\php\php.exe artisan test` (PHP is not on PATH).
 Work locally → commit on branch `staging` → push `origin staging` (staging server pulls it, `APP_URL=https://staging.datamysite.com`) → user verifies → user merges/pushes to `main` (production). Never push `main` without the user's go-ahead. **Database content (service sections, meta tags, blogs) is NOT in git**: it is changed locally through the local API (`/api/v1`, bearer `BLOG_API_TOKEN` from `.env`, never print it) and on production/staging through the "DMS - Connector" MCP tools (`update_service_section`, `create_service_section`, `purge_cache`, `inspect_page`). Order for a release that needs new DB structure: SQL on the server DB → deploy code → create/update DB sections → `purge_cache` → test.
 
 ## Structural changes log (newest first; read this when setting up a new session or machine)
-**2026-11-27 · /outdoor-advertising/lamp-post rebuilt in the hub design (LOCAL DB only; code not committed)**
+**2026-11-27 · /outdoor-advertising/lamp-post rebuilt in the hub design (local + staging DB; code `674add3`)**
 - Service 52 (name stays "Lamp Post"). URL/canonical unchanged, new meta title/description. Hero row 96 rewritten (same background photo; it shows another brand's ads), 14 new keys; old rows hidden incl. `schema` (old FAQPage), `mobile-hero-clamp`, `blogs`, `faq`. Service JSON-LD = row `lamp-post-schema` (areaServed: Country United Arab Emirates).
 - Code: `service-v2.css` (`.sv2-route-plan`, `.sv2-lamp-*`), `fast_pages` += lamp-post, test `LampPostPageTest`, `RewrittenPagesPerfTest`, LinksTest `$withoutBlogs`.
 - Open items and the blog price conflicts: `production-rollout.md` section 9.
