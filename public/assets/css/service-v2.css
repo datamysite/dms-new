@@ -924,3 +924,12 @@ html.sv2-modal-open { overflow: hidden; }
   .sv2 .sv2-process--five .hv2-step-link { --g: 16px; left: calc((100% - 4 * var(--g)) / 5 * (var(--i) + .5) + var(--g) * var(--i) + 50px); width: calc((100% - 4 * var(--g)) / 5 + var(--g) - 100px); }
 }
 @media (min-width: 768px) and (max-width: 991px) { .sv2 .sv2-process--five .hv2-step:last-child { grid-column: 1 / -1; } }
+
+/* Human billboards (database sections): format cards with a 4:5 mockup above the text */
+.sv2-wrap-card.sv2-wrap-card--media { display: flex; flex-direction: column; overflow: hidden; padding: 0; border-top: 1px solid rgba(11, 61, 46, .08); }
+.sv2-wrap-media { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; }
+.sv2 .sv2-legacy .sv2-wrap-media img { display: block; width: 100% !important; height: 100% !important; max-width: none !important; margin: 0 !important; border-radius: 0 !important; object-fit: cover; }
+.sv2-wrap-media-body { padding: 22px 24px 26px; border-top: 5px solid var(--coral); }
+/* "Related Guides" (static blog cards inside a database section): no legacy heading bar */
+.sv2 .sv2-legacy .sv2-guides h2::before, .sv2 .sv2-legacy .sv2-guides h3::before { display: none; }
+.sv2 .sv2-legacy .sv2-guides .hv2-media--blog img { display: block; width: 100% !important; height: 100% !important; max-width: none !important; margin: 0 !important; border-radius: 0 !important; object-fit: cover; }
