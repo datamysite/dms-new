@@ -70,6 +70,29 @@ class FlyersDistributionPageTest extends TestCase
         }
     }
 
+    /* The cards come from the blog table and public/storage/blogs (not in Git): a new or replaced post banner needs WebP copies too */
+    public function test_blog_cards_meet_the_image_and_alt_rules(): void
+    {
+        $x = $this->xpath($this->html(self::PATH));
+        $cards = '//section[@id="hv2-blogs"]//a[contains(@class,"hv2-blog")]';
+        $this->assertSame(3, $x->query($cards)->length, 'three guide cards');
+        $this->assertSame(3, $x->query("$cards/h3")->length, 'card titles are H3');
+        foreach ($x->query("$cards//img") as $img) {
+            $alt = trim($img->getAttribute('alt'));
+            $this->assertStringContainsString(' ', $alt, "descriptive alt text, not a slug or file name: $alt");
+            $this->assertSame('lazy', $img->getAttribute('loading'), $alt);
+            $this->assertNotSame('', $img->getAttribute('width') . $img->getAttribute('height'), "width and height: $alt");
+            $urls = [$img->getAttribute('src')];
+            foreach (array_filter(explode(',', $img->getAttribute('srcset'))) as $c) $urls[] = explode(' ', trim($c))[0];
+            foreach ($urls as $u) {
+                $file = public_path(preg_replace('#^.*?/public/|\?.*$#', '', $u));
+                $this->assertFileExists($file);
+                $limit = getimagesize($file)[0] >= 1440 ? 175 : 150;
+                $this->assertLessThan($limit * 1024, filesize($file), 'make smaller WebP copies (-w480/-w960) of ' . basename($file));
+            }
+        }
+    }
+
     public function test_structured_data_and_eight_faqs(): void
     {
         $html = $this->html(self::PATH);
