@@ -2,7 +2,7 @@
 
 **Purpose:** everything needed to push the rebuilt service pages to production (datamysite.com). Page content lives in each environment's database, **not in Git**, so deploying the code alone does not publish these pages.
 
-**Keep this file updated (standing rule):** whenever a database-driven service page is rebuilt or its rows, meta, snippets, files or SQL change, add or update its section here in the same task. When a page goes live, set its status to "Live" with the date.
+**Keep this file updated (standing rule):** whenever a database-driven service page is rebuilt or its rows, meta, snippets, files or SQL change, add or update its section here in the same task. When a page goes live, set its status to "Live" with the date. **After every staging database change** (rows, meta, snippets, names, SQL), update the page's section and its status in the "Pages" table before reporting the task as done.
 
 How rows are rendered and the API: [`service-pages-db.md`](service-pages-db.md). Change history: [`project-map.md`](project-map.md).
 
@@ -17,8 +17,9 @@ How rows are rendered and the API: [`service-pages-db.md`](service-pages-db.md).
 | 5 | [`/outdoor-advertising/billboards-advertising/wallscapes`](https://datamysite.com/outdoor-advertising/billboards-advertising/wallscapes) | 50 / `wallscapes` | Done | Done | **Pending** |
 | 6 | [`/outdoor-advertising/bridge-banners`](https://datamysite.com/outdoor-advertising/bridge-banners) | 126 / `bridge-banners` | Done | Done | **Pending** |
 | 7 | [`/outdoor-advertising/flyers-distribution`](https://datamysite.com/outdoor-advertising/flyers-distribution) | 17 / `flyers-distribution` | Done | Done (blog image files + post 759 alt text still missing) | **Pending** |
+| 8 | [`/outdoor-advertising/human-billboards`](https://datamysite.com/outdoor-advertising/human-billboards) | 18 / `human-billboards` | Done | Done (4 blog WebP files still missing) | **Pending** |
 
-State read from the three environments' APIs on 2026-11-27: the active rows and the meta title/description of all seven pages are identical on local and staging; production still has the old rows.
+State read from the three environments' APIs on 2026-11-27: the active rows and the meta title/description of pages 1-7 are identical on local and staging; page 8 was applied to staging later that day from the same row files and checked there; production still has the old rows.
 
 ## Release order
 
@@ -284,6 +285,42 @@ Already identical on production (leave as is): `styles`.
 - **Blog banner files (git-ignored, copy by hand to `public/storage/blogs/`):** `759190226053806.webp`, `759190226053806-w480.webp`, `759190226053806-w960.webp`, `532031125112100.webp`, `532031125112100-w480.webp`, `532031125112100-w960.webp`, `532031125112100-w1440.webp`. Staging does not have them yet either.
 - **Blog 759 alt text** (live still shows the slug): set to "Dubai Marina towers, a traditional souk and a villa community, areas for flyer distribution in Dubai" (connector `update_blog`; the IndexNow submit it triggers is expected on production).
 - Open items: real GPS report screenshot and team photos; 6 case studies to be chosen; the live cost guide post quotes different per-flyer prices (AED 0.15-0.60 door to door, 0.25-0.80 hand to hand) from the page (0.15 / 0.20): confirm before release. The Best Areas banner looks AI-generated (sparkle mark).
+
+## 8. Human Billboards: `/outdoor-advertising/human-billboards`
+
+Service 18 (`human-billboards`). URL, canonical and `services.name` unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`.
+
+**Meta title:** Human Billboard Advertising Dubai | Walking LED Billboards
+**Meta description:** Human billboard advertising in Dubai and across the UAE: walking and backpack LED billboards, sign spinners and mascots, with approx. cost per promoter day.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `human-billboard-formats` | content | Create |
+| main | 26 | `where-human-billboards-work` | content | Create |
+| main | 28 | `human-billboard-cost-in-dubai` | content | Create |
+| main | 30 | `human-billboard-permits-and-proof` | content | Create |
+| main | 32 | `why-dms-for-human-billboards` | content | Create |
+| main | 34 | `human-billboard-case-studies` | content | Create |
+| main | 36 | `what-our-clients-say` | content | Create |
+| main | 38 | `human-billboard-guides` | content | Create |
+| main | 40 | `human-billboard-faqs` | faq | Create |
+| main | 42 | `human-billboard-quote-cta` | content | Create |
+| after_main | 50 | `human-billboard-schema` | script | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `what-is-human-billboard-advertising`, `clients`, `case-studies`, `types-of-human-billboard-advertising`, `why-choose-human-billboard-advertising-in-dubai`, `our-human-billboard-advertising-process`, `why-choose-datamysite-advertising`, `blogs`, `faq`.
+
+**Page notes**
+- **Code it depends on:** the hub, Bridge Banners and Flyer Distribution code, plus commit `b2f9ccd` (format card CSS, mockups in `public/assets/img/human-billboards/` (in Git), `fast_pages`).
+- The live page's JSON-LD (2026-11-27) has one Service, one BreadcrumbList and one FAQPage (5 old questions); no snippet was found locally. Check with `inspect_page` before and after: the new page must show 6 questions and one Service (United Arab Emirates).
+- The `human-billboard-guides` row links two live posts and `/experiential-marketing/mall-activations-dubai`.
+- **Blog banner WebP files (git-ignored, copy by hand to `public/storage/blogs/`):** `8290125011943.webp`, `8290125011943-w480.webp`, `924070826044454.webp`, `924070826044454-w480.webp`. Staging and production both have the JPGs but not these (cards fall back to the JPGs).
+- Open items: the hero photo and the human billboards blog banner show other brands' ads (replace with DMS campaign photos; hero kept by the owner's choice); the format images are drawn mockups with no visible "mockup" label (owner asked to remove it; the alt text says mockup); 6 case studies to be chosen; confirm the permit, supervisor, GPS route log and AED 300 claims.
 
 ## Adding a new page to this file
 
