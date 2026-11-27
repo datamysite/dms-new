@@ -906,3 +906,21 @@ html.sv2-modal-open { overflow: hidden; }
 
 /* Phones: the process cards and final CTA layout is shared (home-v2.css); only the legacy-wrapper heading margin needs a stronger rule here */
 @media (max-width: 767px) { .sv2 .sv2-legacy .sv2-process .hv2-step h3 { margin: 0 0 6px !important; } }
+
+/* Flyer distribution (database sections): closing line under a card grid, sub heading above one, 5 "why" cards (3 + 2), "will not do" list, 5-step timeline */
+.sv2 .sv2-legacy .sv2-wrap-types p.sv2-wrap-foot { max-width: 780px; margin: clamp(22px, 2.6vw, 32px) 0 0 !important; }
+.sv2 .sv2-legacy .sv2-wrap-types h3.sv2-wrap-sub { margin: 0 0 var(--space-5) !important; }
+@media (min-width: 992px) {
+  .sv2-wrap-grid--5 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .sv2-wrap-grid--5 > * { grid-column: span 2; }
+  .sv2-wrap-grid--5 > :nth-child(n+4) { grid-column: span 3; }
+}
+.sv2 .sv2-legacy .sv2-proof h3 { margin: var(--space-6) 0 var(--space-4) !important; }
+.sv2 .sv2-legacy ul.sv2-wontdo > li::before { content: "\00d7"; left: 0; top: .12em; width: auto; height: auto; background: none; box-shadow: none; color: #b8302a; font: 800 22px/1.2 var(--font-body); }
+.sv2 .sv2-legacy .sv2-permits p a { color: #b8302a !important; text-decoration: underline; text-underline-offset: 3px; }
+@media (min-width: 992px) {
+  .sv2 .sv2-process--five .hv2-steps { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 16px; }
+  .sv2 .sv2-process--five .hv2-step { padding-left: 14px; padding-right: 14px; }
+  .sv2 .sv2-process--five .hv2-step-link { --g: 16px; left: calc((100% - 4 * var(--g)) / 5 * (var(--i) + .5) + var(--g) * var(--i) + 50px); width: calc((100% - 4 * var(--g)) / 5 + var(--g) - 100px); }
+}
+@media (min-width: 768px) and (max-width: 991px) { .sv2 .sv2-process--five .hv2-step:last-child { grid-column: 1 / -1; } }

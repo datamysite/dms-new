@@ -20,6 +20,7 @@ class RewrittenPagesPerfTest extends TestCase
         'hoarding' => '/outdoor-advertising/billboards-advertising/hoarding',
         'wallscapes' => '/outdoor-advertising/billboards-advertising/wallscapes',
         'bridge-banners' => '/outdoor-advertising/bridge-banners',
+        'flyers-distribution' => '/outdoor-advertising/flyers-distribution',
     ];
 
     public function test_every_rewritten_page_is_covered(): void
