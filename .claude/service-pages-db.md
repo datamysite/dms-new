@@ -46,7 +46,7 @@ Billboards page (service 16) = the same blocks; locations use the map block (`.s
 6. Production only on the user's go-ahead, after the code is merged to `main`: same API calls (or MCP tools), SQL for `services.name`, snippet edits in the admin panel, `purge_cache`.
 A page's rows depend on code: never put rows on a database whose site runs older code (production `main` lacked the hub CSS/JS/`/enquiry/planner` on 2026-11-26).
 
-## 6. State per page (update when it changes)
+## 6. State per page (update when it changes; the production push list is `production-rollout.md`, update both)
 | Page | Local | Staging | Production |
 |---|---|---|---|
 | `/outdoor-advertising` (service 1) | redesigned rows 1344–1356 | same | **old rows** (redesign not live) |

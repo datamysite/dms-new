@@ -1,6 +1,8 @@
 # DataMySite — codebase map (as of 2026-11-26, last commit 9ea5b48 + uncommitted service-v2 work)
 
 Read this before exploring. Stack, performance rules, asset build and staging links are in `CLAUDE.md` (not repeated here).
+**Pushing DB-driven service pages to production:** [`production-rollout.md`](production-rollout.md) (keep it updated for every such page).
+
 **Update this file** when you add/move routes, controllers, views, assets, configs, tools or tests.
 
 ## Request pipeline (`bootstrap/app.php`)

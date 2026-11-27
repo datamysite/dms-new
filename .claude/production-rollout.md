@@ -1,0 +1,290 @@
+# Production rollout: database-driven service pages
+
+**Purpose:** everything needed to push the rebuilt service pages to production (datamysite.com). Page content lives in each environment's database, **not in Git**, so deploying the code alone does not publish these pages.
+
+**Keep this file updated (standing rule):** whenever a database-driven service page is rebuilt or its rows, meta, snippets, files or SQL change, add or update its section here in the same task. When a page goes live, set its status to "Live" with the date.
+
+How rows are rendered and the API: [`service-pages-db.md`](service-pages-db.md). Change history: [`project-map.md`](project-map.md).
+
+## Pages
+
+| # | Page | Service id / slug | Local | Staging | Production |
+|---|---|---|---|---|---|
+| 1 | [`/outdoor-advertising`](https://datamysite.com/outdoor-advertising) | 1 / `outdoor-advertising` | Done | Done | **Pending** |
+| 2 | [`/outdoor-advertising/billboards-advertising`](https://datamysite.com/outdoor-advertising/billboards-advertising) | 16 / `billboards-advertising` | Done | Done | **Pending** |
+| 3 | [`/outdoor-advertising/billboards-advertising/building-wraps`](https://datamysite.com/outdoor-advertising/billboards-advertising/building-wraps) | 48 / `building-wraps` | Done | Done | **Pending** |
+| 4 | [`/outdoor-advertising/billboards-advertising/hoarding`](https://datamysite.com/outdoor-advertising/billboards-advertising/hoarding) | 49 / `hoarding` | Done | Done | **Pending** |
+| 5 | [`/outdoor-advertising/billboards-advertising/wallscapes`](https://datamysite.com/outdoor-advertising/billboards-advertising/wallscapes) | 50 / `wallscapes` | Done | Done | **Pending** |
+| 6 | [`/outdoor-advertising/bridge-banners`](https://datamysite.com/outdoor-advertising/bridge-banners) | 126 / `bridge-banners` | Done | Done | **Pending** |
+| 7 | [`/outdoor-advertising/flyers-distribution`](https://datamysite.com/outdoor-advertising/flyers-distribution) | 17 / `flyers-distribution` | Done | Done (blog image files + post 759 alt text still missing) | **Pending** |
+
+State read from the three environments' APIs on 2026-11-27: the active rows and the meta title/description of all seven pages are identical on local and staging; production still has the old rows.
+
+## Release order
+
+1. **Go-ahead** from the owner. Resolve the open items in the page sections that must not go live.
+2. **Back up** on production: for each page `GET /api/v1/services/{slug}/sections`, then each row (`GET /api/v1/service-sections/{id}`), plus the meta (`GET /api/v1/meta-tags/lookup?url=`) and the snippets listed below. Compare "newest production edit" in each page section: if a row changed after that date, someone edited live; check before overwriting.
+3. **SQL** (before the code; check with `SHOW COLUMNS FROM enquiries;` first, the quote form needs both columns):
+   `ALTER TABLE enquiries ADD COLUMN budget VARCHAR(60) NULL, ADD COLUMN preferred_dates VARCHAR(120) NULL;`
+4. **Code:** merge `staging` into `main` and deploy. On 2026-11-27 `main` was at `9ea5b48`, without the new CSS, templates, images or the `/enquiry/planner` route. Never add the new rows to a site running older code.
+5. **Rows, straight after the deploy** (the new code already treats these pages as rebuilt, for example it loads only the icon subset). Source = **staging** rows. Match by `section_key`, never by id. For each key in a page's table: "Update" = PATCH the existing row, "Create" = POST it (copy `content`, `title`, `type`, `area`, `sort_order`, `is_active=true`). Then set `is_active=false` on every key in the "Hide" list. **Never delete rows.** Use `/api/v1` (bearer `BLOG_API_TOKEN`, never print it; send JSON as UTF-8) or the "DMS - Connector" tools (`create_service_section`, `update_service_section`).
+6. **Meta:** upsert each page's title and description (`upsert_meta_tags`), keyed by the live URL.
+7. **SQL for names, snippets, files:** see the page sections. Snippets are edited only in `/admin/panel/seo/snippet` (no API).
+8. **Purge** the cache **after** the code and rows are live (`purge_cache`). An earlier purge caches the old page again.
+9. **Check each page** (`inspect_page`): new title and description, one H1, **one** FAQPage with the same questions as the page, one Service block, canonical unchanged, no `[` placeholders, images load, quote popup opens. Do not submit a test enquiry without telling the team (it emails them). Check "Read reviews" in the footer.
+10. **PageSpeed:** `php artisan seo:pagespeed --base=<live> --strategy=both --path=/... --fresh`, 3 runs about 70 s apart (limits: `.claude/rules/performance.md`).
+11. Update this file (status "Live" + date) and the state table in `service-pages-db.md`.
+
+**Roll back a page:** restore from the backup or the row revisions (`GET /api/v1/service-sections/{id}/revisions`, then restore), hide the newly created rows, re-activate the hidden ones, restore meta and snippets, purge.
+
+## 1. Outdoor Advertising (hub): `/outdoor-advertising`
+
+Service 1 (`outdoor-advertising`). URL and canonical unchanged. Newest production row edit on 2026-11-27: `2026-11-25T10:31:41+00:00`.
+
+**Meta title:** Outdoor Advertising Dubai: Billboards, Hoardings & Rates
+**Meta description:** Outdoor advertising agency in Dubai since 2010. Billboards, unipoles, hoardings and building wraps on Sheikh Zayed Road and beyond. Quote in 60 minutes.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `our-successful-projects` | content | Create |
+| main | 26 | `dubai-outdoor-advertising-explained` | content | Create |
+| main | 28 | `your-outdoor-advertising-agency-in-dubai` | content | Create |
+| main | 30 | `outdoor-advertising-formats-in-dubai` | content | Create |
+| main | 32 | `prime-outdoor-advertising-locations-in-dubai` | content | Create |
+| main | 34 | `latest-ooh-campaigns` | content | Create |
+| main | 36 | `outdoor-advertising-dubai-prices-2026` | content | Create |
+| main | 38 | `how-we-run-your-outdoor-campaign` | content | Create |
+| main | 39 | `speak-with-our-planning-team` | content | Create |
+| main | 40 | `what-our-clients-say` | content | Create |
+| main | 41 | `outdoor-advertising-dubai-faqs` | faq | Create |
+| main | 42 | `outdoor-advertising-quote-cta` | content | Create |
+
+Already identical on production (leave as is): `styles`, `scripts`.
+
+**Hide** (`is_active=false`): `outdoor-advertising-in-practice`, `why-outdoor-advertising-works-in-dubai`, `clients`, `case-studies`, `our-outdoor-advertising-services`, `prime-locations-we-cover`, `blogs`, `faq`.
+
+**Page notes**
+- **Snippet #12** (Head, "Rating Schema - Outdoor Advertising"): **delete its FAQPage `<script>` block.** It holds the 5 old questions; while it exists the template skips its own FAQPage, so Google would get 5 old questions while the page shows 10 new ones. The same snippet also has a Service block with an OfferCatalog: keep it, but check its prices and text against the new page.
+- The live hero row was edited on 2026-11-25 10:31 UTC and its wording differs from the new hero. The rollout replaces it: confirm nothing from that edit must be kept.
+- Other pages are linked from here and copy blocks from here: do this page first.
+
+## 2. Billboard Advertising: `/outdoor-advertising/billboards-advertising`
+
+Service 16 (`billboards-advertising`). URL and canonical unchanged. Newest production row edit on 2026-11-27: `2026-11-13T10:37:39+00:00`.
+
+**Meta title:** Billboard Advertising Dubai: 2026 Rates, Locations & Formats
+**Meta description:** Billboard advertising in Dubai since 2010. Unipoles, digital, rooftop and bridge billboards on Sheikh Zayed Road and beyond. Quote in 60 minutes.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `our-successful-projects` | content | Create |
+| main | 26 | `how-billboard-advertising-in-dubai-works` | content | Create |
+| main | 28 | `your-billboard-advertising-agency-in-dubai` | content | Create |
+| main | 32 | `billboard-advertising-locations-in-dubai` | content | Create |
+| main | 34 | `latest-billboard-campaigns` | content | Create |
+| main | 36 | `billboard-sizes-and-prices-in-dubai` | content | Create |
+| main | 38 | `how-we-run-your-billboard-campaign` | content | Create |
+| main | 39 | `speak-with-our-planning-team` | content | Create |
+| main | 40 | `what-our-clients-say` | content | Create |
+| main | 41 | `billboard-advertising-dubai-faqs` | faq | Create |
+| main | 42 | `billboard-advertising-quote-cta` | content | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `schema`, `why-billboard-advertising-still-wins-in-dubai`, `clients`, `case-studies`, `our-billboard-advertising-formats`, `dubai-s-highest-trafficbillboard-spots`, `how-much-does-billboard-advertising-cost-in-dubai`, `billboard-sizes-downtown-business-bay`, `our-process`, `2-million-eyes-on-yourbrand-every-single-day`, `blogs`, `faq`.
+
+**Page notes**
+- **SQL (no API):** `UPDATE services SET name='Billboard Advertising' WHERE id=16;` (breadcrumb, form value, schema).
+- **Snippet #63** (Body, old 4-question FAQPage): **delete.** Live currently prints two FAQPage blocks (8 and 4 questions).
+- **Snippet #24** (Head, Service + LocalBusiness): keep, rename the service in it to "Billboard Advertising Dubai".
+- Local also has an inactive spare row `service-schema`: do not create it.
+
+## 3. Building Wraps: `/outdoor-advertising/billboards-advertising/building-wraps`
+
+Service 48 (`building-wraps`). URL and canonical unchanged. Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`.
+
+**Meta title:** Building Wrap Advertising Dubai: Formats, Locations & Costs
+**Meta description:** Building wrap advertising in Dubai on towers, facades and scaffolding. We find the building, get approvals, print and install. Quote in 60 minutes.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `our-successful-projects` | content | Create |
+| main | 26 | `what-is-building-wrap-advertising-in-dubai` | content | Create |
+| main | 28 | `why-brands-choose-us-for-building-wraps` | content | Create |
+| main | 30 | `building-wrap-formats` | content | Create |
+| main | 32 | `building-wrap-locations-in-dubai` | content | Create |
+| main | 34 | `building-wraps-we-have-delivered` | content | Create |
+| main | 36 | `building-wrap-advertising-cost-in-dubai` | content | Create |
+| main | 38 | `how-we-run-your-building-wrap-campaign` | content | Create |
+| main | 39 | `speak-with-our-planning-team` | content | Create |
+| main | 40 | `what-our-clients-say` | content | Create |
+| main | 41 | `building-wrap-advertising-faqs` | faq | Create |
+| main | 42 | `building-wrap-quote-cta` | content | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `what-is-building-wrap-advertising`, `clients`, `case-studies`, `why-choose-building-wrap-advertising-in-dubai`, `ideal-locations-for-building-wraps-in-dubai`, `our-building-wrap-advertising-services`, `advantages-of-choosing-datamysite`, `blogs`, `faq`, `scripts`.
+
+**Page notes**
+- Row `building-wrap-formats` links its "Facade Banner" card to the Wallscapes page.
+- No snippet schema found on the live page (2026-11-27); recheck with `inspect_page`.
+- Location photos are stand-ins; the case-study slider shows all case studies and testimonials are the shared review slider, until the DMS team supplies its picks.
+
+## 4. Hoarding: `/outdoor-advertising/billboards-advertising/hoarding`
+
+Service 49 (`hoarding`). URL and canonical unchanged. Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`.
+
+**Meta title:** Hoarding Advertising Dubai: Sites, Sizes & Costs
+**Meta description:** Hoarding advertising in Dubai on construction sites and main roads. We find the site, handle permits, print and install. Reply in 60 minutes.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `our-successful-projects` | content | Create |
+| main | 26 | `what-is-hoarding-advertising-in-dubai` | content | Create |
+| main | 28 | `choosing-among-hoarding-companies` | content | Create |
+| main | 30 | `types-of-hoarding-we-book` | content | Create |
+| main | 32 | `hoarding-advertising-locations` | content | Create |
+| main | 34 | `hoarding-campaigns-portfolio` | content | Create |
+| main | 36 | `hoarding-sizes-and-costs` | content | Create |
+| main | 38 | `how-we-run-your-hoarding-campaign` | content | Create |
+| main | 39 | `speak-with-our-planning-team` | content | Create |
+| main | 40 | `what-our-clients-say` | content | Create |
+| main | 41 | `hoarding-advertising-faqs` | faq | Create |
+| main | 42 | `hoarding-quote-cta` | content | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `what-is-hoarding-advertising`, `clients`, `case-studies`, `why-hoarding-advertising-works-so-well-in-dubai`, `prime-locations-for-hoarding-advertising-in-dubai`, `our-hoarding-advertising-services`, `benefits-of-hoarding-advertising`, `why-choose-datamysite-for-hoarding-advertising-in-dubai`, `blogs`, `faq`.
+
+**Page notes**
+- No snippet schema found on the live page (2026-11-27); recheck with `inspect_page`.
+- The cost guide post it links to exists on live only (404 on local/staging).
+- Photos are stand-ins except Dubai Media City.
+
+## 5. Wallscapes: `/outdoor-advertising/billboards-advertising/wallscapes`
+
+Service 50 (`wallscapes`). URL and canonical unchanged. Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`.
+
+**Meta title:** Wallscape Advertising Dubai: Vinyl and Hand-Painted Walls
+**Meta description:** Wallscape advertising in Dubai on building walls, printed in vinyl or painted by hand. We find the wall, get approval and install. Reply in 60 minutes.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 26 | `what-is-wallscape-advertising-in-dubai` | content | Create |
+| main | 28 | `why-brands-use-us-for-wallscapes` | content | Create |
+| main | 30 | `wallscape-formats` | content | Create |
+| main | 32 | `wallscape-locations-in-dubai` | content | Create |
+| main | 34 | `wallscape-work-we-have-delivered` | content | Create |
+| main | 36 | `wallscape-advertising-cost-in-dubai` | content | Create |
+| main | 38 | `how-we-run-your-wallscape-campaign` | content | Create |
+| main | 39 | `speak-with-our-planning-team` | content | Create |
+| main | 40 | `what-our-clients-say` | content | Create |
+| main | 41 | `wallscape-advertising-faqs` | faq | Create |
+| main | 42 | `wallscape-quote-cta` | content | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `what-is-wallscape-advertising`, `clients`, `case-studies`, `why-wallscape-advertising-works-in-dubai`, `ideal-locations-for-wallscape-advertising-in-dubai`, `datamysite-s-wallscape-advertising-services`, `benefits-of-wallscape-advertising`, `why-choose-datamysite-for-wallscape-advertising`, `blogs`, `faq`.
+
+**Page notes**
+- No snippet schema found on the live page (2026-11-27); recheck with `inspect_page`.
+- Agency photo is a stand-in; the case-study sentence needs DMS team confirmation.
+
+## 6. Bridge Banners: `/outdoor-advertising/bridge-banners`
+
+Service 126 (`bridge-banners`). URL and canonical unchanged. Newest production row edit on 2026-11-27: `2026-11-16T12:29:49+00:00`.
+
+**Meta title:** Bridge Banner Advertising in Dubai | Locations and Costs
+**Meta description:** Advertise on bridge banners in Dubai over Sheikh Zayed Road, Al Khail Road and more. Bridge locations, daily traffic, sizes, approx. costs and lead times.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `bridge-banner-locations-in-dubai` | content | Create |
+| main | 26 | `bridge-banner-sizes-and-formats` | content | Create |
+| main | 28 | `how-to-choose-the-right-bridge` | content | Create |
+| main | 32 | `bridge-banner-advertising-cost-in-dubai` | content | Create |
+| main | 34 | `bridge-banner-permits-and-lead-times` | content | Create |
+| main | 36 | `designing-a-bridge-banner` | content | Create |
+| main | 38 | `bridge-banner-vs-billboard-vs-unipole` | content | Create |
+| main | 39 | `why-book-your-bridge-banner-with-dms` | content | Create |
+| main | 41 | `bridge-banner-case-studies` | content | Create |
+| main | 42 | `what-our-clients-say` | content | Create |
+| main | 44 | `bridge-banner-faqs` | faq | Create |
+| main | 46 | `bridge-banner-quote-cta` | content | Create |
+| after_main | 48 | `bridge-banner-schema` | script | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `mobile-hero-clamp`, `outdoor-advertising-guides`, `where-the-bridges-are`, `clients`, `sizes-and-formats`, `rates-and-lead-times`, `bridge-banner-or-unipole`, `case-studies`, `who-you-ll-work-with`, `blogs`, `faq`, `put-your-brand-over-dubai-s-busiest-roads`, `schema`.
+
+**Page notes**
+- No snippet found: the Service/LocalBusiness block on live today comes from the old `schema` row, which is hidden here and replaced by `bridge-banner-schema`.
+- The road link `/al-khail-road-e311-and-al-ittihad-road-advertising-2026-rates` is live on production.
+- Hero photo is a stand-in and there is no photo of Aan yet.
+
+## 7. Flyer Distribution: `/outdoor-advertising/flyers-distribution`
+
+Service 17 (`flyers-distribution`). URL and canonical unchanged. Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`.
+
+**Meta title:** Flyer Distribution in Dubai | Door to Door and Hand to Hand
+**Meta description:** Flyer and leaflet distribution in Dubai, Sharjah and Abu Dhabi. Door to door and hand to hand, with print, permit and GPS tracked delivery in one quote.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `flyer-distribution-methods` | content | Create |
+| main | 26 | `flyer-gps-tracking` | content | Create |
+| main | 28 | `flyer-distribution-areas` | content | Create |
+| main | 30 | `flyer-distribution-cost-in-dubai` | content | Create |
+| main | 32 | `flyer-permits` | content | Create |
+| main | 34 | `how-a-flyer-campaign-runs` | content | Create |
+| main | 36 | `flyer-response` | content | Create |
+| main | 38 | `why-dms-for-flyers` | content | Create |
+| main | 40 | `flyer-case-studies` | content | Create |
+| main | 42 | `what-our-clients-say` | content | Create |
+| main | 44 | `blogs` | blogs | Update |
+| main | 46 | `flyer-distribution-faqs` | faq | Create |
+| main | 48 | `flyer-quote-cta` | content | Create |
+| after_main | 50 | `flyer-distribution-schema` | script | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `schema`, `flyer-distribution-guides`, `why-choose-flyer-distribution-in-dubai`, `clients`, `case-studies`, `our-flyer-distribution-services`, `why-choose-datamysite-for-flyer-distribution-in-dubai`, `industries-that-benefit-from-flyer-marketing`, `flyer-rates-types-areas-2026`, `faq`.
+
+**Page notes**
+- **Snippet #25** (Head, Dubai-only Service schema): **delete.** It would duplicate the new Service block (row `flyer-distribution-schema`).
+- The quote modal on this page has no budget field (the fixed budget options start at "Under AED 20,000").
+- **Blog banner files (git-ignored, copy by hand to `public/storage/blogs/`):** `759190226053806.webp`, `759190226053806-w480.webp`, `759190226053806-w960.webp`, `532031125112100.webp`, `532031125112100-w480.webp`, `532031125112100-w960.webp`, `532031125112100-w1440.webp`. Staging does not have them yet either.
+- **Blog 759 alt text** (live still shows the slug): set to "Dubai Marina towers, a traditional souk and a villa community, areas for flyer distribution in Dubai" (connector `update_blog`; the IndexNow submit it triggers is expected on production).
+- Open items: real GPS report screenshot and team photos; 6 case studies to be chosen; the live cost guide post quotes different per-flyer prices (AED 0.15-0.60 door to door, 0.25-0.80 hand to hand) from the page (0.15 / 0.20): confirm before release. The Best Areas banner looks AI-generated (sparkle mark).
+
+## Adding a new page to this file
+
+Copy a section above and fill in: URL, service id and slug, meta title and description, rows to publish (area, sort, key, type, Create/Update), rows to hide, `services.name` or other SQL, snippets to change (check the live page's JSON-LD, local copies can differ), files that Git does not carry, code it depends on, and open items. Add its line to the "Pages" table.
