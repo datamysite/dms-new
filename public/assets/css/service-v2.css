@@ -893,6 +893,7 @@ html.sv2-modal-open { overflow: hidden; }
 
 /* the live-campaign photo has its billboard on the left: keep it in the portrait crop */
 .sv2 .sv2-legacy .sv2-agency-media img[src*="live-campaign"] { object-position: 18% 50% !important; }
+.sv2 .sv2-legacy .sv2-agency-media img[src*="building-wrap-dubai-tower"] { object-position: 37% 50% !important; }   /* the 4/5 frame keeps the wrapped tower, which sits left of centre */
 
 /* image hover: a slow zoom inside the frame (transform only: no layout, no blur). Mouse devices only, off for reduced motion. Client logos and the case-study slider keep their own behaviour. */
 @media (hover: hover) and (prefers-reduced-motion: no-preference) {
