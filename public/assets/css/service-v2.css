@@ -933,3 +933,10 @@ html.sv2-modal-open { overflow: hidden; }
 /* "Related Guides" (static blog cards inside a database section): no legacy heading bar */
 .sv2 .sv2-legacy .sv2-guides h2::before, .sv2 .sv2-legacy .sv2-guides h3::before { display: none; }
 .sv2 .sv2-legacy .sv2-guides .hv2-media--blog img { display: block; width: 100% !important; height: 100% !important; max-width: none !important; margin: 0 !important; border-radius: 0 !important; object-fit: cover; }
+/* Lamp Post (database sections): example route plan box under the three cards, second H2 in the artwork block, links in text blocks */
+.sv2-route-plan { max-width: 780px; margin-top: clamp(22px, 2.6vw, 32px); padding: 24px 26px; border-radius: 22px; background: #fff; border: 1px solid rgba(11, 61, 46, .08); border-left: 5px solid var(--green, #0b3d2e); box-shadow: 0 18px 40px -26px rgba(11, 61, 46, .4); }
+.sv2 .sv2-legacy .sv2-route-plan p.sv2-route-title { margin: 0 0 var(--space-3) !important; font-weight: 800; color: var(--heading-c, #0b3d2e) !important; }
+.sv2 .sv2-legacy .sv2-route-plan ul { margin: 0 !important; }
+.sv2 .sv2-legacy .sv2-route-plan li:last-child { margin-bottom: 0 !important; }
+.sv2 .sv2-legacy .sv2-lamp-artwork h2.sv2-lamp-next { margin-top: var(--space-6) !important; }
+.sv2 .sv2-legacy .sv2-lamp-cost p a { color: #b8302a !important; text-decoration: underline; text-underline-offset: 3px; }

@@ -18,6 +18,7 @@ How rows are rendered and the API: [`service-pages-db.md`](service-pages-db.md).
 | 6 | [`/outdoor-advertising/bridge-banners`](https://datamysite.com/outdoor-advertising/bridge-banners) | 126 / `bridge-banners` | Done | Done | **Pending** |
 | 7 | [`/outdoor-advertising/flyers-distribution`](https://datamysite.com/outdoor-advertising/flyers-distribution) | 17 / `flyers-distribution` | Done | Done (blog image files + post 759 alt text still missing) | **Pending** |
 | 8 | [`/outdoor-advertising/human-billboards`](https://datamysite.com/outdoor-advertising/human-billboards) | 18 / `human-billboards` | Done | Done (4 blog WebP files still missing) | **Pending** |
+| 9 | [`/outdoor-advertising/lamp-post`](https://datamysite.com/outdoor-advertising/lamp-post) | 52 / `lamp-post` | Done | **Pending** | **Pending** |
 
 State read from the three environments' APIs on 2026-11-27: the active rows and the meta title/description of pages 1-7 are identical on local and staging; page 8 was applied to staging later that day from the same row files and checked there; production still has the old rows.
 
@@ -321,6 +322,47 @@ Already identical on production (leave as is): `styles`.
 - The `human-billboard-guides` row links two live posts and `/experiential-marketing/mall-activations-dubai`.
 - **Blog banner WebP files (git-ignored, copy by hand to `public/storage/blogs/`):** `8290125011943.webp`, `8290125011943-w480.webp`, `924070826044454.webp`, `924070826044454-w480.webp`. Staging and production both have the JPGs but not these (cards fall back to the JPGs).
 - Open items: the hero photo and the human billboards blog banner show other brands' ads (replace with DMS campaign photos; hero kept by the owner's choice); the format images are drawn mockups with no visible "mockup" label (owner asked to remove it; the alt text says mockup); 6 case studies to be chosen; confirm the permit, supervisor, GPS route log and AED 300 claims.
+
+## 9. Lamp Post: `/outdoor-advertising/lamp-post`
+
+Service 52 (`lamp-post`). URL, canonical and `services.name` ("Lamp Post") unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-10T13:42:10+00:00`. **Local only so far (2026-11-27); code not committed.** Until staging has the rows, the source for them is the local database.
+
+**Meta title:** Lamppost Advertising in Dubai | Routes, Permits and Cost
+**Meta description:** Book lamppost advertising in Dubai on the roads your customers use. We plan the route, handle the permit, print, install and check every pole.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `why-brands-book-lamp-posts` | content | Create |
+| main | 26 | `why-dms-for-lamp-posts` | content | Create |
+| main | 28 | `lamp-post-formats` | content | Create |
+| main | 30 | `lamp-post-roads-and-areas` | content | Create |
+| main | 32 | `how-many-lamp-posts` | content | Create |
+| main | 34 | `lamp-post-advertising-cost-in-dubai` | content | Create |
+| main | 36 | `lamp-posts-or-billboards` | content | Create |
+| main | 38 | `how-a-lamp-post-campaign-runs` | content | Create |
+| main | 40 | `lamp-post-artwork-and-uae-coverage` | content | Create |
+| main | 42 | `lamp-post-case-studies` | content | Create |
+| main | 44 | `lamp-post-faqs` | faq | Create |
+| main | 46 | `lamp-post-quote-cta` | content | Create |
+| after_main | 48 | `lamp-post-schema` | script | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `schema` (old FAQPage), `mobile-hero-clamp`, `what-is-lamp-post-advertising`, `clients`, `case-studies`, `why-choose-lamp-post-advertising-in-dubai`, `types-of-lamp-post-advertising-in-dubai`, `our-lamp-post-advertising-services-in-dubai`, `cost-of-lamp-post-advertising-in-dubai`, `advantages-of-choosing-datamysite`, `light-up-dubai-with-your-brand`, `blogs`, `faq`.
+
+**Page notes**
+- **Code it depends on:** the hub, Bridge Banners and Flyer Distribution code, plus this page's `.sv2-route-plan` CSS and `fast_pages` entry.
+- No snippet found locally; check with `inspect_page`: after release the page needs one Service (United Arab Emirates) and one FAQPage with 7 questions.
+- The brief has no testimonials or blog block, so neither is on the page.
+- **Must fix before release, the blogs contradict the page's prices:** post 921 (the linked guide) says AED 15,000-50,000 per route package plus AED 5,000-12,000+ permits; post 942 says AED 300-800 per unit and RTA approval (the page says AED 2,000 / 3,500 / 10,000 per pole and a municipal permit). Both have their own FAQPage with these figures.
+- **Prices change a lot:** live today says from AED 500 per pole; the new page says approx. avg. AED 2,000. Confirm before release.
+- The Al Barsha example says approx. avg. AED 40,000 for media plus print (owner's choice, brief wording). The page's own rates give AED 40,000 media + AED 3,360 print (28 x 120) = AED 43,360.
+- Hero photo (`service-new/lamp-post`) shows another brand's ads (Rivoli Shop), kept by the owner's choice: replace with a DMS campaign photo. No other images were added.
+- Open items: 6 case studies to be chosen (the slider shows all); DMS team to confirm the route drive before quoting, weekly checks, free banner replacement, dated photo report and overnight installation.
 
 ## Adding a new page to this file
 
