@@ -19,7 +19,7 @@ How rows are rendered and the API: [`service-pages-db.md`](service-pages-db.md).
 | 7 | [`/outdoor-advertising/flyers-distribution`](https://datamysite.com/outdoor-advertising/flyers-distribution) | 17 / `flyers-distribution` | Done | Done (blog image files + post 759 alt text still missing) | **Pending** |
 | 8 | [`/outdoor-advertising/human-billboards`](https://datamysite.com/outdoor-advertising/human-billboards) | 18 / `human-billboards` | Done | Done (4 blog WebP files still missing) | **Pending** |
 | 9 | [`/outdoor-advertising/lamp-post`](https://datamysite.com/outdoor-advertising/lamp-post) | 52 / `lamp-post` | Done | Done | **Pending** |
-| 10 | [`/outdoor-advertising/unipoles`](https://datamysite.com/outdoor-advertising/unipoles) | 51 / `unipoles` | Done | **Pending** | **Pending** |
+| 10 | [`/outdoor-advertising/unipoles`](https://datamysite.com/outdoor-advertising/unipoles) | 51 / `unipoles` | Done | Done | **Pending** |
 
 State read from the three environments' APIs on 2026-11-27: the active rows and the meta title/description of pages 1-7 are identical on local and staging; page 8 was applied to staging later that day from the same row files and checked there; production still has the old rows.
 
@@ -367,7 +367,7 @@ Already identical on production (leave as is): `styles`.
 
 ## 10. Unipoles: `/outdoor-advertising/unipoles`
 
-Service 51 (`unipoles`). URL, canonical and `services.name` ("Unipoles") unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`. **Rows are in the local DB only (2026-11-27); code `4d6e904` is committed and on `origin/staging`.** For staging, take the rows from local.
+Service 51 (`unipoles`). URL, canonical and `services.name` ("Unipoles") unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`. **Local and staging DB have the same rows and meta (2026-11-27); code `4d6e904` is live on staging.** Staging page checked: all 15 rows identical to local, one H1, one FAQPage with 7 questions, one Service for the United Arab Emirates, the five linked pages load, no sideways scroll, broken images or console errors at 1440 and 390 px. PageSpeed on staging, 3 runs: mobile 98 each (FCP 1.4, LCP 2.1-2.3, TBT 0-40 ms, CLS 0, SI 2.6-3.2), desktop 96-100 (SI 1.0-2.0, two runs got a Speed Index warning), accessibility, best practices and SEO 100.
 
 **Meta title:** Unipole Advertising in Dubai | Static and Digital Unipoles
 **Meta description:** Book static and digital unipole advertising in Dubai on Sheikh Zayed Road and the main highways. We check the site, print, install and send proof photos.
