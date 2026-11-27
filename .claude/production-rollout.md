@@ -19,6 +19,7 @@ How rows are rendered and the API: [`service-pages-db.md`](service-pages-db.md).
 | 7 | [`/outdoor-advertising/flyers-distribution`](https://datamysite.com/outdoor-advertising/flyers-distribution) | 17 / `flyers-distribution` | Done | Done (blog image files + post 759 alt text still missing) | **Pending** |
 | 8 | [`/outdoor-advertising/human-billboards`](https://datamysite.com/outdoor-advertising/human-billboards) | 18 / `human-billboards` | Done | Done (4 blog WebP files still missing) | **Pending** |
 | 9 | [`/outdoor-advertising/lamp-post`](https://datamysite.com/outdoor-advertising/lamp-post) | 52 / `lamp-post` | Done | Done | **Pending** |
+| 10 | [`/outdoor-advertising/unipoles`](https://datamysite.com/outdoor-advertising/unipoles) | 51 / `unipoles` | Done | **Pending** | **Pending** |
 
 State read from the three environments' APIs on 2026-11-27: the active rows and the meta title/description of pages 1-7 are identical on local and staging; page 8 was applied to staging later that day from the same row files and checked there; production still has the old rows.
 
@@ -363,6 +364,50 @@ Already identical on production (leave as is): `styles`.
 - The Al Barsha example says approx. avg. AED 40,000 for media plus print (owner's choice, brief wording). The page's own rates give AED 40,000 media + AED 3,360 print (28 x 120) = AED 43,360.
 - Hero photo (`service-new/lamp-post`) shows another brand's ads (Rivoli Shop), kept by the owner's choice: replace with a DMS campaign photo. No other images were added.
 - Open items: 6 case studies to be chosen (the slider shows all); DMS team to confirm the route drive before quoting, weekly checks, free banner replacement, dated photo report and overnight installation.
+
+## 10. Unipoles: `/outdoor-advertising/unipoles`
+
+Service 51 (`unipoles`). URL, canonical and `services.name` ("Unipoles") unchanged (no SQL beyond the shared `enquiries` columns). Newest production row edit on 2026-11-27: `2026-11-12T14:57:40+00:00`. **Local DB only so far (2026-11-27); the code is not committed.** For staging, take the rows from local.
+
+**Meta title:** Unipole Advertising in Dubai | Static and Digital Unipoles
+**Meta description:** Book static and digital unipole advertising in Dubai on Sheikh Zayed Road and the main highways. We check the site, print, install and send proof photos.
+
+**Rows to publish**
+
+| Area | Sort | section_key | Type | On production |
+|---|---|---|---|---|
+| main | 20 | `hero` | hero | Update |
+| main | 22 | `brands-we-work-with` | content | Create |
+| main | 24 | `why-brands-book-unipoles` | content | Create |
+| main | 26 | `why-dms-for-unipoles` | content | Create |
+| main | 28 | `unipole-formats` | content | Create |
+| main | 30 | `digital-unipoles` | content | Create |
+| main | 32 | `unipole-roads` | content | Create |
+| main | 34 | `unipole-advertising-cost-in-dubai` | content | Create |
+| main | 36 | `unipole-or-another-format` | content | Create |
+| main | 38 | `how-a-unipole-campaign-runs` | content | Create |
+| main | 40 | `unipole-uae-coverage` | content | Create |
+| main | 42 | `unipole-case-studies` | content | Create |
+| main | 44 | `unipole-faqs` | faq | Create |
+| main | 46 | `unipole-quote-cta` | content | Create |
+| after_main | 48 | `unipole-schema` | script | Create |
+
+Already identical on production (leave as is): `styles`.
+
+**Hide** (`is_active=false`): `what-is-unipole-advertising`, `clients`, `case-studies`, `why-choose-unipole-advertising-in-dubai`, `types-of-unipole-advertising-in-dubai`, `our-unipole-advertising-services-in-dubai`, `advantages-of-partnering-with-datamysite`, `make-your-brand-tower-above-the-rest`, `blogs`, `faq`, `scripts` (this one holds the old FAQPage).
+
+**Page notes**
+- **Code it depends on:** the hub, Bridge Banners, Flyer Distribution and Lamp Post code, plus this page's `.sv2-uni-*` CSS and `fast_pages` entry.
+- No snippet found locally; check with `inspect_page`: after release the page needs one Service (United Arab Emirates) and one FAQPage with 7 questions.
+- The brief has no testimonials or blog block, so neither is on the page. The road list is a table (the brief's fallback until there are real site photos).
+- **Price conflicts, fix before release** (owner chose to change this page only). The page says approx. avg. AED 45,000 secondary highways, 175,000 prime Sheikh Zayed Road, 20,000 per digital slot, 25,000 print and install:
+  - Hub rows `outdoor-advertising-dubai-prices-2026`, `outdoor-advertising-formats-in-dubai`, `outdoor-advertising-dubai-faqs` and Billboards rows `billboard-sizes-and-prices-in-dubai`, `billboard-advertising-dubai-faqs`: secondary AED 40,000, main highway AED 100,000. Billboards also lists unipole sizes of 12 x 4 m or 14 x 5 m (this page's FAQ: 8 x 4 m to 14 x 6 m).
+  - Home FAQ (`home-v2.blade.php`): highway unipole AED 100,000.
+  - `/digital-advertising` row `dubai-digital-advertising-what-each-format-does`: digital unipoles AED 60,000.
+  - **The linked cost guide** (blog 899, also live): secondary 35,000-50,000, prime Sheikh Zayed Road from about 225,000, production 15,000-40,000, plus its own FAQPage.
+  - Local DB blogs 531 (from 35,000), 817 (from 40,000, SZR 100,000-350,000, digital 15,000-25,000), 952 (from 45,000, SZR 75,000-220,000). Meta descriptions of those posts, `/unipole-advertising-in-dubai-stand-tall-stay-visible` and `/digital-advertising/dooh-advertising/digital-unipole` (AED 60,000) quote prices too.
+- Hero photo is the Outdoor Advertising hub photo, kept by the owner's choice: there is no real DMS unipole photo yet. No images were added.
+- Open items: real unipole photos (hero and road cards); 6 case studies to be chosen (the slider shows all); DMS team to confirm the site photos, hold, overnight install, next-morning check, mid-campaign check, lighting from dusk, face sizes and lead times.
 
 ## Adding a new page to this file
 
