@@ -23,6 +23,7 @@ class RewrittenPagesPerfTest extends TestCase
         'flyers-distribution' => '/outdoor-advertising/flyers-distribution',
         'human-billboards' => '/outdoor-advertising/human-billboards',
         'lamp-post' => '/outdoor-advertising/lamp-post',
+        'unipoles' => '/outdoor-advertising/unipoles',
     ];
 
     public function test_every_rewritten_page_is_covered(): void

@@ -25,7 +25,7 @@ class LinksTest extends TestCase
         // the stored section text links to one category (/blogs/pr-and-media-relations); the page must send visitors to /blogs
         $paths = array_merge(self::SERVICE_PAGES, ['/transit-media', '/digital-advertising/dooh-advertising', '/celebrity-marketing', '/public-relations-pr-coverage']);
         /* pages whose blog row was deliberately taken out of the layout (the redesigned /outdoor-advertising ends with the final CTA) */
-        $withoutBlogs = ['/outdoor-advertising', '/outdoor-advertising/billboards-advertising', '/outdoor-advertising/billboards-advertising/building-wraps', '/outdoor-advertising/billboards-advertising/hoarding', '/outdoor-advertising/billboards-advertising/wallscapes', '/outdoor-advertising/bridge-banners', '/outdoor-advertising/lamp-post'];
+        $withoutBlogs = ['/outdoor-advertising', '/outdoor-advertising/billboards-advertising', '/outdoor-advertising/billboards-advertising/building-wraps', '/outdoor-advertising/billboards-advertising/hoarding', '/outdoor-advertising/billboards-advertising/wallscapes', '/outdoor-advertising/bridge-banners', '/outdoor-advertising/lamp-post', '/outdoor-advertising/unipoles'];
         foreach ($paths as $path) {
             if (in_array($path, $withoutBlogs, true)) continue;
             $html = $this->html($path);

@@ -940,3 +940,6 @@ html.sv2-modal-open { overflow: hidden; }
 .sv2 .sv2-legacy .sv2-route-plan li:last-child { margin-bottom: 0 !important; }
 .sv2 .sv2-legacy .sv2-lamp-artwork h2.sv2-lamp-next { margin-top: var(--space-6) !important; }
 .sv2 .sv2-legacy .sv2-lamp-cost p a { color: #b8302a !important; text-decoration: underline; text-underline-offset: 3px; }
+/* Unipoles (database sections): "won't do" list under the six cards, links in the cost text and in the comparison table's format column */
+.sv2-uni-wontdo { max-width: 780px; margin-top: clamp(28px, 3.4vw, 44px); }
+.sv2 .sv2-legacy .sv2-uni-cost p a, .sv2 .sv2-legacy .sv2-uni-vs tbody th a { color: #b8302a !important; text-decoration: underline; text-underline-offset: 3px; }
