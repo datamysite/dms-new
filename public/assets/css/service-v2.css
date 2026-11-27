@@ -797,7 +797,7 @@
   .sv2 .sv2-legacy .sv2-compare .sv2-compare-table tbody th { font-size: 12.5px !important; }
   .sv2 .sv2-legacy .sv2-compare .sv2-compare-table thead th { font-size: 10.5px !important; }
 }
-.sv2 .sv2-legacy .sv2-compare p a { color: #b8302a !important; text-decoration: underline; text-underline-offset: 3px; }   /* #b8302a: coral fails 4.5:1 on this light background */
+.sv2 .sv2-legacy .sv2-compare p a, .sv2 .sv2-legacy .sv2-prices--bridges p a { color: #b8302a !important; text-decoration: underline; text-underline-offset: 3px; }   /* #b8302a: coral fails 4.5:1 on this light background */
 /* process timeline block (hv2-process markup stored in a database section): keep the home look inside the legacy wrapper */
 .sv2 .sv2-legacy .hv2-process h2::before { display: none; }
 .sv2 .sv2-legacy .sv2-on-dark .hv2-step-badge span:not(.badge) { color: var(--green) !important; }
@@ -808,6 +808,15 @@
 .sv2 .sv2-legacy .hv2-step h3::before { display: none; }
 .sv2 .sv2-legacy .hv2-step p { font-size: 15px !important; line-height: 1.7 !important; margin: 0 !important; }
 
+
+/* Bridge Banners (database sections): card icons, timeline sub heading + step titles (styled paragraphs, not headings), final CTA "something bigger" line */
+.sv2-wrap-ico { display: inline-grid; place-items: center; width: 48px; height: 48px; margin-bottom: 16px; border-radius: 14px; background: rgba(11, 61, 46, .07); color: var(--green, #0b3d2e); font-size: 22px; }
+.sv2 .sv2-legacy .sv2-process h3.sv2-process-sub { margin: var(--space-5) 0 0 !important; padding: 0; color: #fff !important; font-size: var(--fs-h3) !important; line-height: 1.2 !important; }
+.sv2 .sv2-legacy .sv2-process h3.sv2-process-sub::before { display: none; }
+.sv2 .sv2-legacy .hv2-step p.sv2-step-title { position: relative; color: #fff !important; font-family: var(--font-display); font-size: var(--fs-h3) !important; line-height: 1.15 !important; font-weight: 800; letter-spacing: -.02em; margin: var(--space-5) 0 var(--space-2) !important; }
+.sv2 .sv2-legacy .sv2-process p.sv2-process-foot { max-width: 62ch; margin: var(--space-6) auto 0 !important; text-align: center; color: #fff !important; }
+.sv2 .sv2-legacy .sv2-cta p.sv2-cta-more a { color: #fff !important; font-weight: 800; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 767px) { .sv2 .sv2-legacy .hv2-process .hv2-step p.sv2-step-title { grid-column: 2; grid-row: 1; margin: 0 0 6px !important; text-align: left; } }
 
 /* "Speak With Our Planning Team" (database section): centered call to action; the lead form opens in a modal (.sv2-modal, moved out of the legacy wrapper by service-v2.js) */
 .sv2 .sv2-legacy .sv2-planner { background: var(--green-d, #082e23); }
