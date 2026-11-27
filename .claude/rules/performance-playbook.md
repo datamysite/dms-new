@@ -94,3 +94,7 @@ Rewritten pages = `config/v2.php` `fast_pages`; `tests/Feature/Seo/RewrittenPage
 - Seven API runs on identical code: perf 97-99 six times and 77 once; SI 2.9-3.2 s five times, 3.8 and 4.7 s twice; FCP 1.4, LCP 2.0-2.1, CLS 0; server response 120-130 ms.
 - Filmstrips of four of them: the two good ones paint the finished hero once at ~1.7 s; in the two slow ones nothing is painted until ~2.5-2.6 s, and in the worst (also TBT 810 ms) that first paint is the loader curtain. The curtain was not changed (design decision).
 - Only change: al-khail road photo w720 40 -> 32 KB, w960 89 -> 73 KB (shared with Building Wraps).
+
+### Bridge banners (2026-11-27, a UI run said mobile SI 3.6, desktop SI 1.8)
+- Four API rounds on the deployed code (`00c053a`): mobile perf 97-98, FCP 1.4, LCP 2.3, TBT 0-40 ms, CLS 0, SI 3.5 / 2.5 / 2.5 / 2.5 s; desktop perf 99-100, LCP 0.4-0.6, TBT 10-50 ms, CLS 0-0.003, SI 1.0 / 1.1 / 1.4 / 1.1 s. Wallscapes, measured alongside: mobile SI 2.7-3.1, desktop 1.1-1.5.
+- Filmstrips: the finished first screen arrives in one paint. The slow mobile run (the first one) and the slow desktop run paint later (about 2.3-2.4 s instead of 1.4 s); two other desktop runs show the loader curtain at 1.4 s. No page change made (render-blocking CSS, unused Bootstrap CSS and the curtain stay as above).
