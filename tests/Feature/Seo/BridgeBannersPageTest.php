@@ -37,6 +37,13 @@ class BridgeBannersPageTest extends TestCase
         $this->assertSame(6, $x->query('//main//section[contains(@class,"sv2-why")]//article//h3')->length, 'six "why DMS" cards');
     }
 
+    public function test_brands_strip_follows_the_hero_like_the_other_outdoor_pages(): void
+    {
+        $x = $this->xpath($this->html(self::PATH));
+        $first = $x->query('//main//div[@data-sv2-legacy]')->item(0);
+        $this->assertSame('sv2-brands-we-work-with', $first->getAttribute('id'), 'first section after the hero');
+    }
+
     public function test_locations_table_has_ten_bridges_and_no_prices(): void
     {
         $x = $this->xpath($this->html(self::PATH));
