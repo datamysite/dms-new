@@ -2,6 +2,9 @@
 
 namespace Tests\Feature\Seo;
 
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use Tests\Support\CrawlsPages;
 use Tests\TestCase;
 
@@ -69,6 +72,31 @@ class SharedSourcesTest extends TestCase
         }
         $this->assertFileExists(resource_path('views/web/home-v2/popups.blade.php'));
         $this->assertStringNotContainsString('id="newsletter-modal-u"', file_get_contents(resource_path('views/web/home-v2/master.blade.php')), 'the master no longer holds the popup markup');
+    }
+
+    public function test_every_page_footer_has_read_reviews_without_a_home_page_visit(): void
+    {
+        Storage::fake('local');
+        $google = ['status' => 'OK', 'result' => ['rating' => 5, 'user_ratings_total' => 45,
+            'reviews' => [['author_name' => 'Test Reviewer', 'rating' => 5, 'text' => 'Great team.', 'relative_time_description' => 'a month ago']]]];
+        $up = true;
+        Http::fake(['maps.googleapis.com/*' => function () use (&$up, $google) {
+            return $up ? Http::response($google) : Http::response(['status' => 'OVER_QUERY_LIMIT']);
+        }]);
+
+        $button = fn (string $path) => $this->xpath($this->html($path))->query('//footer//button[contains(@class,"hs-rating--btn")]')->length;
+        Cache::flush();
+        $this->assertSame(1, $button('/about-us'), 'empty cache, home page never opened');
+
+        Cache::flush();
+        $up = false;
+        $this->assertSame(1, $button('/contact-us'), 'cache cleared and Google failing: the last good copy is used');
+
+        Cache::flush();
+        Storage::fake('local');
+        $x = $this->xpath($this->html('/faq'));
+        $this->assertSame(1, $x->query('//footer//a[contains(@class,"hs-rating")]//span[contains(@class,"hs-rating-go")]')->length,
+            'no review texts at all: a link to Google with the same label');
     }
 
     public function test_reviews_link_and_fallback_numbers_come_from_config(): void

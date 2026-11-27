@@ -25,26 +25,8 @@ class WebController extends Controller
         $data['sub_footer'] = 'visible';
         $data['blogs'] = Blogs::with('author')->where('status', '1')->orderBy('created_at', 'desc')->limit(3)->get();
 
-        // Live Google reviews (same GooglePlaces service the old /get-google-reviews endpoint uses).
-        // Cached; on any failure the view falls back to its built-in reviews, so the section is never empty.
-        $hours = max(1, (int) env('GOOGLE_REVIEWS_CACHE_HOURS', 6));
-        $data['googleReviews'] = Cache::remember('home_v2_google_reviews', now()->addHours($hours), function () {
-            try {
-                $places = new \App\Services\GooglePlaces;
-                $res = $places->details('most_relevant');
-                if (empty($res['reviews'])) return null;
-                // Google returns at most 5 reviews per call; "newest" is a different 5, so merge both (de-duplicated)
-                $seen = array_map(fn ($r) => mb_strtolower(($r['author'] ?? '') . '|' . mb_substr($r['text'] ?? '', 0, 40)), $res['reviews']);
-                foreach (($places->details('newest')['reviews'] ?? []) as $r) {
-                    $key = mb_strtolower(($r['author'] ?? '') . '|' . mb_substr($r['text'] ?? '', 0, 40));
-                    if (!in_array($key, $seen, true)) { $res['reviews'][] = $r; $seen[] = $key; }
-                }
-                return $res;
-            } catch (\Throwable $e) {
-                return null;
-            }
-        });
-        if ($data['googleReviews'] === null) Cache::forget('home_v2_google_reviews'); // do not cache a failure
+        // Live Google reviews (cached, shared with every page's footer). On failure the view falls back to its built-in reviews.
+        $data['googleReviews'] = \App\Services\GooglePlaces::cached();
 
         $placeId = env('GOOGLE_PLACE_ID');
         $data['googleReviewsUrl'] = 'https://www.google.com/maps/place/?q=place_id:' . $placeId;

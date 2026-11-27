@@ -272,11 +272,11 @@ if (!function_exists('v2_reviews')) {
 }
 
 if (!function_exists('v2_google_score')) {
-	/* Score badge of the testimonial section: live values from the cached Google data (the home page fills the cache), otherwise the config fallbacks.
-	   Never calls Google itself. Returns ['rating', 'total', 'url', 'stars' (inline-SVG stars, safe HTML)]. */
+	/* Score badge of the testimonial section: the same cached Google data as the footer, otherwise the config fallbacks.
+	   Returns ['rating', 'total', 'url', 'stars' (inline-SVG stars, safe HTML)]. */
 	function v2_google_score()
 	{
-		$g = \Illuminate\Support\Facades\Cache::get('home_v2_google_reviews');
+		$g = \App\Services\GooglePlaces::cached();
 		$rating = !empty($g['rating']) ? (float) $g['rating'] : (float) config('business.reviews.fallback_score', 5.0);
 		$total = !empty($g['total']) ? (int) $g['total'] : (int) config('business.reviews.fallback_total');
 		$star = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';

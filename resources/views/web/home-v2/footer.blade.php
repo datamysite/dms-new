@@ -19,8 +19,8 @@
 			<p>Smarter Marketing, Better Outcomes. Boost your brand’s visibility and campaign performance across Dubai and the UAE.</p>
 			@php
 				/* live Google data from WebController@indexNew (cached); the modal only exists when Google returned reviews */
-				/* pages other than the home page don't pass $googleReviews: reuse the cached copy (never calls Google from here) */
-				$googleReviews = $googleReviews ?? \Illuminate\Support\Facades\Cache::get('home_v2_google_reviews');
+				/* pages other than the home page don't pass $googleReviews: the same cached copy (fetched again here when the cache is empty) */
+				$googleReviews = $googleReviews ?? \App\Services\GooglePlaces::cached();
 				$hsRevs = [];
 				foreach (array_values($googleReviews['reviews'] ?? []) as $i => $r) {
 					$t = trim((string) ($r['text'] ?? ''));
@@ -32,7 +32,7 @@
 				$hsColors = ['#4285f4', '#ea4335', '#34a853', '#ff7043', '#7c4dff', '#00897b', '#d81b60', '#0288d1', '#f57c00'];
 				$hsStar = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>';
 				$hsSeeAll = config('business.reviews.url');   /* Maps place page opened on its Reviews tab (same link as the old home page) */
-				$hsWrite = $googleWriteUrl ?? null;
+				$hsWrite = $googleWriteUrl ?? (env('GOOGLE_PLACE_ID') ? 'https://search.google.com/local/writereview?placeid=' . env('GOOGLE_PLACE_ID') : null);
 			@endphp
 			@if(count($hsRevs))
 				<button type="button" class="hs-rating hs-rating--btn" data-hs-reviews aria-haspopup="dialog" aria-controls="hs-reviews" aria-label="Google rating {{ number_format($hsScore, 1) }} from {{ $hsTotal }} reviews — read reviews">
@@ -46,6 +46,7 @@
 					<span class="hs-g" aria-hidden="true"><b class="b">G</b><b class="r">o</b><b class="y">o</b><b class="b">g</b><b class="g">l</b><b class="r">e</b></span>
 					<span class="hs-stars" aria-hidden="true">★★★★★</span>
 					<span class="hs-score">{{ number_format($hsScore, 1) }} <small>({{ $hsTotal }} reviews)</small></span>
+					<span class="hs-rating-go" aria-hidden="true">Read reviews <i class="bi bi-arrow-up-right"></i></span>
 				</a>
 			@endif
 			<div class="hs-social">
